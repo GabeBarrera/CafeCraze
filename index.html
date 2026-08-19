@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#0a0705;overscroll-behavior:none}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+a{color:#e8b661}a:hover{color:#f5d69a}
+@keyframes cbpulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes cbpop{from{transform:translateY(6px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes cbstream{0%{transform:scaleY(0)}25%{transform:scaleY(1)}100%{transform:scaleY(1)}}
+@keyframes cbdrip{0%{transform:translateY(-2px);opacity:0}30%{opacity:1}100%{transform:translateY(10px);opacity:0}}
+</style>
+</helmet>
+<div style="position:fixed;inset:0;background:#0a0705;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:'VT323',monospace;color:#f0e2cd;touch-action:none;user-select:none">
+
+<div style="{{ scaleStyle }}">
+<div style="position:relative;width:420px;height:800px;overflow:hidden;background:#0a0705;box-shadow:0 0 0 3px #3a2a1c,0 24px 60px rgba(0,0,0,.7);image-rendering:pixelated">
+
+<sc-if value="{{ isMenu }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;background:#120b07;display:flex;flex-direction:column;align-items:center;padding:28px 22px">
+  <div style="font-family:'Silkscreen',monospace;font-size:13px;color:#8a6b45;letter-spacing:3px">EST. 1998 · CORNER LOT</div>
+  <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:34px;color:#e8b661;margin-top:10px;text-shadow:0 4px 0 #5a3a12">CAFÉ</div>
+  <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:34px;color:#e8b661;text-shadow:0 4px 0 #5a3a12">BARISTA</div>
+  <div style="font-size:19px;color:#c9b394;margin-top:8px;text-align:center;line-height:1.15">Two views. One clock.<br>Don't burn the milk.</div>
+
+  <div style="font-family:'Silkscreen',monospace;font-size:11px;color:#8a6b45;letter-spacing:2px;margin-top:22px">PICK YOUR BARISTA</div>
+  <div style="display:flex;gap:14px;margin-top:12px">
+    <div data-tap="barista-0" style="{{ pick0Style }}">
+      <div style="position:relative;width:100%;height:160px"><div style="{{ spr.p0 }}"></div></div>
+      <div style="font-family:'Silkscreen',monospace;font-size:10px;text-align:center;padding:4px 0;color:#e8b661">{{ name0 }}</div>
+    </div>
+    <div data-tap="barista-1" style="{{ pick1Style }}">
+      <div style="position:relative;width:100%;height:160px"><div style="{{ spr.p1 }}"></div></div>
+      <div style="font-family:'Silkscreen',monospace;font-size:10px;text-align:center;padding:4px 0;color:#e8b661">{{ name1 }}</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:7px;margin-top:12px">
+    <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#8a6b45;letter-spacing:1px">NAME</div>
+    <input value="{{ baristaName }}" onChange="{{ onRename }}" maxLength="12" placeholder="your name" style="width:168px;background:#231710;border:2px solid #3a2a1c;color:#e8b661;font-family:'Silkscreen',monospace;font-size:11px;padding:7px 8px;outline:none;text-align:center"></input>
+  </div>
+
+  <div data-tap="start" style="margin-top:26px;background:#2f6d3f;border:3px solid #1a3d24;box-shadow:0 5px 0 #14301b;padding:14px 30px;font-family:'Silkscreen',monospace;font-weight:700;font-size:16px;color:#eafbef;cursor:pointer">START SHIFT</div>
+  <div style="display:flex;gap:10px;margin-top:14px">
+    <div data-tap="modal-instructions" style="border:2px solid #3a2a1c;background:#1a120c;padding:8px 12px;font-family:'Silkscreen',monospace;font-size:10px;color:#c9b394;cursor:pointer">HOW TO PLAY</div>
+    <div data-tap="modal-scores" style="border:2px solid #3a2a1c;background:#1a120c;padding:8px 12px;font-family:'Silkscreen',monospace;font-size:10px;color:#c9b394;cursor:pointer">HIGHSCORES</div>
+    <div data-tap="load" style="border:2px solid #3a2a1c;background:#1a120c;padding:8px 12px;font-family:'Silkscreen',monospace;font-size:10px;color:#c9b394;cursor:pointer">CONTINUE</div>
+  </div>
+  <div style="margin-top:auto;font-size:17px;color:#8a6b45;text-align:center;line-height:1.15">Accept tickets at the window,<br>pull shots at the bar, serve before<br>the timer runs dry.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPlay }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0">
+
+  <div style="position:absolute;left:0;right:0;top:0;height:52px;background:#150e09;border-bottom:3px solid #3a2a1c;display:flex;align-items:center;gap:6px;padding:0 6px;z-index:60">
+    <div data-tap="modal-menu" style="width:34px;height:34px;border:2px solid #3a2a1c;background:#231710;display:flex;align-items:center;justify-content:center;font-size:20px;color:#e8b661;cursor:pointer">☰</div>
+    <div style="width:34px;height:34px;border:2px solid #3a2a1c;background:#231710;position:relative;overflow:hidden"><div style="{{ spr.avatar }}"></div></div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:2px;min-width:0">
+      <div style="display:flex;gap:8px;align-items:baseline;font-family:'Silkscreen',monospace;font-size:10px;color:#8a6b45">
+        <span>DAY {{ day }}</span><span style="color:#e8b661">{{ clockStr }}</span><span style="color:#7fd39a">${{ moneyStr }}</span>
+      </div>
+      <div style="font-size:15px;color:#8a3b1f;letter-spacing:2px;line-height:1">{{ heartsStr }}</div>
+    </div>
+    <div data-tap="bell" style="position:relative;width:36px;height:38px;background:#231710;border:2px solid #3a2a1c;display:flex;align-items:center;justify-content:center;font-size:19px;color:#e8b661;cursor:pointer;flex:none">🔔
+      <sc-if value="{{ unread }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ unreadStyle }}">{{ unreadCount }}</div>
+      </sc-if>
+    </div>
+    <div data-tap="toggle" style="position:relative;height:38px;min-width:96px;background:#3d2a17;border:3px solid #e8b661;box-shadow:0 4px 0 #1a1008;display:flex;align-items:center;justify-content:center;font-family:'Silkscreen',monospace;font-size:10px;color:#e8b661;cursor:pointer;padding:0 8px">
+      {{ toggleLabel }}
+      <sc-if value="{{ badge }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;top:-7px;right:-7px;width:16px;height:16px;border-radius:50%;background:#8a3b1f;border:2px solid #f0e2cd;animation:cbpulse 1s infinite"></div>
+      </sc-if>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;top:52px;height:648px;overflow:hidden">
+
+    <sc-if value="{{ isCustomer }}" hint-placeholder-val="{{ true }}">
+    <div style="position:absolute;inset:0">
+      <div style="position:absolute;left:16.5%;top:13.78%;width:75.2%;height:39.3%;background-image:url(assets/scene_customer_b1.png);background-size:cover;background-position:50% 25%"></div>
+      <sc-for list="{{ npcsView }}" as="n" hint-placeholder-count="1">
+        <div data-zone="{{ n.zone }}" data-tap="{{ n.tap }}" style="{{ n.wrap }}"><div style="{{ n.spr }}"></div></div>
+      </sc-for>
+      <div style="position:absolute;inset:0;background-image:url(assets/scene_customer_top.png);background-size:cover;background-position:center;pointer-events:none;z-index:20"></div>
+      <div data-tap="modal-note" style="position:absolute;left:30%;top:65.5%;width:13.1%;height:8.5%;cursor:pointer;z-index:25"><div style="{{ spr.note }}"></div></div>
+      <sc-for list="{{ ordersView }}" as="o" hint-placeholder-count="1">
+        <div style="{{ o.wrap }}">
+          <div data-zone="{{ o.zone }}" data-tap="{{ o.tap }}" style="{{ o.card }}">
+            <div style="display:flex;gap:5px;align-items:center">
+              <div style="position:relative;width:34px;height:32px;flex:none"><div style="{{ o.spr }}"></div></div>
+              <div style="min-width:0;flex:1">
+                <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#2a1a0e;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.drinkLabel }}</div>
+                <div style="font-size:14px;color:#6b5236;line-height:1">{{ o.who }}</div>
+              </div>
+            </div>
+            <div style="height:8px;background:#d8c49b;border:1px solid #6b5236;margin-top:4px"><div style="{{ o.bar }}"></div></div>
+            <div style="{{ o.tagStyle }}">{{ o.tag }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isCraft }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0">
+      <div style="position:absolute;inset:0;background-image:url(assets/scene_crafting.png);background-size:cover;background-position:50% 19%"></div>
+
+      <div data-item="beans" style="position:absolute;left:24%;bottom:87%;width:12.3%;height:12%;cursor:grab"><div style="{{ spr.beans }}"></div><div style="position:absolute;bottom:-2px;right:-6px;font-family:'Silkscreen',monospace;font-size:9px;color:#f0e2cd;background:#2a1a0e;border:1px solid #6b5236;padding:0 2px">{{ inv.beans }}</div></div>
+      <div data-item="milk" style="position:absolute;left:41%;bottom:87%;width:15.5%;height:10%;cursor:grab"><div style="{{ spr.pitcherMilk }}"></div><div style="position:absolute;bottom:-2px;right:-4px;font-family:'Silkscreen',monospace;font-size:9px;color:#f0e2cd;background:#2a1a0e;border:1px solid #6b5236;padding:0 2px">{{ inv.milk }}</div></div>
+      <div data-item="cocoa" style="position:absolute;left:60%;bottom:87%;width:10.4%;height:10%;cursor:grab"><div style="{{ spr.cocoa }}"></div><div style="position:absolute;bottom:-2px;right:-6px;font-family:'Silkscreen',monospace;font-size:9px;color:#f0e2cd;background:#2a1a0e;border:1px solid #6b5236;padding:0 2px">{{ inv.cocoa }}</div></div>
+
+      <div data-item="cup" style="position:absolute;left:8%;bottom:70.8%;width:16.1%;height:9%;cursor:grab"><div style="{{ spr.cupEmpty }}"></div></div>
+      <div data-item="demi" style="position:absolute;left:29.1%;bottom:70.8%;width:13.1%;height:7.5%;cursor:grab"><div style="{{ spr.demiEmpty }}"></div></div>
+      <div data-item="glass" style="position:absolute;left:47.2%;bottom:70.8%;width:10.1%;height:8%;cursor:grab"><div style="{{ spr.glassEmpty }}"></div></div>
+      <div data-item="tamp" style="position:absolute;left:62.3%;bottom:70.8%;width:8.8%;height:9.5%;cursor:grab"><div style="{{ spr.tamp }}"></div></div>
+      <sc-if value="{{ pfOnShelf }}" hint-placeholder-val="{{ true }}">
+        <div data-item="pf" data-zone="pf" style="position:absolute;left:76.1%;bottom:70.8%;width:15.9%;height:11%;cursor:grab"><div style="{{ spr.pf }}"></div>
+          <div style="{{ pfTagStyle }}">{{ pfTag }}</div>
+        </div>
+      </sc-if>
+
+      <div data-zone="grinder" style="position:absolute;left:5%;bottom:16%;width:24.7%;height:30%"><div style="{{ spr.grinder }}"></div></div>
+
+      <div data-zone="machine" style="position:absolute;left:34%;bottom:16%;width:50.9%;height:33%"><div style="{{ spr.machine }}"></div></div>
+      <sc-if value="{{ showDockCup }}" hint-placeholder-val="{{ false }}">
+        <div data-tap="pour" style="{{ dockCupWrap }}"><div style="{{ spr.dockCup }}"></div></div>
+      </sc-if>
+      <sc-if value="{{ pouring }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;left:58.9%;top:68.5%;width:1.4%;height:7%;background:linear-gradient(#4a2410,#7a3f18);transform-origin:top center;animation:cbstream .5s ease-out;z-index:18;box-shadow:0 0 3px rgba(0,0,0,.5)"></div>
+        <div style="position:absolute;left:58.2%;top:75%;width:2.8%;height:1.2%;border-radius:50%;background:rgba(122,63,24,.85);animation:cbdrip .4s linear infinite;z-index:18"></div>
+      </sc-if>
+      <div data-zone="nozzle" style="position:absolute;left:74%;bottom:16%;width:11%;height:19%;border-right:2px dashed rgba(232,182,97,.25)"></div>
+      <sc-if value="{{ showGlass }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;left:75%;bottom:18.5%;width:10.1%;height:8%"><div style="{{ spr.glassEmpty }}"></div></div>
+      </sc-if>
+      <div data-zone="wand" style="position:absolute;left:33%;bottom:16%;width:11%;height:19%;border-left:2px dashed rgba(232,182,97,.25)"></div>
+      <sc-if value="{{ wandItem }}" hint-placeholder-val="{{ false }}">
+        <div data-item="froth" style="{{ wandWrap }}"><div style="{{ spr.wandPitcher }}"></div></div>
+      </sc-if>
+
+      <div data-zone="trash" style="position:absolute;left:33%;bottom:0;width:30%;height:11.3%;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px">
+        <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#c9b394;background:rgba(10,7,5,.75);border:1px solid #3a2a1c;padding:1px 4px">TRASH</div>
+      </div>
+
+      <div style="position:absolute;left:2%;right:2%;bottom:1.5%;display:flex;flex-direction:column;gap:4px;z-index:20">
+        <sc-if value="{{ showGrind }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:6px;background:rgba(10,7,5,.86);border:2px solid #3a2a1c;padding:4px 6px">
+            <div data-hold="grind" style="background:#3d2a17;border:2px solid #e8b661;padding:5px 8px;font-family:'Silkscreen',monospace;font-size:9px;color:#e8b661;cursor:pointer;flex:none">HOLD GRIND</div>
+            <div style="flex:1;height:12px;background:#231710;border:1px solid #6b5236"><div style="{{ grindBar }}"></div></div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showBrew }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:6px;background:rgba(10,7,5,.86);border:2px solid #3a2a1c;padding:4px 6px">
+            <div data-tap="brew" style="{{ brewBtnStyle }}">{{ brewBtnLabel }}</div>
+            <div data-tap="stopbrew" style="background:#8a3b1f;border:2px solid #f0b48c;padding:5px 8px;font-family:'Silkscreen',monospace;font-size:9px;color:#ffe6d8;cursor:pointer;flex:none">STOP</div>
+            <div style="flex:1;height:14px;background:#231710;border:1px solid #6b5236;position:relative">
+              <div style="position:absolute;left:42%;width:16%;top:0;bottom:0;background:rgba(232,182,97,.22);border-left:1px solid #e8b661;border-right:1px solid #e8b661"></div>
+              <div style="{{ brewBar }}"></div>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showSteam }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:6px;background:rgba(10,7,5,.86);border:2px solid #3a2a1c;padding:4px 6px">
+            <div data-hold="steam" style="background:#3d2a17;border:2px solid #e8b661;padding:5px 8px;font-family:'Silkscreen',monospace;font-size:9px;color:#e8b661;cursor:pointer;flex:none">HOLD STEAM</div>
+            <div style="flex:1;height:14px;background:#231710;border:1px solid #6b5236;position:relative">
+              <div style="position:absolute;left:55%;width:25%;top:0;bottom:0;background:rgba(127,211,154,.25);border-left:1px solid #7fd39a;border-right:1px solid #7fd39a"></div>
+              <div style="{{ steamBar }}"></div>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showWater }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:6px;background:rgba(10,7,5,.86);border:2px solid #3a2a1c;padding:4px 6px">
+            <div data-tap="water" style="{{ waterBtnStyle }}">{{ waterBtnLabel }}</div>
+            <div style="flex:1;height:14px;background:#231710;border:1px solid #6b5236;position:relative">
+              <div style="{{ waterZone }}"></div>
+              <div style="{{ waterPin }}"></div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ tutOn }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:6px;right:6px;bottom:6px;background:#150e09;border:3px solid #e8b661;padding:6px 8px;z-index:40;animation:cbpop .2s">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#e8b661">STEP {{ tutStep }}/9</div>
+          <div data-tap="tutskip" style="font-family:'Silkscreen',monospace;font-size:9px;color:#8a6b45;cursor:pointer">SKIP ›</div>
+        </div>
+        <div style="font-size:18px;line-height:1.1;color:#f0e2cd;margin-top:2px">{{ tutText }}</div>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;bottom:0;height:100px;background:#150e09;border-top:3px solid #3a2a1c;display:flex;align-items:center;gap:8px;padding:0 8px;z-index:50">
+    <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#8a6b45;writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:2px">TRAY</div>
+    <sc-for list="{{ trayView }}" as="t" hint-placeholder-count="3">
+      <div style="{{ t.wrap }}">
+        <sc-if value="{{ t.filled }}" hint-placeholder-val="{{ false }}">
+          <div data-item="{{ t.dragId }}" data-zone="{{ t.zoneId }}" style="position:absolute;inset:0;cursor:grab"><div style="{{ t.spr }}"></div>
+            <div style="position:absolute;left:0;right:0;bottom:0;font-family:'Silkscreen',monospace;font-size:8px;text-align:center;color:#f0e2cd;background:rgba(10,7,5,.7)">{{ t.label }}</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ t.empty }}" hint-placeholder-val="{{ true }}">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Silkscreen',monospace;font-size:9px;color:#4a3728">EMPTY</div>
+        </sc-if>
+      </div>
+    </sc-for>
+    <div style="margin-left:auto;display:flex;flex-direction:column;gap:5px">
+      <div data-tap="modal-shop" style="border:2px solid #3a2a1c;background:#231710;padding:5px 7px;font-family:'Silkscreen',monospace;font-size:9px;color:#7fd39a;cursor:pointer">SUPPLIES</div>
+      <div data-tap="modal-recipes" style="border:2px solid #3a2a1c;background:#231710;padding:5px 7px;font-family:'Silkscreen',monospace;font-size:9px;color:#c9b394;cursor:pointer">RECIPES</div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDayEnd }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:#120b07;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px">
+  <div style="font-family:'Silkscreen',monospace;font-size:11px;color:#8a6b45;letter-spacing:3px">{{ baristaUpper }} · 3:00 PM</div>
+  <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:26px;color:#e8b661;margin:10px 0 20px">DAY {{ day }} DONE</div>
+  <div style="width:100%;border:3px solid #3a2a1c;background:#1a120c">
+    <div style="display:flex;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #3a2a1c"><span style="font-size:19px">Drinks served</span><span style="font-family:'Silkscreen',monospace;font-size:13px;color:#7fd39a">{{ dayServed }}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #3a2a1c"><span style="font-size:19px">Orders missed</span><span style="font-family:'Silkscreen',monospace;font-size:13px;color:#e0805a">{{ dayMissed }}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #3a2a1c"><span style="font-size:19px">Earned today</span><span style="font-family:'Silkscreen',monospace;font-size:13px;color:#e8b661">${{ dayCashStr }}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:9px 12px"><span style="font-size:19px">Till total</span><span style="font-family:'Silkscreen',monospace;font-size:13px;color:#e8b661">${{ moneyStr }}</span></div>
+  </div>
+  <div style="margin-top:14px;font-size:18px;color:#8a6b45;text-align:center">Beans {{ inv.beans }} · Milk {{ inv.milk }} · Cocoa {{ inv.cocoa }}</div>
+  <div data-tap="modal-shop" style="margin-top:10px;border:2px solid #3a2a1c;background:#1a120c;padding:9px 14px;font-family:'Silkscreen',monospace;font-size:10px;color:#7fd39a;cursor:pointer">RESTOCK</div>
+  <div data-tap="nextday" style="margin-top:20px;background:#2f6d3f;border:3px solid #1a3d24;box-shadow:0 5px 0 #14301b;padding:13px 24px;font-family:'Silkscreen',monospace;font-weight:700;font-size:14px;color:#eafbef;cursor:pointer">START DAY {{ nextDay }}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isOver }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:#140806;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px">
+  <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:30px;color:#8a3b1f;text-shadow:0 4px 0 #2a0f06">GAME OVER</div>
+  <div style="font-size:20px;color:#c9b394;margin-top:10px;text-align:center">Five missed tickets and the<br>queue walked away.</div>
+  <div style="margin-top:22px;width:100%;border:3px solid #3a2a1c;background:#1a120c">
+    <div style="display:flex;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #3a2a1c"><span style="font-size:19px">Day reached</span><span style="font-family:'Silkscreen',monospace;font-size:13px;color:#e8b661">{{ day }}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #3a2a1c"><span style="font-size:19px">Cash earned</span><span style="font-family:'Silkscreen',monospace;font-size:13px;color:#e8b661">${{ moneyStr }}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:9px 12px"><span style="font-size:19px">Total served</span><span style="font-family:'Silkscreen',monospace;font-size:13px;color:#7fd39a">{{ served }}</span></div>
+  </div>
+  <div data-tap="tryagain" style="margin-top:24px;background:#8a3b1f;border:3px solid #f0b48c;box-shadow:0 5px 0 #40160a;padding:13px 26px;font-family:'Silkscreen',monospace;font-weight:700;font-size:14px;color:#ffe6d8;cursor:pointer">TRY AGAIN</div>
+  <div data-tap="modal-scores" style="margin-top:12px;border:2px solid #3a2a1c;background:#1a120c;padding:8px 12px;font-family:'Silkscreen',monospace;font-size:10px;color:#c9b394;cursor:pointer">HIGHSCORES</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ modalOn }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(5,3,2,.82);z-index:200;display:flex;align-items:center;justify-content:center;padding:18px">
+  <div style="width:100%;max-height:100%;overflow:auto;background:#1a120c;border:3px solid #e8b661;box-shadow:0 10px 0 rgba(0,0,0,.5)">
+    <div style="display:flex;justify-content:space-between;align-items:center;background:#3d2a17;padding:7px 9px">
+      <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:12px;color:#e8b661">{{ modalTitle }}</div>
+      <div data-tap="close" style="font-family:'Silkscreen',monospace;font-size:12px;color:#f0e2cd;cursor:pointer;padding:0 3px">✕</div>
+    </div>
+    <div style="padding:12px">
+
+      <sc-if value="{{ mMenu }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div data-tap="modal-shop" style="border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#7fd39a;cursor:pointer">SUPPLIES / SHOP</div>
+          <div data-tap="modal-recipes" style="border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#c9b394;cursor:pointer">RECIPES</div>
+          <div data-tap="modal-instructions" style="border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#c9b394;cursor:pointer">INSTRUCTIONS</div>
+          <div data-tap="modal-scores" style="border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#c9b394;cursor:pointer">HIGHSCORES</div>
+          <div data-tap="modal-settings" style="border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#c9b394;cursor:pointer">SETTINGS</div>
+          <div data-tap="save" style="border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#e8b661;cursor:pointer">SAVE GAME</div>
+          <div data-tap="newgame" style="border:2px solid #6b2a12;background:#2a120a;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#e0805a;cursor:pointer">NEW GAME</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ mShop }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:19px;color:#c9b394;margin-bottom:10px">Till: <span style="color:#7fd39a">${{ moneyStr }}</span> — the clock is paused while you shop.</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;gap:9px;border:2px solid #3a2a1c;background:#231710;padding:7px">
+            <div style="position:relative;width:34px;height:40px;flex:none"><div style="{{ spr.beans }}"></div></div>
+            <div style="flex:1"><div style="font-family:'Silkscreen',monospace;font-size:10px;color:#e8b661">BEANS ×5</div><div style="font-size:17px;color:#8a6b45">have {{ inv.beans }}</div></div>
+            <div data-tap="buy-beans" style="background:#2f6d3f;border:2px solid #7fd39a;padding:7px 9px;font-family:'Silkscreen',monospace;font-size:10px;color:#eafbef;cursor:pointer">$6</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:9px;border:2px solid #3a2a1c;background:#231710;padding:7px">
+            <div style="position:relative;width:34px;height:40px;flex:none"><div style="{{ spr.pitcherMilk }}"></div></div>
+            <div style="flex:1"><div style="font-family:'Silkscreen',monospace;font-size:10px;color:#e8b661">MILK ×3</div><div style="font-size:17px;color:#8a6b45">have {{ inv.milk }}</div></div>
+            <div data-tap="buy-milk" style="background:#2f6d3f;border:2px solid #7fd39a;padding:7px 9px;font-family:'Silkscreen',monospace;font-size:10px;color:#eafbef;cursor:pointer">$4</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:9px;border:2px solid #3a2a1c;background:#231710;padding:7px">
+            <div style="position:relative;width:34px;height:40px;flex:none"><div style="{{ spr.cocoa }}"></div></div>
+            <div style="flex:1"><div style="font-family:'Silkscreen',monospace;font-size:10px;color:#e8b661">COCOA ×3</div><div style="font-size:17px;color:#8a6b45">have {{ inv.cocoa }}</div></div>
+            <div data-tap="buy-cocoa" style="background:#2f6d3f;border:2px solid #7fd39a;padding:7px 9px;font-family:'Silkscreen',monospace;font-size:10px;color:#eafbef;cursor:pointer">$5</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ mRecipes }}" hint-placeholder-val="{{ false }}">
+        <sc-for list="{{ recipesView }}" as="r" hint-placeholder-count="6">
+          <div style="display:flex;gap:9px;align-items:center;border-bottom:1px solid #3a2a1c;padding:7px 0">
+            <div style="position:relative;width:40px;height:38px;flex:none"><div style="{{ r.spr }}"></div></div>
+            <div style="min-width:0"><div style="font-family:'Silkscreen',monospace;font-size:10px;color:#e8b661">{{ r.name }}</div><div style="font-size:17px;color:#c9b394;line-height:1.1">{{ r.how }}</div></div>
+          </div>
+        </sc-for>
+      </sc-if>
+
+      <sc-if value="{{ mInstr }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:19px;line-height:1.2;color:#e2d2b8">
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Two views, one clock.</b> Tickets keep counting down no matter which view you're in — switching costs you time.</p>
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Window:</b> tap a ticket to accept it. Drag a finished drink from the tray onto an accepted ticket to ring it up.</p>
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Bar:</b> beans → grinder, hold GRIND, dock the portafilter on the grinder, tamp it, put a cup + the portafilter on the machine, BREW, then tap the shot to pour.</p>
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Stopping a brew:</b> before 40% it pauses. Inside the gold band (42–58%) you pull a ristretto — two of those combine into a full shot.</p>
+          <p style="margin:0">Miss five tickets and the run is over. Drag mistakes to the trash.</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ mScores }}" hint-placeholder-val="{{ false }}">
+        <sc-for list="{{ scoresView }}" as="s" hint-placeholder-count="3">
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid #3a2a1c;padding:8px 2px;font-family:'Silkscreen',monospace;font-size:11px">
+            <span style="color:#8a6b45">{{ s.rank }}</span><span style="color:#c9b394">DAY {{ s.day }}</span><span style="color:#e8b661">${{ s.cash }}</span>
+          </div>
+        </sc-for>
+        <sc-if value="{{ noScores }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:19px;color:#8a6b45;padding:10px 0">No shifts on record yet.</div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{ mSettings }}" hint-placeholder-val="{{ false }}">
+        <div style="font-family:'Silkscreen',monospace;font-size:10px;color:#8a6b45;letter-spacing:2px;margin-bottom:9px">BARISTA ON SHIFT</div>
+        <div style="display:flex;gap:12px">
+          <div data-tap="barista-0" style="{{ pick0Style }}"><div style="position:relative;width:100%;height:120px"><div style="{{ spr.p0 }}"></div></div><div style="font-family:'Silkscreen',monospace;font-size:10px;text-align:center;padding:3px 0;color:#e8b661">{{ name0 }}</div></div>
+          <div data-tap="barista-1" style="{{ pick1Style }}"><div style="position:relative;width:100%;height:120px"><div style="{{ spr.p1 }}"></div></div><div style="font-family:'Silkscreen',monospace;font-size:10px;text-align:center;padding:3px 0;color:#e8b661">{{ name1 }}</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;margin-top:12px">
+          <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#8a6b45;letter-spacing:1px">NAME</div>
+          <input value="{{ baristaName }}" onChange="{{ onRename }}" maxLength="12" placeholder="your name" style="flex:1;background:#231710;border:2px solid #3a2a1c;color:#e8b661;font-family:'Silkscreen',monospace;font-size:11px;padding:7px 8px;outline:none;text-align:center"></input>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ mNote }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <div style="position:relative;width:56px;height:60px;flex:none"><div style="{{ spr.note }}"></div></div>
+          <div style="font-size:20px;line-height:1.2;color:#e2d2b8">Dear Mi Mariposita,<br><br>I hope these games bring you as much joy as it has been for me to make them for you.<br><br>I love you times infinity &lt;3<br><br>Love,<br>Your Oso</div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ logOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;top:52px;bottom:0;z-index:300">
+  <div data-tap="close-log" style="position:absolute;inset:0;background:rgba(5,3,2,.55)"></div>
+  <div style="position:absolute;right:6px;top:6px;width:274px;max-height:380px;overflow:auto;background:#150e09;border:3px solid #e8b661;box-shadow:0 8px 0 rgba(0,0,0,.5)">
+    <div style="display:flex;justify-content:space-between;align-items:center;background:#3d2a17;padding:6px 8px;position:sticky;top:0">
+      <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:10px;color:#e8b661">SERVICE LOG</div>
+      <div data-tap="close-log" style="font-family:'Silkscreen',monospace;font-size:11px;color:#f0e2cd;cursor:pointer;padding:0 3px">✕</div>
+    </div>
+    <sc-for list="{{ logView }}" as="l" hint-placeholder-count="3">
+      <div style="{{ l.row }}">
+        <div style="{{ l.dot }}"></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:17px;line-height:1.1;color:#f0e2cd;text-wrap:pretty">{{ l.text }}</div>
+          <div style="font-family:'Silkscreen',monospace;font-size:8px;color:#8a6b45;margin-top:2px">{{ l.time }}</div>
+        </div>
+      </div>
+    </sc-for>
+    <sc-if value="{{ logEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="font-size:18px;color:#8a6b45;padding:14px 10px">Nothing logged yet.</div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+</div>
+</div>
+
+<sc-if value="{{ dragging }}" hint-placeholder-val="{{ false }}">
+  <div style="{{ ghostStyle }}"><div style="{{ ghostSpr }}"></div></div>
+</sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:800}}">
+const ING='assets/espresso_ingredients.png';
+const DRK='assets/espresso_drinks.png';
+const MCH='assets/machines.png';
+const NPC='assets/characters_npc.png';
+const PLR='assets/player.png';
+
+function crop(img,iw,ih,sx,sy,sw,sh){
+  return {backgroundImage:'url('+img+')',
+    backgroundSize:(100*iw/sw).toFixed(2)+'% '+(100*ih/sh).toFixed(2)+'%',
+    backgroundPosition:(100*sx/(iw-sw)).toFixed(2)+'% '+(100*sy/(ih-sh)).toFixed(2)+'%',
+    backgroundRepeat:'no-repeat',height:'100%',width:'auto',aspectRatio:(sw/sh).toFixed(4),margin:'0 auto'};
+}
+const I=(sx,sy,sw,sh)=>crop(ING,1536,1024,sx,sy,sw,sh);
+const D=(sx,sy,sw,sh)=>crop(DRK,1536,1024,sx,sy,sw,sh);
+const M=(sx,sy,sw,sh)=>crop(MCH,1536,1024,sx,sy,sw,sh);
+
+const SPR={
+  tamp:I(57,72,182,303), pfClean:I(331,83,317,339), pfGrounds:I(750,72,322,353), pfTamped:I(1193,85,303,343),
+  beans:I(56,491,298,450), cocoa:I(429,541,243,362), note:I(1247,655,262,256),
+  glassEmpty:D(49,89,206,251), glassWater:D(326,89,205,251), pitcherMilk:D(895,76,272,270), pitcherFroth:D(1217,0,265,348),
+  demiEmpty:D(116,397,243,215), demiShot:D(480,399,244,213), glassShot:D(873,394,173,208), cortado:D(1185,380,190,228),
+  cupEmpty:D(12,663,264,228), espresso:D(322,661,264,230), latte:D(632,660,273,234), mocha:D(954,642,269,251), americano:D(1262,662,266,231),
+  g0:M(46,40,200,463), g1:M(297,40,202,463), g2:M(547,40,197,462), g3:M(800,40,198,462), g4:M(1045,40,199,462), g5:M(1294,40,200,462),
+  mIdle:M(201,534,502,450), mPf:M(835,530,511,453),
+  p0:crop(PLR,1370,1148,295,15,420,700), p1:crop(PLR,1370,1148,740,15,400,700),
+  h0:crop(PLR,1370,1148,400,20,220,210), h1:crop(PLR,1370,1148,840,55,205,205)
+};
+const NPC_BOX=[[75,15,193,535],[307,20,182,529],[520,6,203,544],[774,12,187,539],[1007,14,237,539],[1279,39,173,511],
+  [58,555,192,465],[302,556,186,462],[551,547,181,472],[792,548,172,471],[1025,555,187,461],[1282,554,164,464]];
+const npcSpr=i=>{const b=NPC_BOX[i]||NPC_BOX[0];return crop(NPC,1536,1024,b[0]-2,b[1]-2,b[2]+4,b[3]+4);};
+
+const DRINKS={
+  espresso:{label:'ESPRESSO',price:3.5,spr:'espresso',dur:46,w:3,how:'Full shot, nothing else.'},
+  americano:{label:'AMERICANO',price:4,spr:'americano',dur:52,w:2,how:'Full shot + a glass of water.'},
+  latte:{label:'LATTE',price:5,spr:'latte',dur:58,w:3,how:'Full shot + steamed milk.'},
+  cortado:{label:'CORTADO',price:4.5,spr:'cortado',dur:56,w:1,how:'Shot pulled into a GLASS (or drag a glass onto a poured shot) + steamed milk.'},
+  mocha:{label:'MOCHA',price:5.5,spr:'mocha',dur:64,w:1,how:'Full shot + cocoa + steamed milk.'},
+  water:{label:'ICE WATER',price:1,spr:'glassWater',dur:42,w:1,how:'Glass on the nozzle, time the pour.'}
+};
+const TRAY_SPR={espresso:'espresso',shortshot:'demiShot',glassShot:'glassShot',americano:'americano',latte:'latte',cortado:'cortado',mocha:'mocha',mochaBase:'espresso',water:'glassWater'};
+const TRAY_LABEL={espresso:'ESPRESSO',shortshot:'RISTRETTO',glassShot:'GLASS SHOT',americano:'AMERICANO',latte:'LATTE',cortado:'CORTADO',mocha:'MOCHA',mochaBase:'+COCOA',water:'WATER'};
+const NPC_NAMES=['Kenji','Britt','Grant','Naomi','Mateus','Marguerite','Priya','Darius','Bodhi','Zaria','Hiroshi','Valentina'];
+const TUT=[
+  {k:'accept',t:'Someone\u2019s at the window. Tap their ticket to accept the order.'},
+  {k:'view',t:'Good. Hit \u2630 MAKE up top to step over to the bar \u2014 the timer keeps running.'},
+  {k:'beans',t:'Drag the coffee bag onto the grinder to load the hopper.'},
+  {k:'grind',t:'Press and hold GRIND until the grounds bin fills.'},
+  {k:'fill',t:'Drag the portafilter onto the grinder to dose it with grounds.'},
+  {k:'tamp',t:'Drag the tamp onto the filled portafilter.'},
+  {k:'dock',t:'Drag a cup onto the machine, then dock the tamped portafilter.'},
+  {k:'shot',t:'Press BREW, let it finish, then tap the cup to pour the shot.'},
+  {k:'serve',t:'Back to \u2630 CUSTOMERS and drag the espresso onto their ticket.'}
+];
+const money2=n=>(Math.round(n*100)/100).toFixed(2);
+
+class Component extends DCLogic {
+  state={
+    screen:'menu',view:'customer',barista:0,names:['Gabriel','Daniella'],scale:1,
+    day:1,clock:360,money:20,lives:5,served:0,dayServed:0,dayMissed:0,dayCash:0,
+    inv:{beans:6,milk:4,cocoa:3},
+    orders:[],tray:[],toasts:[],unread:0,logOpen:false,
+    grinder:{hopper:false,levels:0,prog:0},
+    pf:'clean',
+    machine:{cup:null,glass:false,pf:null,brew:0,brewState:'idle',shot:null,wpos:0,wdir:1,wtarget:30,wactive:false},
+    wand:{milk:false,gauge:0,froth:false},
+    modal:null,tut:0,drag:null,selected:null,scores:[],pouring:false
+  };
+  hold=null; spawnCd=6; uid=1; scripted=false;
+
+  componentDidMount(){
+    try{this.setState({scores:JSON.parse(localStorage.getItem('cb_scores')||'[]')});}catch(e){}
+    try{const n=JSON.parse(localStorage.getItem('cb_names')||'null'); if(n&&n.length===2) this.setState({names:n});}catch(e){}
+    this.pump();
+    this.vis=()=>{ this.lastTick=Date.now(); this.pump(); };
+    document.addEventListener('visibilitychange',this.vis);
+    window.addEventListener('focus',this.vis);
+  }
+  pump(){
+    clearTimeout(this.pumpId);
+    const step=()=>{
+      this.pumpId=null;
+      try{ this.tick(); }catch(e){ }
+      this.pumpId=setTimeout(step,100);
+    };
+    this.pumpId=setTimeout(step,100);
+  }
+  rename(v){
+    const s=this.state;
+    const names=s.names.map((n,i)=>i===s.barista?v.slice(0,12):n);
+    this.setState({names});
+    try{localStorage.setItem('cb_names',JSON.stringify(names));}catch(e){}
+  }
+  componentWillUnmount(){
+    clearTimeout(this.pumpId); this.pumpId=null; this.bound=false;
+    if(this.vis){ document.removeEventListener('visibilitychange',this.vis); window.removeEventListener('focus',this.vis); }
+    if(this.fit) window.removeEventListener('resize',this.fit);
+    window.removeEventListener('pointerdown',this.pd);
+    window.removeEventListener('pointermove',this.pm);
+    window.removeEventListener('pointerup',this.pu);
+    window.removeEventListener('pointercancel',this.pu);
+  }
+
+  toast(text,kind){
+    const s=this.state;
+    const hh=Math.floor(s.clock/60), mm=Math.floor(s.clock%60);
+    const t={id:this.uid++,text,kind:kind||'info',time:(hh>12?hh-12:hh)+':'+(mm<10?'0':'')+mm+' '+(hh>=12?'PM':'AM')};
+    this.setState(st=>({toasts:[t,...st.toasts].slice(0,40),unread:st.logOpen?0:st.unread+1}));
+  }
+  tut(k){
+    const s=this.state; if(!s.tut) return;
+    if(TUT[s.tut-1].k===k){
+      if(s.tut>=9){ this.setState({tut:0}); try{localStorage.setItem('cb_seen','1');}catch(e){} this.toast('Tutorial complete — the rush starts now.','good'); }
+      else this.setState({tut:s.tut+1});
+    }
+  }
+
+  /* ------- loop ------- */
+  tick(){
+    const now=Date.now();
+    const dt=Math.max(0.02,Math.min(0.5,(now-(this.lastTick||now-100))/1000));
+    this.lastTick=now;
+    const s=this.state;
+    if(s.screen!=='play') return;
+    const paused=!!s.modal;
+    const next={};
+    if(!paused){
+      let clock=s.clock+2.2*dt;
+      const orders=[]; let lives=s.lives, money=s.money, dayMissed=s.dayMissed, missed=0;
+      s.orders.forEach(o=>{
+        const left=o.left-dt;
+        if(left<=0){ lives-=1; money=Math.max(0,money-2); dayMissed+=1; missed++; }
+        else orders.push({...o,left});
+      });
+      if(missed) this.toast('Missed order! −1 life, −$2','bad');
+      next.orders=orders; next.lives=lives; next.money=money; next.dayMissed=dayMissed;
+      if(clock>=900){ clock=900; }
+      next.clock=clock;
+      if(s.tut===0 && clock<895){
+        this.spawnCd-=dt;
+        if(this.spawnCd<=0 && orders.length<2){ this.spawnCd=5+Math.random()*4; next.orders=[...orders,this.makeOrder(null,orders.map(o=>o.npc))]; }
+      }
+      if(lives<=0){ this.endRun(next); return; }
+      if(clock>=900){ this.setState({...next,screen:'dayend',orders:[],tray:[],selected:null}); return; }
+    }
+    // machine / grinder / wand always advance except when paused
+    if(!paused){
+      const g={...s.grinder};
+      if(this.hold==='grind' && g.hopper){
+        g.prog=Math.min(1,g.prog+dt/1.1);
+        if(g.prog>=1){ g.prog=0; g.hopper=false; g.levels=3; this.tut('grind'); this.toast('Ground and ready — 3 doses.','good'); }
+        next.grinder=g;
+      }
+      const m={...s.machine};
+      let mdirty=false;
+      if(m.brewState==='brewing'){ m.brew=Math.min(100,m.brew+26*dt);
+        if(m.brew>=100){ m.brewState='idle'; m.shot='full'; m.pf=null; next.pf='spent'; this.toast('Full shot pulled — tap the cup to pour.','good'); }
+        mdirty=true;
+      }
+      if(m.wactive){ m.wpos+=m.wdir*46*dt; if(m.wpos>100){m.wpos=100;m.wdir=-1;} if(m.wpos<0){m.wpos=0;m.wdir=1;} mdirty=true; }
+      if(mdirty) next.machine=m;
+      const w={...s.wand};
+      if(this.hold==='steam' && w.milk && !w.froth){
+        w.gauge=Math.min(1,w.gauge+dt/2.2);
+        if(w.gauge>=1){ this.hold=null; w.milk=false; w.gauge=0; this.toast('Milk scalded — dump it and retry.','bad'); }
+        next.wand=w;
+      }
+    }
+    if(Object.keys(next).length) this.setState(next);
+  }
+
+  makeOrder(forced,used){
+    const keys=[]; Object.keys(DRINKS).forEach(k=>{for(let i=0;i<DRINKS[k].w;i++)keys.push(k);});
+    const drink=forced||keys[Math.floor(Math.random()*keys.length)];
+    const dur=DRINKS[drink].dur+(forced?60:0);
+    const taken=used||this.state.orders.map(o=>o.npc);
+    const free=[0,1,2,3,4,5,6,7,8,9,10,11].filter(n=>taken.indexOf(n)<0);
+    const pool=free.length?free:[0,1,2,3,4,5,6,7,8,9,10,11];
+    const npc=pool[Math.floor(Math.random()*pool.length)];
+    return {id:this.uid++,drink,npc,who:'',dur,left:dur,accepted:false};
+  }
+  endRun(extra){
+    const s=this.state;
+    const rec={day:s.day,cash:Math.round(s.money)};
+    let scores=[...s.scores,rec].sort((a,b)=>b.day-a.day||b.cash-a.cash).slice(0,5);
+    try{localStorage.setItem('cb_scores',JSON.stringify(scores));localStorage.removeItem('cb_save');}catch(e){}
+    this.setState({...(extra||{}),screen:'gameover',scores,orders:[],tray:[],modal:null,tut:0});
+  }
+
+  /* ------- pointer ------- */
+  onDown(e){
+    if(e.__cb) return; e.__cb=1;
+    const t=e.target instanceof Element?e.target:null; if(!t) return;
+    const hold=t.closest('[data-hold]');
+    if(hold){ this.hold=hold.getAttribute('data-hold'); e.preventDefault(); return; }
+    const tap=t.closest('[data-tap]');
+    if(tap){ e.preventDefault(); this.lastTap=Date.now(); this.doTap(tap.getAttribute('data-tap')); return; }
+    const item=t.closest('[data-item]');
+    if(item){ e.preventDefault(); this.setState({drag:{item:item.getAttribute('data-item'),x:e.clientX,y:e.clientY}}); }
+  }
+  onMove(e){ if(this.state.drag) this.setState(s=>({drag:{...s.drag,x:e.clientX,y:e.clientY}})); }
+  onUp(e){
+    if(this.hold){ const h=this.hold; this.hold=null; if(h==='steam') this.releaseSteam(); else this.setState(s=>({grinder:{...s.grinder,prog:0}})); }
+    const d=this.state.drag; if(!d) return;
+    this.setState({drag:null});
+    const els=document.elementsFromPoint(e.clientX,e.clientY);
+    let zone=null;
+    for(const el of els){ const z=el.closest&&el.closest('[data-zone]'); if(z){ zone=z.getAttribute('data-zone'); break; } }
+    if(zone) this.drop(d.item,zone);
+  }
+  releaseSteam(){
+    const w={...this.state.wand};
+    if(!w.milk||w.froth) return;
+    if(w.gauge>=0.55&&w.gauge<=0.8){ w.froth=true; w.gauge=0; this.toast('Silky microfoam.','good'); }
+    else if(w.gauge<0.55){ this.toast('Too cold — keep steaming.','info'); this.setState({wand:w}); return; }
+    else { w.milk=false; w.gauge=0; this.toast('Scalded. Milk wasted.','bad'); }
+    this.setState({wand:w});
+  }
+
+  /* ------- taps ------- */
+  doTap(a){
+    const s=this.state;
+    if(a==='barista-0') return this.setState({barista:0});
+    if(a==='barista-1') return this.setState({barista:1});
+    if(a==='start') return this.startRun();
+    if(a==='toggle'){ this.setState({view:s.view==='customer'?'crafting':'customer',selected:null}); if(s.view==='customer') this.tut('view'); return; }
+    if(a==='bell') return this.setState({logOpen:!s.logOpen,unread:0});
+    if(a==='close-log') return this.setState({logOpen:false,unread:0});
+    if(a==='close') return this.setState({modal:null});
+    if(a.indexOf('modal-')===0) return this.setState({modal:a.slice(6)});
+    if(a==='tutskip'){ try{localStorage.setItem('cb_seen','1');}catch(e){} return this.setState({tut:0}); }
+    if(a==='nextday') return this.nextDay();
+    if(a==='tryagain') return this.setState({screen:'menu'});
+    if(a==='save'){ this.save(); return this.toast('Shift saved.','good'); }
+    if(a==='load') return this.load();
+    if(a==='newgame'){ try{localStorage.removeItem('cb_save');}catch(e){} return this.setState({screen:'menu',modal:null}); }
+    if(a.indexOf('buy-')===0) return this.buy(a.slice(4));
+    if(a==='brew') return this.brew();
+    if(a==='stopbrew') return this.stopBrew();
+    if(a==='water') return this.water();
+    if(a==='pour') return this.pour();
+    if(a.indexOf('ticket-')===0) return this.tapTicket(+a.slice(7));
+  }
+  startRun(){
+    let seen=false; try{seen=!!localStorage.getItem('cb_seen');}catch(e){}
+    const first=this.makeOrder(seen?null:'espresso');
+    if(!seen) first.dur=first.left=240;
+    this.spawnCd=6;
+    this.setState({screen:'play',view:'customer',day:1,clock:360,money:20,lives:5,served:0,dayServed:0,dayMissed:0,dayCash:0,
+      inv:{beans:6,milk:4,cocoa:3},orders:[first],tray:[],toasts:[],unread:0,logOpen:false,modal:null,tut:seen?0:1,selected:null,
+      grinder:{hopper:false,levels:0,prog:0},pf:'clean',
+      machine:{cup:null,glass:false,pf:null,brew:0,brewState:'idle',shot:null,wpos:0,wdir:1,wtarget:30,wactive:false},
+      wand:{milk:false,gauge:0,froth:false}});
+  }
+  nextDay(){
+    const s=this.state;
+    this.spawnCd=4;
+    this.setState({screen:'play',view:'customer',day:s.day+1,clock:360,dayServed:0,dayMissed:0,dayCash:0,
+      orders:[this.makeOrder()],tray:[],modal:null,selected:null,
+      grinder:{hopper:false,levels:0,prog:0},pf:'clean',
+      machine:{cup:null,glass:false,pf:null,brew:0,brewState:'idle',shot:null,wpos:0,wdir:1,wtarget:30,wactive:false},
+      wand:{milk:false,gauge:0,froth:false}});
+  }
+  save(){
+    const s=this.state;
+    const keep={day:s.day,clock:s.clock,money:s.money,lives:s.lives,served:s.served,inv:s.inv,barista:s.barista,names:s.names,view:s.view,
+      grinder:s.grinder,pf:s.pf,machine:s.machine,wand:s.wand,tray:s.tray,dayServed:s.dayServed,dayMissed:s.dayMissed,dayCash:s.dayCash};
+    try{localStorage.setItem('cb_save',JSON.stringify(keep));}catch(e){}
+  }
+  load(){
+    let d=null; try{d=JSON.parse(localStorage.getItem('cb_save')||'null');}catch(e){}
+    if(!d) return this.toast('No saved shift found.','bad');
+    this.spawnCd=4;
+    this.setState({...d,screen:'play',orders:[this.makeOrder()],modal:null,tut:0,selected:null});
+  }
+  buy(k){
+    const cost={beans:6,milk:4,cocoa:5}[k], amt={beans:5,milk:3,cocoa:3}[k];
+    const s=this.state;
+    if(s.money<cost) return this.toast('Not enough in the till.','bad');
+    this.setState({money:s.money-cost,inv:{...s.inv,[k]:s.inv[k]+amt}});
+    this.toast('Restocked '+k+' +'+amt,'good');
+  }
+
+  /* ------- espresso pipeline ------- */
+  brew(){
+    const m={...this.state.machine};
+    if(m.brewState==='paused'){ m.brewState='brewing'; return this.setState({machine:m}); }
+    if(m.shot) return this.toast('Pour the shot in the cup first.','info');
+    if(!m.cup) return this.toast('Dock a cup under the group head.','info');
+    if(m.pf!=='tamped') return this.toast('Needs a tamped portafilter.','info');
+    m.brewState='brewing'; m.brew=0; this.setState({machine:m});
+  }
+  stopBrew(){
+    const s=this.state; const m={...s.machine};
+    if(m.brewState!=='brewing') return;
+    if(m.brew<40){ m.brewState='paused'; this.setState({machine:m}); return this.toast('Brew paused at '+Math.round(m.brew)+'%.','info'); }
+    if(m.brew<=58){ m.brewState='idle'; m.shot='short'; m.pf=null; this.setState({machine:m,pf:'spent'}); return this.toast('Ristretto! Short and syrupy.','good'); }
+    m.brewState='idle'; m.brew=0; m.pf=null; this.setState({machine:m,pf:'spent'});
+    this.toast('Stopped too late — shot ran thin and was binned.','bad');
+  }
+  pour(){
+    const s=this.state; const m={...s.machine};
+    if(!m.shot||s.pouring) return;
+    if(s.tray.length>=3) return this.toast('Tray is full — ring one up first.','bad');
+    const type=m.cup==='glass'?'glassShot':(m.shot==='short'?'shortshot':'espresso');
+    const shot=m.shot;
+    this.setState({pouring:true});
+    setTimeout(()=>{
+      const st=this.state; const mm={...st.machine};
+      mm.shot=null; mm.cup=null; mm.brew=0;
+      this.setState({machine:mm,pouring:false,tray:[...st.tray,{id:this.uid++,type}]});
+      this.toast(type==='glassShot'?'Shot in a glass — add steamed milk for a cortado.':(shot==='short'?'Ristretto in the tray.':'Espresso in the tray.'),'good');
+      this.tut('shot');
+    },780);
+  }
+  water(){
+    const s=this.state; const m={...s.machine};
+    if(!m.glass) return this.toast('Dock a glass on the water nozzle.','info');
+    if(!m.wactive){ m.wactive=true; m.wpos=0; m.wdir=1; m.wtarget=12+Math.random()*58; return this.setState({machine:m}); }
+    const hit=m.wpos>=m.wtarget&&m.wpos<=m.wtarget+18;
+    m.wactive=false;
+    if(hit){
+      if(s.tray.length>=3){ this.setState({machine:m}); return this.toast('Tray is full.','bad'); }
+      m.glass=false;
+      this.setState({machine:m,tray:[...s.tray,{id:this.uid++,type:'water'}]});
+      this.toast('Clean pour.','good');
+    } else { this.setState({machine:m}); this.toast('Sloppy pour — try again.','bad'); }
+  }
+
+  /* ------- drops ------- */
+  drop(item,zone){
+    const s=this.state;
+    if(zone==='trash') return this.trash(item);
+    if(item.indexOf('drink:')===0){
+      const id=+item.slice(6);
+      if(zone.indexOf('ticket:')===0) return this.serve(id,+zone.slice(7));
+      if(zone.indexOf('slot:')===0) return this.combine(id,+zone.slice(5));
+      return;
+    }
+    if(zone.indexOf('slot:')===0) return this.addTo(+zone.slice(5),item);
+    if(zone==='grinder') return this.toGrinder(item);
+    if(zone==='pf') return this.toPf(item);
+    if(zone==='machine') return this.toMachine(item);
+    if(zone==='wand') return this.toWand(item);
+    if(zone==='nozzle') return this.toNozzle(item);
+  }
+  trash(item){
+    const s=this.state;
+    if(item.indexOf('drink:')===0){ const id=+item.slice(6); this.setState({tray:s.tray.filter(t=>t.id!==id),selected:null}); return this.toast('Binned.','info'); }
+    if(item==='pf'&&s.pf!=='clean'){ this.setState({pf:'clean'}); return this.toast('Puck knocked out.','info'); }
+    if(item==='froth'&&s.wand.froth){ this.setState({wand:{milk:false,gauge:0,froth:false}}); return this.toast('Milk dumped.','info'); }
+  }
+  toGrinder(item){
+    const s=this.state; const g={...s.grinder};
+    if(item==='beans'){
+      if(g.hopper||g.levels>0) return this.toast('Grinder still has coffee in it.','info');
+      if(s.inv.beans<=0) return this.toast('Out of beans — check Supplies.','bad');
+      g.hopper=true; g.prog=0;
+      this.setState({grinder:g,inv:{...s.inv,beans:s.inv.beans-1}});
+      this.tut('beans'); return this.toast('Hopper loaded. Hold GRIND.','info');
+    }
+    if(item==='pf'){
+      if(s.pf==='spent'){ this.setState({pf:'clean'}); return this.toast('Knocked out the old puck.','info'); }
+      if(s.pf!=='clean') return this.toast('Portafilter already dosed.','info');
+      if(g.levels<=0) return this.toast('No grounds yet — load beans and grind.','info');
+      g.levels-=1;
+      this.setState({grinder:g,pf:'grounds'});
+      this.tut('fill'); return this.toast('Dosed. '+g.levels+' left in the bin.','good');
+    }
+  }
+  toPf(item){
+    const s=this.state;
+    if(item!=='tamp') return;
+    if(s.pf!=='grounds') return this.toast('Nothing to tamp.','info');
+    this.setState({pf:'tamped'}); this.tut('tamp'); this.toast('Level and firm.','good');
+  }
+  toMachine(item){
+    const s=this.state; const m={...s.machine};
+    if(item==='cup'||item==='demi'){
+      if(m.shot) return this.toast('Pour the shot already in there.','info');
+      m.cup=item; this.setState({machine:m});
+      if(m.pf==='tamped') this.tut('dock');
+      return this.toast('Cup under the group head.','info');
+    }
+    if(item==='glass'){
+      if(m.shot) return this.toast('Pour the shot already in there.','info');
+      m.cup='glass'; this.setState({machine:m});
+      if(m.pf==='tamped') this.tut('dock');
+      return this.toast('Glass under the group head — for a cortado.','info');
+    }
+    if(item==='pf'){
+      if(s.pf!=='tamped') return this.toast('Dose and tamp it first.','info');
+      m.pf='tamped'; this.setState({machine:m,pf:'docked'});
+      if(m.cup) this.tut('dock');
+      return this.toast('Portafilter locked in.','good');
+    }
+  }
+  toNozzle(item){
+    if(item!=='glass') return this.toast('Only a glass fits the water nozzle.','info');
+    this.setState(s=>({machine:{...s.machine,glass:true}}));
+    this.toast('Glass on the water nozzle.','info');
+  }
+  toWand(item){
+    const s=this.state;
+    if(item!=='milk') return;
+    if(s.wand.milk||s.wand.froth) return this.toast('Pitcher already on the wand.','info');
+    if(s.inv.milk<=0) return this.toast('Out of milk — check Supplies.','bad');
+    this.setState({wand:{milk:true,gauge:0,froth:false},inv:{...s.inv,milk:s.inv.milk-1}});
+    this.toast('Hold STEAM — release in the green band.','info');
+  }
+  addTo(slot,item){
+    const s=this.state; const d=s.tray[slot]; if(!d) return;
+    if(item==='froth'){
+      if(!s.wand.froth) return;
+      let type=null;
+      if(d.type==='espresso') type='latte';
+      else if(d.type==='glassShot') type='cortado';
+      else if(d.type==='mochaBase') type='mocha';
+      else if(d.type==='shortshot') return this.toast('A ristretto needs a glass before milk.','bad');
+      if(!type) return this.toast('Milk doesn\u2019t belong in that.','bad');
+      this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,type}:t),wand:{milk:false,gauge:0,froth:false}});
+      return this.toast(TRAY_LABEL[type]+' built.','good');
+    }
+    if(item==='glass'){
+      if(d.type!=='espresso'&&d.type!=='shortshot') return this.toast('Only a poured shot can move to a glass.','bad');
+      this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,type:'glassShot'}:t)});
+      return this.toast('Shot poured into a glass. Add steamed milk.','info');
+    }
+    if(item==='cocoa'){
+      if(d.type!=='espresso') return this.toast('Cocoa goes in an espresso.','bad');
+      if(s.inv.cocoa<=0) return this.toast('Out of cocoa — check Supplies.','bad');
+      this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,type:'mochaBase'}:t),inv:{...s.inv,cocoa:s.inv.cocoa-1}});
+      return this.toast('Cocoa in. Now steamed milk.','info');
+    }
+  }
+  combine(fromId,slot){
+    const s=this.state; const a=s.tray.find(t=>t.id===fromId); const b=s.tray[slot];
+    if(!a||!b||a.id===b.id) return;
+    if(a.type==='water'&&b.type==='espresso'){
+      return this.setState({tray:s.tray.filter(t=>t.id!==a.id).map(t=>t.id===b.id?{...t,type:'americano'}:t),selected:null},()=>this.toast('Americano built.','good'));
+    }
+    if(a.type==='shortshot'&&b.type==='shortshot'){
+      return this.setState({tray:s.tray.filter(t=>t.id!==a.id).map(t=>t.id===b.id?{...t,type:'espresso'}:t),selected:null},()=>this.toast('Two ristrettos make a full shot.','good'));
+    }
+    this.toast('Those don\u2019t combine.','bad');
+  }
+  tapTicket(oid){
+    const s=this.state;
+    const o=s.orders.find(x=>x.id===oid); if(!o) return;
+    if(!o.accepted){
+      this.setState({orders:s.orders.map(x=>x.id===oid?{...x,accepted:true}:x)});
+      this.tut('accept'); return this.toast((o.who||NPC_NAMES[o.npc])+' ordered a '+DRINKS[o.drink].label,'good');
+    }
+    if(s.selected!=null){ const d=s.tray.find(t=>t.id===s.selected); if(d) return this.serve(d.id,oid); }
+    this.toast('Drag their drink onto the ticket.','info');
+  }
+  serve(drinkId,orderId){
+    const s=this.state;
+    const d=s.tray.find(t=>t.id===drinkId), o=s.orders.find(x=>x.id===orderId);
+    if(!d||!o) return;
+    if(!o.accepted) return this.toast('Tap the ticket to accept it first.','bad');
+    if(d.type!==o.drink) return this.toast('Not their order!','bad');
+    const pay=DRINKS[o.drink].price+(o.left/o.dur>0.5?0.5:0);
+    this.setState({tray:s.tray.filter(t=>t.id!==drinkId),orders:s.orders.filter(x=>x.id!==orderId),
+      money:s.money+pay,served:s.served+1,dayServed:s.dayServed+1,dayCash:s.dayCash+pay,selected:null});
+    this.toast('Served '+(o.who||NPC_NAMES[o.npc])+' · +$'+money2(pay),'good');
+    this.tut('serve');
+  }
+
+  /* ------- view ------- */
+  renderVals(){
+    const s=this.state;
+    if(!this.pumpId||(this.lastTick&&Date.now()-this.lastTick>900)) this.pump();
+    if(!this.bound){ this.bound=true;
+      const prev=window.__cbHandlers;
+      if(prev){ window.removeEventListener('pointerdown',prev.pd); window.removeEventListener('pointermove',prev.pm); window.removeEventListener('pointerup',prev.pu); window.removeEventListener('pointercancel',prev.pu); if(prev.fit) window.removeEventListener('resize',prev.fit); }
+      if(prev&&prev.ck) window.removeEventListener('click',prev.ck);
+      this.pd=e=>this.onDown(e); this.pm=e=>this.onMove(e); this.pu=e=>this.onUp(e);
+      this.ck=e=>{ const t=e.target instanceof Element?e.target:null; if(!t) return;
+        const tap=t.closest('[data-tap]'); if(!tap) return;
+        if(this.lastTap&&Date.now()-this.lastTap<600) return;
+        this.lastTap=Date.now(); this.doTap(tap.getAttribute('data-tap')); };
+      window.addEventListener('click',this.ck);
+      window.addEventListener('pointerdown',this.pd);
+      window.addEventListener('pointermove',this.pm);
+      window.addEventListener('pointerup',this.pu);
+      window.addEventListener('pointercancel',this.pu);
+      this.fit=()=>this.setState({scale:Math.min(window.innerWidth/420,window.innerHeight/800)});
+      window.addEventListener('resize',this.fit);
+      window.__cbHandlers={pd:this.pd,pm:this.pm,pu:this.pu,fit:this.fit,ck:this.ck};
+      setTimeout(this.fit,0);
+    }
+    const hh=Math.floor(s.clock/60), mm=Math.floor(s.clock%60);
+    const ampm=hh>=12?'PM':'AM'; const h12=hh>12?hh-12:hh;
+    const hearts='\u2665'.repeat(Math.max(0,s.lives))+'\u2661'.repeat(Math.max(0,5-s.lives));
+    const spr={...SPR, avatar:s.barista?SPR.h1:SPR.h0,
+      grinder:(s.grinder.hopper?(this.hold==='grind'?SPR.g2:SPR.g1):[SPR.g0,SPR.g5,SPR.g4,SPR.g3][s.grinder.levels]),
+      machine:s.machine.pf?SPR.mPf:SPR.mIdle,
+      pf:{clean:SPR.pfClean,grounds:SPR.pfGrounds,tamped:SPR.pfTamped,spent:SPR.pfGrounds}[s.pf]||SPR.pfClean,
+      dockCup:s.machine.cup==='glass'?(s.machine.shot?SPR.glassShot:SPR.glassEmpty):(s.machine.shot?(s.machine.shot==='short'?SPR.demiShot:SPR.espresso):(s.machine.cup==='demi'?SPR.demiEmpty:SPR.cupEmpty)),
+      wandPitcher:s.wand.froth?SPR.pitcherFroth:SPR.pitcherMilk
+    };
+    const pick=on=>({width:96,border:on?'3px solid #e8b661':'3px solid #3a2a1c',background:on?'#3d2a17':'#1a120c',boxShadow:on?'0 0 0 2px rgba(232,182,97,.3)':'none',cursor:'pointer',padding:'4px 2px 0'});
+    const slots=[0,1,2];
+    const trayView=slots.map(i=>{
+      const t=s.tray[i];
+      const sel=t&&s.selected===t.id;
+      return {wrap:{position:'relative',width:78,height:78,border:sel?'3px solid #e8b661':'2px solid #3a2a1c',background:sel?'#33220f':'#231710'},
+        filled:!!t,empty:!t,
+        dragId:t?'drink:'+t.id:'',zoneId:'slot:'+i,
+        spr:t?{...SPR[TRAY_SPR[t.type]]}:null, label:t?TRAY_LABEL[t.type]:''};
+    });
+    const ordersView=s.orders.slice(0,2).map((o,i)=>{
+      const pct=Math.max(0,Math.min(100,100*o.left/o.dur));
+      const col=pct>50?'#2f6d3f':pct>22?'#e8b661':'#8a3b1f';
+      return {wrap:{position:'absolute',left:i===0?'3%':'55%',top:'1.5%',width:'42%',zIndex:30},
+        card:{background:o.accepted?'#f3e2bd':'#e9dcc4',border:o.accepted?'3px solid #e8b661':'3px dashed #8a6b45',
+          boxShadow:'0 4px 0 rgba(0,0,0,.45)',padding:'5px 5px 3px',cursor:'pointer',position:'relative'},
+        spr:{...SPR[DRINKS[o.drink].spr]}, drinkLabel:DRINKS[o.drink].label, who:o.who||NPC_NAMES[o.npc],
+        bar:{height:'100%',width:pct.toFixed(1)+'%',background:col},
+        tag:o.accepted?'ACCEPTED':'TAP TO ACCEPT',
+        tagStyle:{fontFamily:"'Silkscreen',monospace",fontSize:8,textAlign:'center',marginTop:3,color:o.accepted?'#2f6d3f':'#8a3b1f'},
+        zone:'ticket:'+o.id, tap:'ticket-'+o.id
+      };
+    });
+    const npcsView=s.orders.slice(0,2).map((o,i)=>{
+      const b=NPC_BOX[o.npc]||NPC_BOX[0];
+      return {wrap:{position:'absolute',left:i===0?'17%':'51%',bottom:'44%',width:'31%',height:(40*b[3]/540).toFixed(2)+'%',zIndex:10,cursor:'pointer'},
+      spr:npcSpr(o.npc), zone:'ticket:'+o.id, tap:'ticket-'+o.id};
+    });
+    const logView=s.toasts.map((t,i)=>({text:t.text,time:t.time,
+      row:{display:'flex',gap:7,alignItems:'flex-start',padding:'7px 9px',borderBottom:'1px solid #2a1d12',background:i===0?'#1c1409':'transparent'},
+      dot:{width:8,height:8,marginTop:5,flex:'none',background:t.kind==='bad'?'#8a3b1f':t.kind==='good'?'#2f6d3f':'#8a6b45',border:'1px solid '+(t.kind==='bad'?'#f0b48c':t.kind==='good'?'#7fd39a':'#6b5236')}}));
+    const m=s.machine;
+    const recipesView=Object.keys(DRINKS).map(k=>({name:DRINKS[k].label,how:DRINKS[k].how,spr:{...SPR[DRINKS[k].spr]}}));
+    const other=s.view==='customer'?'crafting':'customer';
+    const servable=s.tray.some(t=>s.orders.some(o=>o.accepted&&o.drink===t.type));
+    const badge=other==='customer'?(s.orders.some(o=>!o.accepted)||servable):(!!m.shot||s.wand.froth);
+    return {
+      scaleStyle:{transform:'scale('+s.scale+')',transformOrigin:'center center'},
+      isMenu:s.screen==='menu',isPlay:s.screen==='play',isDayEnd:s.screen==='dayend',isOver:s.screen==='gameover',
+      isCustomer:s.view==='customer',isCraft:s.view==='crafting',
+      spr,pick0Style:pick(s.barista===0),pick1Style:pick(s.barista===1),
+      name0:(s.names[0]||'').toUpperCase(),name1:(s.names[1]||'').toUpperCase(),
+      baristaName:s.names[s.barista]||'',onRename:e=>this.rename(e.target.value),
+      baristaUpper:(s.names[s.barista]||'BARISTA').toUpperCase(),
+      day:s.day,nextDay:s.day+1,clockStr:h12+':'+(mm<10?'0':'')+mm+' '+ampm,moneyStr:money2(s.money),heartsStr:hearts,
+      served:s.served,dayServed:s.dayServed,dayMissed:s.dayMissed,dayCashStr:money2(s.dayCash),inv:s.inv,
+      toggleLabel:other==='crafting'?'\u2630 MAKE':'\u2630 CUSTOMERS',badge,
+      ordersView,npcsView,trayView,recipesView,
+      logOpen:s.logOpen,logView,logEmpty:s.toasts.length===0,
+      unread:s.unread>0,unreadCount:s.unread>9?'9+':s.unread,
+      unreadStyle:{position:'absolute',top:-7,right:-7,minWidth:16,height:16,padding:'0 3px',borderRadius:9,background:'#8a3b1f',border:'2px solid #f0e2cd',color:'#fff6e6',fontFamily:"'Silkscreen',monospace",fontSize:8,display:'flex',alignItems:'center',justifyContent:'center'},
+      pfOnShelf:s.pf!=='docked',
+      pfTag:{clean:'CLEAN',grounds:'DOSED',tamped:'TAMPED',spent:'SPENT'}[s.pf]||'',
+      pfTagStyle:{position:'absolute',left:0,bottom:-2,fontFamily:"'Silkscreen',monospace",fontSize:8,color:'#f0e2cd',background:'#2a1a0e',border:'1px solid #6b5236',padding:'0 2px'},
+      showDockCup:!!m.cup||!!m.shot,
+      pouring:s.pouring,
+      dockCupWrap:{position:'absolute',left:m.cup==='glass'?'54.35%':(m.cup==='demi'?'52.85%':'51.35%'),bottom:'18%',width:m.cup==='glass'?'10.1%':(m.cup==='demi'?'13.1%':'16.1%'),height:m.cup==='glass'?'8%':(m.cup==='demi'?'7.5%':'10%'),cursor:m.shot?'pointer':'default',animation:m.shot?'cbpulse 1s infinite':'none',zIndex:15},
+      showGlass:!!m.glass,
+      wandItem:s.wand.milk||s.wand.froth,
+      wandWrap:{position:'absolute',left:'32%',bottom:'26.5%',width:'17%',height:'11%',zIndex:16,cursor:s.wand.froth?'grab':'default'},
+      showGrind:s.grinder.hopper,
+      grindBar:{height:'100%',width:(s.grinder.prog*100).toFixed(0)+'%',background:'#e8b661'},
+      showBrew:(!!m.cup&&m.pf==='tamped')||m.brewState!=='idle'||!!m.shot,
+      brewBtnLabel:m.brewState==='paused'?'RESUME':'BREW',
+      brewBtnStyle:{background:'#2f6d3f',border:'2px solid #7fd39a',padding:'5px 8px',fontFamily:"'Silkscreen',monospace",fontSize:9,color:'#eafbef',cursor:'pointer',flex:'none'},
+      brewBar:{position:'absolute',left:0,top:0,bottom:0,width:m.brew.toFixed(1)+'%',background:m.brewState==='paused'?'#8a6b45':'#c46a2a'},
+      showSteam:s.wand.milk&&!s.wand.froth,
+      steamBar:{position:'absolute',left:0,top:0,bottom:0,width:(s.wand.gauge*100).toFixed(0)+'%',background:'rgba(240,226,205,.75)'},
+      showWater:!!m.glass,
+      waterBtnLabel:m.wactive?'STOP':'WATER',
+      waterBtnStyle:{background:m.wactive?'#8a3b1f':'#2f6d3f',border:'2px solid '+(m.wactive?'#f0b48c':'#7fd39a'),padding:'5px 8px',fontFamily:"'Silkscreen',monospace",fontSize:9,color:'#fff6e6',cursor:'pointer',flex:'none'},
+      waterZone:{position:'absolute',left:m.wtarget.toFixed(1)+'%',width:'18%',top:0,bottom:0,background:'rgba(127,211,154,.25)',border:'1px solid #7fd39a'},
+      waterPin:{position:'absolute',left:m.wpos.toFixed(1)+'%',top:-2,bottom:-2,width:4,background:'#e8b661'},
+      tutOn:s.tut>0,tutStep:s.tut,tutText:s.tut>0?TUT[s.tut-1].t:'',
+      modalOn:!!s.modal,modalTitle:{menu:'CAFÉ MENU',shop:'SUPPLIES',recipes:'RECIPE CARD',instructions:'HOW TO PLAY',scores:'HIGHSCORES',settings:'SETTINGS',note:'A NOTE'}[s.modal]||'',
+      mMenu:s.modal==='menu',mShop:s.modal==='shop',mRecipes:s.modal==='recipes',mInstr:s.modal==='instructions',
+      mScores:s.modal==='scores',mSettings:s.modal==='settings',mNote:s.modal==='note',
+      scoresView:s.scores.map((x,i)=>({rank:'#'+(i+1),day:x.day,cash:x.cash})),noScores:s.scores.length===0,
+      dragging:!!s.drag,
+      ghostStyle:s.drag?{position:'fixed',left:s.drag.x,top:s.drag.y,width:64,height:64,transform:'translate(-50%,-50%)',pointerEvents:'none',zIndex:999,opacity:.9}:null,
+      ghostSpr:s.drag?this.ghost(s.drag.item):null
+    };
+  }
+  ghost(item){
+    if(item.indexOf('drink:')===0){ const d=this.state.tray.find(t=>t.id===+item.slice(6)); return d?{...SPR[TRAY_SPR[d.type]]}:null; }
+    const map={beans:'beans',milk:'pitcherMilk',cocoa:'cocoa',cup:'cupEmpty',demi:'demiEmpty',glass:'glassEmpty',tamp:'tamp',froth:'pitcherFroth'};
+    if(item==='pf') return {...SPR[{clean:'pfClean',grounds:'pfGrounds',tamped:'pfTamped',spent:'pfGrounds'}[this.state.pf]||'pfClean']};
+    return map[item]?{...SPR[map[item]]}:null;
+  }
+}
+
+</script>
+</body>
+</html>
