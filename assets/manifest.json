@@ -1,0 +1,11 @@
+{
+  "name": "Cafe Craze",
+  "short_name": "Cafe Craze",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0a0705",
+  "theme_color": "#0a0705",
+  "icons": [
+    { "src": "favicon.png", "sizes": "1254x1254", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

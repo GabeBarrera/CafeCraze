@@ -1,8 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cafe Craze</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
+<link rel="manifest" href="assets/manifest.json">
+<meta name="theme-color" content="#0a0705">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -17,7 +22,7 @@ html,body{margin:0;padding:0;background:#0a0705;overscroll-behavior:none}
 a{color:#e8b661}a:hover{color:#f5d69a}
 @keyframes cbpulse{0%,100%{opacity:1}50%{opacity:.35}}
 @keyframes cbpop{from{transform:translateY(6px);opacity:0}to{transform:translateY(0);opacity:1}}
-@keyframes cbstream{0%{transform:scaleY(0)}25%{transform:scaleY(1)}100%{transform:scaleY(1)}}
+@keyframes cbstream{0%{transform:scaleY(0)}18%{transform:scaleY(1)}100%{transform:scaleY(1)}}
 @keyframes cbdrip{0%{transform:translateY(-2px);opacity:0}30%{opacity:1}100%{transform:translateY(10px);opacity:0}}
 </style>
 </helmet>
@@ -28,10 +33,10 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 
 <sc-if value="{{ isMenu }}" hint-placeholder-val="{{ true }}">
 <div style="position:absolute;inset:0;background:#120b07;display:flex;flex-direction:column;align-items:center;padding:28px 22px">
-  <div style="font-family:'Silkscreen',monospace;font-size:13px;color:#8a6b45;letter-spacing:3px">EST. 1998 · CORNER LOT</div>
-  <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:34px;color:#e8b661;margin-top:10px;text-shadow:0 4px 0 #5a3a12">CAFÉ</div>
-  <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:34px;color:#e8b661;text-shadow:0 4px 0 #5a3a12">BARISTA</div>
-  <div style="font-size:19px;color:#c9b394;margin-top:8px;text-align:center;line-height:1.15">Two views. One clock.<br>Don't burn the milk.</div>
+  <div style="font-family:'Silkscreen',monospace;font-size:13px;color:#8a6b45;letter-spacing:3px">EST. 1998 Â· CORNER LOT</div>
+  <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:34px;color:#e8b661;margin-top:10px;text-shadow:0 4px 0 #5a3a12">CAFE</div>
+  <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:34px;color:#e8b661;text-shadow:0 4px 0 #5a3a12">CRAZE</div>
+  <div style="font-size:19px;color:#c9b394;margin-top:8px;text-align:center;line-height:1.15">The Coffee Cart simulator that's as addicting the caffeine addiction you swear you don't have.</div>
 
   <div style="font-family:'Silkscreen',monospace;font-size:11px;color:#8a6b45;letter-spacing:2px;margin-top:22px">PICK YOUR BARISTA</div>
   <div style="display:flex;gap:14px;margin-top:12px">
@@ -63,15 +68,17 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 <div style="position:absolute;inset:0">
 
   <div style="position:absolute;left:0;right:0;top:0;height:52px;background:#150e09;border-bottom:3px solid #3a2a1c;display:flex;align-items:center;gap:6px;padding:0 6px;z-index:60">
-    <div data-tap="modal-menu" style="width:34px;height:34px;border:2px solid #3a2a1c;background:#231710;display:flex;align-items:center;justify-content:center;font-size:20px;color:#e8b661;cursor:pointer">☰</div>
+    <div data-tap="modal-menu" style="width:34px;height:34px;border:2px solid #3a2a1c;background:#231710;display:flex;align-items:center;justify-content:center;font-size:20px;color:#e8b661;cursor:pointer">â˜°</div>
     <div style="width:34px;height:34px;border:2px solid #3a2a1c;background:#231710;position:relative;overflow:hidden"><div style="{{ spr.avatar }}"></div></div>
     <div style="flex:1;display:flex;flex-direction:column;gap:2px;min-width:0">
       <div style="display:flex;gap:8px;align-items:baseline;font-family:'Silkscreen',monospace;font-size:10px;color:#8a6b45">
         <span>DAY {{ day }}</span><span style="color:#e8b661">{{ clockStr }}</span><span style="color:#7fd39a">${{ moneyStr }}</span>
       </div>
-      <div style="font-size:15px;color:#8a3b1f;letter-spacing:2px;line-height:1">{{ heartsStr }}</div>
+      <sc-if value="{{ firedOn }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:15px;color:#8a3b1f;letter-spacing:2px;line-height:1">{{ heartsStr }}</div>
+      </sc-if>
     </div>
-    <div data-tap="bell" style="position:relative;width:36px;height:38px;background:#231710;border:2px solid #3a2a1c;display:flex;align-items:center;justify-content:center;font-size:19px;color:#e8b661;cursor:pointer;flex:none">🔔
+    <div data-tap="bell" style="position:relative;width:36px;height:38px;background:#231710;border:2px solid #3a2a1c;display:flex;align-items:center;justify-content:center;font-size:19px;color:#e8b661;cursor:pointer;flex:none">ðŸ””
       <sc-if value="{{ unread }}" hint-placeholder-val="{{ false }}">
         <div style="{{ unreadStyle }}">{{ unreadCount }}</div>
       </sc-if>
@@ -88,12 +95,12 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 
     <sc-if value="{{ isCustomer }}" hint-placeholder-val="{{ true }}">
     <div style="position:absolute;inset:0">
-      <div style="position:absolute;left:16.5%;top:13.78%;width:75.2%;height:39.3%;background-image:url(assets/scene_customer_b1.png);background-size:cover;background-position:50% 25%"></div>
+      <div style="position:absolute;left:16.5%;top:13.78%;width:75.2%;height:39.3%;background-image:url(assets/scene_customer_b1.webp);background-size:cover;background-position:50% 25%"></div>
       <sc-for list="{{ npcsView }}" as="n" hint-placeholder-count="1">
         <div data-zone="{{ n.zone }}" data-tap="{{ n.tap }}" style="{{ n.wrap }}"><div style="{{ n.spr }}"></div></div>
       </sc-for>
-      <div style="position:absolute;inset:0;background-image:url(assets/scene_customer_top.png);background-size:cover;background-position:center;pointer-events:none;z-index:20"></div>
-      <div data-tap="modal-note" style="position:absolute;left:30%;top:65.5%;width:13.1%;height:8.5%;cursor:pointer;z-index:25"><div style="{{ spr.note }}"></div></div>
+      <div style="position:absolute;inset:0;background-image:url(assets/scene_customer_top.webp);background-size:cover;background-position:center;pointer-events:none;z-index:20"></div>
+      <div data-tap="modal-note" style="position:absolute;left:calc(30% + 50px);top:calc(65.5% - 40px);width:13.1%;height:8.5%;cursor:pointer;z-index:25"><div style="{{ spr.note }}"></div></div>
       <sc-for list="{{ ordersView }}" as="o" hint-placeholder-count="1">
         <div style="{{ o.wrap }}">
           <div data-zone="{{ o.zone }}" data-tap="{{ o.tap }}" style="{{ o.card }}">
@@ -102,9 +109,14 @@ a{color:#e8b661}a:hover{color:#f5d69a}
               <div style="min-width:0;flex:1">
                 <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#2a1a0e;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.drinkLabel }}</div>
                 <div style="font-size:14px;color:#6b5236;line-height:1">{{ o.who }}</div>
+                <sc-if value="{{ o.hasMods }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-family:'Silkscreen',monospace;font-size:7px;color:#8a3b1f;line-height:1.3;margin-top:1px">{{ o.modsLabel }}</div>
+                </sc-if>
               </div>
             </div>
-            <div style="height:8px;background:#d8c49b;border:1px solid #6b5236;margin-top:4px"><div style="{{ o.bar }}"></div></div>
+            <sc-if value="{{ patienceOn }}" hint-placeholder-val="{{ false }}">
+              <div style="height:8px;background:#d8c49b;border:1px solid #6b5236;margin-top:4px"><div style="{{ o.bar }}"></div></div>
+            </sc-if>
             <div style="{{ o.tagStyle }}">{{ o.tag }}</div>
           </div>
         </div>
@@ -114,11 +126,11 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 
     <sc-if value="{{ isCraft }}" hint-placeholder-val="{{ false }}">
     <div style="position:absolute;inset:0">
-      <div style="position:absolute;inset:0;background-image:url(assets/scene_crafting.png);background-size:cover;background-position:50% 19%"></div>
+      <div style="position:absolute;inset:0;background-image:url(assets/scene_crafting.webp);background-size:cover;background-position:50% 19%"></div>
 
-      <div data-item="beans" style="position:absolute;left:24%;bottom:87%;width:12.3%;height:12%;cursor:grab"><div style="{{ spr.beans }}"></div><div style="position:absolute;bottom:-2px;right:-6px;font-family:'Silkscreen',monospace;font-size:9px;color:#f0e2cd;background:#2a1a0e;border:1px solid #6b5236;padding:0 2px">{{ inv.beans }}</div></div>
-      <div data-item="milk" style="position:absolute;left:41%;bottom:87%;width:15.5%;height:10%;cursor:grab"><div style="{{ spr.pitcherMilk }}"></div><div style="position:absolute;bottom:-2px;right:-4px;font-family:'Silkscreen',monospace;font-size:9px;color:#f0e2cd;background:#2a1a0e;border:1px solid #6b5236;padding:0 2px">{{ inv.milk }}</div></div>
-      <div data-item="cocoa" style="position:absolute;left:60%;bottom:87%;width:10.4%;height:10%;cursor:grab"><div style="{{ spr.cocoa }}"></div><div style="position:absolute;bottom:-2px;right:-6px;font-family:'Silkscreen',monospace;font-size:9px;color:#f0e2cd;background:#2a1a0e;border:1px solid #6b5236;padding:0 2px">{{ inv.cocoa }}</div></div>
+      <div data-item="beans" style="position:absolute;left:53.6%;bottom:87%;width:12.3%;height:12%;cursor:grab"><div style="{{ spr.beans }}"></div><div style="position:absolute;bottom:-2px;right:-6px;font-family:'Silkscreen',monospace;font-size:9px;color:#f0e2cd;background:#2a1a0e;border:1px solid #6b5236;padding:0 2px">{{ inv.beans }}</div></div>
+      <div data-item="cocoa" style="position:absolute;left:69.5%;bottom:87%;width:10.4%;height:10%;cursor:grab"><div style="{{ spr.cocoa }}"></div><div style="position:absolute;bottom:-2px;right:-6px;font-family:'Silkscreen',monospace;font-size:9px;color:#f0e2cd;background:#2a1a0e;border:1px solid #6b5236;padding:0 2px">{{ inv.cocoa }}</div></div>
+      <div data-item="cinnamon" style="position:absolute;left:83.4%;bottom:87%;width:9%;height:11%;cursor:grab"><div style="{{ spr.cinnamon }}"></div><div style="position:absolute;bottom:-2px;right:-6px;font-family:'Silkscreen',monospace;font-size:9px;color:#f0e2cd;background:#2a1a0e;border:1px solid #6b5236;padding:0 2px">{{ inv.cinnamon }}</div></div>
 
       <div data-item="cup" style="position:absolute;left:8%;bottom:70.8%;width:16.1%;height:9%;cursor:grab"><div style="{{ spr.cupEmpty }}"></div></div>
       <div data-item="demi" style="position:absolute;left:29.1%;bottom:70.8%;width:13.1%;height:7.5%;cursor:grab"><div style="{{ spr.demiEmpty }}"></div></div>
@@ -130,28 +142,41 @@ a{color:#e8b661}a:hover{color:#f5d69a}
         </div>
       </sc-if>
 
-      <div data-zone="grinder" style="position:absolute;left:5%;bottom:16%;width:24.7%;height:30%"><div style="{{ spr.grinder }}"></div></div>
+      <div data-zone="grinder" style="position:absolute;left:calc(5% - 15px);bottom:calc(16% + 38px);width:24.7%;height:30%"><div style="{{ spr.grinder }}"></div></div>
 
-      <div data-zone="machine" style="position:absolute;left:34%;bottom:16%;width:50.9%;height:33%"><div style="{{ spr.machine }}"></div></div>
+      <div data-zone="machine" style="position:absolute;left:24.55%;bottom:calc(16% + 20px);width:50.9%;height:33%"><div style="{{ spr.machine }}"></div></div>
       <sc-if value="{{ showDockCup }}" hint-placeholder-val="{{ false }}">
         <div data-tap="pour" style="{{ dockCupWrap }}"><div style="{{ spr.dockCup }}"></div></div>
       </sc-if>
-      <sc-if value="{{ pouring }}" hint-placeholder-val="{{ false }}">
-        <div style="position:absolute;left:58.9%;top:68.5%;width:1.4%;height:7%;background:linear-gradient(#4a2410,#7a3f18);transform-origin:top center;animation:cbstream .5s ease-out;z-index:18;box-shadow:0 0 3px rgba(0,0,0,.5)"></div>
-        <div style="position:absolute;left:58.2%;top:75%;width:2.8%;height:1.2%;border-radius:50%;background:rgba(122,63,24,.85);animation:cbdrip .4s linear infinite;z-index:18"></div>
+      <sc-if value="{{ brewing }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;left:49.45%;top:calc(68.5% - 20px);width:1.4%;height:7%;background:linear-gradient(#4a2410,#7a3f18);transform-origin:top center;animation:cbstream .5s ease-out;z-index:18;box-shadow:0 0 3px rgba(0,0,0,.5)"></div>
+        <div style="position:absolute;left:48.75%;top:calc(75% - 20px);width:2.8%;height:1.2%;border-radius:50%;background:rgba(122,63,24,.85);animation:cbdrip .4s linear infinite;z-index:18"></div>
       </sc-if>
-      <div data-zone="nozzle" style="position:absolute;left:74%;bottom:16%;width:11%;height:19%;border-right:2px dashed rgba(232,182,97,.25)"></div>
+      <div data-zone="nozzle" style="position:absolute;left:64.55%;bottom:calc(16% + 20px);width:11%;height:19%;border-right:2px dashed rgba(232,182,97,.25)"></div>
       <sc-if value="{{ showGlass }}" hint-placeholder-val="{{ false }}">
-        <div style="position:absolute;left:75%;bottom:18.5%;width:10.1%;height:8%"><div style="{{ spr.glassEmpty }}"></div></div>
+        <div style="position:absolute;left:65%;bottom:calc(18.5% + 20px);width:10.1%;height:8%"><div style="{{ spr.glassEmpty }}"></div></div>
       </sc-if>
-      <div data-zone="wand" style="position:absolute;left:33%;bottom:16%;width:11%;height:19%;border-left:2px dashed rgba(232,182,97,.25)"></div>
+      <div data-zone="wand" style="position:absolute;left:23.55%;bottom:calc(16% + 20px);width:11%;height:19%;border-left:2px dashed rgba(232,182,97,.25)"></div>
       <sc-if value="{{ wandItem }}" hint-placeholder-val="{{ false }}">
         <div data-item="froth" style="{{ wandWrap }}"><div style="{{ spr.wandPitcher }}"></div></div>
       </sc-if>
 
-      <div data-zone="trash" style="position:absolute;left:33%;bottom:0;width:30%;height:11.3%;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px">
-        <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#c9b394;background:rgba(10,7,5,.75);border:1px solid #3a2a1c;padding:1px 4px">TRASH</div>
+      <div data-zone="trash" style="position:absolute;left:31%;bottom:0;width:28%;height:11.3%;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px">
+        <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#c9b394;background:rgba(10,7,5,.75);border:1px solid #3a2a1c;padding:1px 4px;transform:translateX(15px)">TRASH</div>
       </div>
+      <div data-tap="fridge" style="position:absolute;left:64%;bottom:0;width:32%;height:11.3%;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;cursor:pointer">
+        <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#9fd8ff;background:rgba(10,7,5,.78);border:1px solid #3a2a1c;padding:1px 4px;transform:translateX(15px)">FRIDGE</div>
+      </div>
+      <sc-if value="{{ frotherOnShelf }}" hint-placeholder-val="{{ true }}">
+        <div data-item="frother" data-zone="frother" style="position:absolute;left:calc(78% + 10px);bottom:calc(12% + 50px);width:14%;height:10%;cursor:grab"><div style="{{ spr.frother }}"></div>
+          <div style="{{ frotherTagStyle }}">{{ frotherTag }}</div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ counterItem }}" hint-placeholder-val="{{ false }}">
+        <div data-item="{{ counterDragId }}" style="{{ counterWrap }}"><div style="{{ spr.counter }}"></div>
+          <div style="position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);font-family:'Silkscreen',monospace;font-size:8px;color:#f0e2cd;background:#2a1a0e;border:1px solid #6b5236;padding:0 3px;white-space:nowrap">{{ counterLabel }}</div>
+        </div>
+      </sc-if>
 
       <div style="position:absolute;left:2%;right:2%;bottom:1.5%;display:flex;flex-direction:column;gap:4px;z-index:20">
         <sc-if value="{{ showGrind }}" hint-placeholder-val="{{ false }}">
@@ -162,9 +187,12 @@ a{color:#e8b661}a:hover{color:#f5d69a}
         </sc-if>
         <sc-if value="{{ showBrew }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;align-items:center;gap:6px;background:rgba(10,7,5,.86);border:2px solid #3a2a1c;padding:4px 6px">
-            <div data-tap="brew" style="{{ brewBtnStyle }}">{{ brewBtnLabel }}</div>
+            <div data-tap="brew" style="background:#2f6d3f;border:2px solid #7fd39a;padding:5px 8px;font-family:'Silkscreen',monospace;font-size:9px;color:#eafbef;cursor:pointer;flex:none">BREW</div>
             <div data-tap="stopbrew" style="background:#8a3b1f;border:2px solid #f0b48c;padding:5px 8px;font-family:'Silkscreen',monospace;font-size:9px;color:#ffe6d8;cursor:pointer;flex:none">STOP</div>
             <div style="flex:1;height:14px;background:#231710;border:1px solid #6b5236;position:relative">
+              <sc-if value="{{ showLungoZone }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;left:58%;right:0;top:0;bottom:0;background:rgba(159,216,255,.16);border-left:1px solid #9fd8ff"></div>
+              </sc-if>
               <div style="position:absolute;left:42%;width:16%;top:0;bottom:0;background:rgba(232,182,97,.22);border-left:1px solid #e8b661;border-right:1px solid #e8b661"></div>
               <div style="{{ brewBar }}"></div>
             </div>
@@ -196,7 +224,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
       <div style="position:absolute;left:6px;right:6px;bottom:6px;background:#150e09;border:3px solid #e8b661;padding:6px 8px;z-index:40;animation:cbpop .2s">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#e8b661">STEP {{ tutStep }}/9</div>
-          <div data-tap="tutskip" style="font-family:'Silkscreen',monospace;font-size:9px;color:#8a6b45;cursor:pointer">SKIP ›</div>
+          <div data-tap="tutskip" style="font-family:'Silkscreen',monospace;font-size:9px;color:#8a6b45;cursor:pointer">SKIP â€º</div>
         </div>
         <div style="font-size:18px;line-height:1.1;color:#f0e2cd;margin-top:2px">{{ tutText }}</div>
       </div>
@@ -210,6 +238,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
         <sc-if value="{{ t.filled }}" hint-placeholder-val="{{ false }}">
           <div data-item="{{ t.dragId }}" data-zone="{{ t.zoneId }}" style="position:absolute;inset:0;cursor:grab"><div style="{{ t.spr }}"></div>
             <div style="position:absolute;left:0;right:0;bottom:0;font-family:'Silkscreen',monospace;font-size:8px;text-align:center;color:#f0e2cd;background:rgba(10,7,5,.7)">{{ t.label }}</div>
+            <div style="{{ t.extraStyle }}">{{ t.extra }}</div>
           </div>
         </sc-if>
         <sc-if value="{{ t.empty }}" hint-placeholder-val="{{ true }}">
@@ -220,6 +249,14 @@ a{color:#e8b661}a:hover{color:#f5d69a}
     <div style="margin-left:auto;display:flex;flex-direction:column;gap:5px">
       <div data-tap="modal-shop" style="border:2px solid #3a2a1c;background:#231710;padding:5px 7px;font-family:'Silkscreen',monospace;font-size:9px;color:#7fd39a;cursor:pointer">SUPPLIES</div>
       <div data-tap="modal-recipes" style="border:2px solid #3a2a1c;background:#231710;padding:5px 7px;font-family:'Silkscreen',monospace;font-size:9px;color:#c9b394;cursor:pointer">RECIPES</div>
+      <div data-tap="modal-reputation" style="border:2px solid #3a2a1c;background:#231710;padding:4px 7px;display:flex;gap:2px;cursor:pointer">
+        <sc-for list="{{ repStarsView }}" as="st" hint-placeholder-count="5">
+          <div style="position:relative;width:9px;height:11px;font-family:'Silkscreen',monospace;font-size:11px;line-height:1;flex:none">
+            <div style="position:absolute;inset:0;color:#4a3728">â˜…</div>
+            <div style="{{ st.fillWrap }}"><div style="color:#e8b661">â˜…</div></div>
+          </div>
+        </sc-for>
+      </div>
     </div>
   </div>
 </div>
@@ -227,7 +264,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 
 <sc-if value="{{ isDayEnd }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;inset:0;background:#120b07;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px">
-  <div style="font-family:'Silkscreen',monospace;font-size:11px;color:#8a6b45;letter-spacing:3px">{{ baristaUpper }} · 3:00 PM</div>
+  <div style="font-family:'Silkscreen',monospace;font-size:11px;color:#8a6b45;letter-spacing:3px">{{ baristaUpper }} Â· 3:00 PM</div>
   <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:26px;color:#e8b661;margin:10px 0 20px">DAY {{ day }} DONE</div>
   <div style="width:100%;border:3px solid #3a2a1c;background:#1a120c">
     <div style="display:flex;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #3a2a1c"><span style="font-size:19px">Drinks served</span><span style="font-family:'Silkscreen',monospace;font-size:13px;color:#7fd39a">{{ dayServed }}</span></div>
@@ -235,7 +272,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
     <div style="display:flex;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #3a2a1c"><span style="font-size:19px">Earned today</span><span style="font-family:'Silkscreen',monospace;font-size:13px;color:#e8b661">${{ dayCashStr }}</span></div>
     <div style="display:flex;justify-content:space-between;padding:9px 12px"><span style="font-size:19px">Till total</span><span style="font-family:'Silkscreen',monospace;font-size:13px;color:#e8b661">${{ moneyStr }}</span></div>
   </div>
-  <div style="margin-top:14px;font-size:18px;color:#8a6b45;text-align:center">Beans {{ inv.beans }} · Milk {{ inv.milk }} · Cocoa {{ inv.cocoa }}</div>
+  <div style="margin-top:14px;font-size:18px;color:#8a6b45;text-align:center">{{ stockLine }}</div>
   <div data-tap="modal-shop" style="margin-top:10px;border:2px solid #3a2a1c;background:#1a120c;padding:9px 14px;font-family:'Silkscreen',monospace;font-size:10px;color:#7fd39a;cursor:pointer">RESTOCK</div>
   <div data-tap="nextday" style="margin-top:20px;background:#2f6d3f;border:3px solid #1a3d24;box-shadow:0 5px 0 #14301b;padding:13px 24px;font-family:'Silkscreen',monospace;font-weight:700;font-size:14px;color:#eafbef;cursor:pointer">START DAY {{ nextDay }}</div>
 </div>
@@ -260,7 +297,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
   <div style="width:100%;max-height:100%;overflow:auto;background:#1a120c;border:3px solid #e8b661;box-shadow:0 10px 0 rgba(0,0,0,.5)">
     <div style="display:flex;justify-content:space-between;align-items:center;background:#3d2a17;padding:7px 9px">
       <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:12px;color:#e8b661">{{ modalTitle }}</div>
-      <div data-tap="close" style="font-family:'Silkscreen',monospace;font-size:12px;color:#f0e2cd;cursor:pointer;padding:0 3px">✕</div>
+      <div data-tap="close" style="font-family:'Silkscreen',monospace;font-size:12px;color:#f0e2cd;cursor:pointer;padding:0 3px">âœ•</div>
     </div>
     <div style="padding:12px">
 
@@ -270,35 +307,53 @@ a{color:#e8b661}a:hover{color:#f5d69a}
           <div data-tap="modal-recipes" style="border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#c9b394;cursor:pointer">RECIPES</div>
           <div data-tap="modal-instructions" style="border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#c9b394;cursor:pointer">INSTRUCTIONS</div>
           <div data-tap="modal-scores" style="border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#c9b394;cursor:pointer">HIGHSCORES</div>
-          <div data-tap="modal-settings" style="border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#c9b394;cursor:pointer">SETTINGS</div>
+          <div data-tap="modal-settings" style="border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#c9b394;cursor:pointer">GAMEPLAY</div>
           <div data-tap="save" style="border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#e8b661;cursor:pointer">SAVE GAME</div>
           <div data-tap="newgame" style="border:2px solid #6b2a12;background:#2a120a;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#e0805a;cursor:pointer">NEW GAME</div>
         </div>
       </sc-if>
 
-      <sc-if value="{{ mShop }}" hint-placeholder-val="{{ false }}">
-        <div style="font-size:19px;color:#c9b394;margin-bottom:10px">Till: <span style="color:#7fd39a">${{ moneyStr }}</span> — the clock is paused while you shop.</div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <div style="display:flex;align-items:center;gap:9px;border:2px solid #3a2a1c;background:#231710;padding:7px">
-            <div style="position:relative;width:34px;height:40px;flex:none"><div style="{{ spr.beans }}"></div></div>
-            <div style="flex:1"><div style="font-family:'Silkscreen',monospace;font-size:10px;color:#e8b661">BEANS ×5</div><div style="font-size:17px;color:#8a6b45">have {{ inv.beans }}</div></div>
-            <div data-tap="buy-beans" style="background:#2f6d3f;border:2px solid #7fd39a;padding:7px 9px;font-family:'Silkscreen',monospace;font-size:10px;color:#eafbef;cursor:pointer">$6</div>
+      <sc-if value="{{ mFridge }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:19px;color:#c9b394;margin-bottom:10px">Take one thing out at a time. Cartons go into the frother tin on the shelf.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div data-tap="take-whole" style="position:relative;border:2px solid #3a2a1c;background:#231710;padding:7px;cursor:pointer">
+            <div style="position:relative;height:66px"><div style="{{ spr.milkCarton }}"></div></div>
+            <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#e8b661;text-align:center;margin-top:4px">WHOLE</div>
+            <div style="{{ badgeStyle }}">{{ inv.whole }}</div>
           </div>
-          <div style="display:flex;align-items:center;gap:9px;border:2px solid #3a2a1c;background:#231710;padding:7px">
-            <div style="position:relative;width:34px;height:40px;flex:none"><div style="{{ spr.pitcherMilk }}"></div></div>
-            <div style="flex:1"><div style="font-family:'Silkscreen',monospace;font-size:10px;color:#e8b661">MILK ×3</div><div style="font-size:17px;color:#8a6b45">have {{ inv.milk }}</div></div>
-            <div data-tap="buy-milk" style="background:#2f6d3f;border:2px solid #7fd39a;padding:7px 9px;font-family:'Silkscreen',monospace;font-size:10px;color:#eafbef;cursor:pointer">$4</div>
+          <div data-tap="take-oat" style="position:relative;border:2px solid #3a2a1c;background:#231710;padding:7px;cursor:pointer">
+            <div style="position:relative;height:66px"><div style="{{ spr.milkCarton }}"></div></div>
+            <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#e8b661;text-align:center;margin-top:4px">OAT</div>
+            <div style="{{ badgeStyle }}">{{ inv.oat }}</div>
           </div>
-          <div style="display:flex;align-items:center;gap:9px;border:2px solid #3a2a1c;background:#231710;padding:7px">
-            <div style="position:relative;width:34px;height:40px;flex:none"><div style="{{ spr.cocoa }}"></div></div>
-            <div style="flex:1"><div style="font-family:'Silkscreen',monospace;font-size:10px;color:#e8b661">COCOA ×3</div><div style="font-size:17px;color:#8a6b45">have {{ inv.cocoa }}</div></div>
-            <div data-tap="buy-cocoa" style="background:#2f6d3f;border:2px solid #7fd39a;padding:7px 9px;font-family:'Silkscreen',monospace;font-size:10px;color:#eafbef;cursor:pointer">$5</div>
+          <div data-tap="take-cashew" style="position:relative;border:2px solid #3a2a1c;background:#231710;padding:7px;cursor:pointer">
+            <div style="position:relative;height:66px"><div style="{{ spr.milkCarton }}"></div></div>
+            <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#e8b661;text-align:center;margin-top:4px">CASHEW</div>
+            <div style="{{ badgeStyle }}">{{ inv.cashew }}</div>
+          </div>
+          <div data-tap="take-sugar" style="position:relative;border:2px solid #3a2a1c;background:#231710;padding:7px;cursor:pointer">
+            <div style="position:relative;height:66px"><div style="{{ spr.sugar }}"></div></div>
+            <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#e8b661;text-align:center;margin-top:4px">SUGAR CUBE</div>
+            <div style="{{ badgeStyle }}">{{ inv.sugar }}</div>
           </div>
         </div>
       </sc-if>
 
+      <sc-if value="{{ mShop }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:19px;color:#c9b394;margin-bottom:10px">Till: <span style="color:#7fd39a">${{ moneyStr }}</span> â€” the clock is paused while you shop.</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ shopView }}" as="p" hint-placeholder-count="7">
+            <div style="display:flex;align-items:center;gap:9px;border:2px solid #3a2a1c;background:#231710;padding:7px">
+              <div style="position:relative;width:34px;height:40px;flex:none"><div style="{{ p.spr }}"></div></div>
+              <div style="flex:1"><div style="font-family:'Silkscreen',monospace;font-size:10px;color:#e8b661">{{ p.name }}</div><div style="font-size:17px;color:#8a6b45">have {{ p.have }}</div></div>
+              <div data-tap="{{ p.tap }}" style="background:#2f6d3f;border:2px solid #7fd39a;padding:7px 9px;font-family:'Silkscreen',monospace;font-size:10px;color:#eafbef;cursor:pointer">{{ p.price }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
       <sc-if value="{{ mRecipes }}" hint-placeholder-val="{{ false }}">
-        <sc-for list="{{ recipesView }}" as="r" hint-placeholder-count="6">
+        <sc-for list="{{ recipesView }}" as="r" hint-placeholder-count="7">
           <div style="display:flex;gap:9px;align-items:center;border-bottom:1px solid #3a2a1c;padding:7px 0">
             <div style="position:relative;width:40px;height:38px;flex:none"><div style="{{ r.spr }}"></div></div>
             <div style="min-width:0"><div style="font-family:'Silkscreen',monospace;font-size:10px;color:#e8b661">{{ r.name }}</div><div style="font-size:17px;color:#c9b394;line-height:1.1">{{ r.how }}</div></div>
@@ -308,11 +363,13 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 
       <sc-if value="{{ mInstr }}" hint-placeholder-val="{{ false }}">
         <div style="font-size:19px;line-height:1.2;color:#e2d2b8">
-          <p style="margin:0 0 9px"><b style="color:#e8b661">Two views, one clock.</b> Tickets keep counting down no matter which view you're in — switching costs you time.</p>
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Two views, one clock.</b> Tickets keep counting down no matter which view you're in â€” switching costs you time.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Window:</b> tap a ticket to accept it. Drag a finished drink from the tray onto an accepted ticket to ring it up.</p>
-          <p style="margin:0 0 9px"><b style="color:#e8b661">Bar:</b> beans → grinder, hold GRIND, dock the portafilter on the grinder, tamp it, put a cup + the portafilter on the machine, BREW, then tap the shot to pour.</p>
-          <p style="margin:0 0 9px"><b style="color:#e8b661">Stopping a brew:</b> before 40% it pauses. Inside the gold band (42–58%) you pull a ristretto — two of those combine into a full shot.</p>
-          <p style="margin:0">Miss five tickets and the run is over. Drag mistakes to the trash.</p>
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Bar:</b> beans â†’ grinder, hold GRIND (it keeps its progress if you let go), dose the portafilter, tamp it, set a cup and the portafilter on the machine, then BREW.</p>
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Stopping a brew:</b> hit STOP inside the gold band for an espresso. Miss the band with a demitasse or a glass and the shot is binned â€” re-dose and try again. In a latte cup, stopping past the band (or letting it run out) gives you a lungo.</p>
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Milk:</b> open the FRIDGE by the trash, pick whole, oat or cashew, then drag the carton into the frother tin on the far left of the shelf. Put the full tin on the steam wand and hold STEAM.</p>
+          <p style="margin:0">Sugar cubes and cinnamon dust on a finished drink earn a bigger tip. Miss five tickets and the run is over â€” unless You're Fired! is switched off in GAMEPLAY.</p>
+          <p style="margin:9px 0 0"><b style="color:#e8b661">Reputation:</b> tucked under RECIPES. Fast, accurate service builds it; missed or wrong orders cost you â€” it quietly shifts customer traffic, tips, and patience. House rules (game over, patience, modifications, day length) live under GAMEPLAY in the menu.</p>
         </div>
       </sc-if>
 
@@ -337,6 +394,27 @@ a{color:#e8b661}a:hover{color:#f5d69a}
           <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#8a6b45;letter-spacing:1px">NAME</div>
           <input value="{{ baristaName }}" onChange="{{ onRename }}" maxLength="12" placeholder="your name" style="flex:1;background:#231710;border:2px solid #3a2a1c;color:#e8b661;font-family:'Silkscreen',monospace;font-size:11px;padding:7px 8px;outline:none;text-align:center"></input>
         </div>
+        <div style="margin-top:16px;border-top:1px solid #3a2a1c;padding-top:10px">
+          <div style="font-family:'Silkscreen',monospace;font-size:10px;color:#8a6b45;letter-spacing:2px;margin-bottom:8px">GAMEPLAY</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div data-tap="toggle-fired" style="display:flex;justify-content:space-between;align-items:center;border:2px solid #3a2a1c;background:#231710;padding:8px;cursor:pointer">
+              <div style="font-size:17px;color:#e2d2b8">You're Fired!</div>
+              <div style="{{ toggleFiredStyle }}">{{ toggleFiredLabel }}</div>
+            </div>
+            <div data-tap="toggle-patience" style="display:flex;justify-content:space-between;align-items:center;border:2px solid #3a2a1c;background:#231710;padding:8px;cursor:pointer">
+              <div style="font-size:17px;color:#e2d2b8">Patience</div>
+              <div style="{{ togglePatienceStyle }}">{{ togglePatienceLabel }}</div>
+            </div>
+            <div data-tap="toggle-mods" style="display:flex;justify-content:space-between;align-items:center;border:2px solid #3a2a1c;background:#231710;padding:8px;cursor:pointer">
+              <div style="font-size:17px;color:#e2d2b8">Modifications</div>
+              <div style="{{ toggleModsStyle }}">{{ toggleModsLabel }}</div>
+            </div>
+            <div style="border:2px solid #3a2a1c;background:#231710;padding:8px">
+              <div style="display:flex;justify-content:space-between;font-size:17px;color:#e2d2b8"><span>Day length</span><span style="color:#e8b661">{{ dayLengthLabel }}</span></div>
+              <input type="range" min="1" max="60" step="1" value="{{ dayLengthVal }}" onChange="{{ onDayLength }}" style="width:100%;margin-top:6px"></input>
+            </div>
+          </div>
+        </div>
       </sc-if>
 
       <sc-if value="{{ mNote }}" hint-placeholder-val="{{ false }}">
@@ -344,6 +422,12 @@ a{color:#e8b661}a:hover{color:#f5d69a}
           <div style="position:relative;width:56px;height:60px;flex:none"><div style="{{ spr.note }}"></div></div>
           <div style="font-size:20px;line-height:1.2;color:#e2d2b8">Dear Mi Mariposita,<br><br>I hope these games bring you as much joy as it has been for me to make them for you.<br><br>I love you times infinity &lt;3<br><br>Love,<br>Your Oso</div>
         </div>
+      </sc-if>
+
+      <sc-if value="{{ mRep }}" hint-placeholder-val="{{ false }}">
+        <div style="font-family:'Silkscreen',monospace;font-size:24px;color:#e8b661;text-align:center">{{ repNumber }} â˜…</div>
+        <div style="font-family:'Silkscreen',monospace;font-size:10px;color:#8a6b45;text-align:center;letter-spacing:2px;margin-top:4px">{{ repTierLabel }}</div>
+        <div style="margin-top:12px;font-size:19px;line-height:1.3;color:#e2d2b8">{{ repPerkText }}</div>
       </sc-if>
 
     </div>
@@ -357,7 +441,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
   <div style="position:absolute;right:6px;top:6px;width:274px;max-height:380px;overflow:auto;background:#150e09;border:3px solid #e8b661;box-shadow:0 8px 0 rgba(0,0,0,.5)">
     <div style="display:flex;justify-content:space-between;align-items:center;background:#3d2a17;padding:6px 8px;position:sticky;top:0">
       <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:10px;color:#e8b661">SERVICE LOG</div>
-      <div data-tap="close-log" style="font-family:'Silkscreen',monospace;font-size:11px;color:#f0e2cd;cursor:pointer;padding:0 3px">✕</div>
+      <div data-tap="close-log" style="font-family:'Silkscreen',monospace;font-size:11px;color:#f0e2cd;cursor:pointer;padding:0 3px">âœ•</div>
     </div>
     <sc-for list="{{ logView }}" as="l" hint-placeholder-count="3">
       <div style="{{ l.row }}">
@@ -385,78 +469,95 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:800}}">
-const ING='assets/espresso_ingredients.png';
-const DRK='assets/espresso_drinks.png';
-const MCH='assets/machines.png';
-const NPC='assets/characters_npc.png';
-const PLR='assets/player.png';
+const S=n=>({backgroundImage:'url(assets/sprites/'+n+'.webp)',backgroundSize:'contain',backgroundRepeat:'no-repeat',backgroundPosition:'center center',width:'100%',height:'100%'});
 
-function crop(img,iw,ih,sx,sy,sw,sh){
-  return {backgroundImage:'url('+img+')',
-    backgroundSize:(100*iw/sw).toFixed(2)+'% '+(100*ih/sh).toFixed(2)+'%',
-    backgroundPosition:(100*sx/(iw-sw)).toFixed(2)+'% '+(100*sy/(ih-sh)).toFixed(2)+'%',
-    backgroundRepeat:'no-repeat',height:'100%',width:'auto',aspectRatio:(sw/sh).toFixed(4),margin:'0 auto'};
-}
-const I=(sx,sy,sw,sh)=>crop(ING,1536,1024,sx,sy,sw,sh);
-const D=(sx,sy,sw,sh)=>crop(DRK,1536,1024,sx,sy,sw,sh);
-const M=(sx,sy,sw,sh)=>crop(MCH,1536,1024,sx,sy,sw,sh);
-
-const SPR={
-  tamp:I(57,72,182,303), pfClean:I(331,83,317,339), pfGrounds:I(750,72,322,353), pfTamped:I(1193,85,303,343),
-  beans:I(56,491,298,450), cocoa:I(429,541,243,362), note:I(1247,655,262,256),
-  glassEmpty:D(49,89,206,251), glassWater:D(326,89,205,251), pitcherMilk:D(895,76,272,270), pitcherFroth:D(1217,0,265,348),
-  demiEmpty:D(116,397,243,215), demiShot:D(480,399,244,213), glassShot:D(873,394,173,208), cortado:D(1185,380,190,228),
-  cupEmpty:D(12,663,264,228), espresso:D(322,661,264,230), latte:D(632,660,273,234), mocha:D(954,642,269,251), americano:D(1262,662,266,231),
-  g0:M(46,40,200,463), g1:M(297,40,202,463), g2:M(547,40,197,462), g3:M(800,40,198,462), g4:M(1045,40,199,462), g5:M(1294,40,200,462),
-  mIdle:M(201,534,502,450), mPf:M(835,530,511,453),
-  p0:crop(PLR,1370,1148,295,15,420,700), p1:crop(PLR,1370,1148,740,15,400,700),
-  h0:crop(PLR,1370,1148,400,20,220,210), h1:crop(PLR,1370,1148,840,55,205,205)
-};
-const NPC_BOX=[[75,15,193,535],[307,20,182,529],[520,6,203,544],[774,12,187,539],[1007,14,237,539],[1279,39,173,511],
-  [58,555,192,465],[302,556,186,462],[551,547,181,472],[792,548,172,471],[1025,555,187,461],[1282,554,164,464]];
-const npcSpr=i=>{const b=NPC_BOX[i]||NPC_BOX[0];return crop(NPC,1536,1024,b[0]-2,b[1]-2,b[2]+4,b[3]+4);};
+const SPR={};
+['tamp','pfClean','pfGrounds','pfTamped','sugar','beans','cocoa','cinnamon','milkCarton','note',
+ 'glassEmpty','glassWater','pitcherEmpty','pitcherMilk','pitcherFroth','demiEmpty','demiShot','glassShot','cortado',
+ 'cupEmpty','espressoCup','latte','mocha','americano','g0','g1','g2','g3','g4','g5','mIdle','mPf',
+ 'p0','p1','h0','h1','n0','n1','n2','n3','n4','n5','n6','n7','n8','n9','n10','n11'].forEach(n=>{SPR[n]=S(n);});
 
 const DRINKS={
-  espresso:{label:'ESPRESSO',price:3.5,spr:'espresso',dur:46,w:3,how:'Full shot, nothing else.'},
-  americano:{label:'AMERICANO',price:4,spr:'americano',dur:52,w:2,how:'Full shot + a glass of water.'},
-  latte:{label:'LATTE',price:5,spr:'latte',dur:58,w:3,how:'Full shot + steamed milk.'},
-  cortado:{label:'CORTADO',price:4.5,spr:'cortado',dur:56,w:1,how:'Shot pulled into a GLASS (or drag a glass onto a poured shot) + steamed milk.'},
-  mocha:{label:'MOCHA',price:5.5,spr:'mocha',dur:64,w:1,how:'Full shot + cocoa + steamed milk.'},
+  espresso:{label:'ESPRESSO',price:3.5,spr:'demiShot',dur:46,w:3,how:'Stop the brew inside the gold band. Any cup will do.'},
+  lungo:{label:'LUNGO',price:4.25,spr:'espressoCup',dur:50,w:2,how:'Latte cup only â€” let the brew run past the band.'},
+  americano:{label:'AMERICANO',price:4,spr:'americano',dur:52,w:2,how:'Espresso + a glass of water, combined in the tray.'},
+  latte:{label:'LATTE',price:5,spr:'latte',dur:58,w:3,how:'Espresso + steamed milk.'},
+  cortado:{label:'CORTADO',price:4.5,spr:'cortado',dur:56,w:1,how:'Espresso pulled into a GLASS + steamed milk.'},
+  mocha:{label:'MOCHA',price:5.5,spr:'mocha',dur:64,w:1,how:'Espresso + cocoa + steamed milk.'},
   water:{label:'ICE WATER',price:1,spr:'glassWater',dur:42,w:1,how:'Glass on the nozzle, time the pour.'}
 };
-const TRAY_SPR={espresso:'espresso',shortshot:'demiShot',glassShot:'glassShot',americano:'americano',latte:'latte',cortado:'cortado',mocha:'mocha',mochaBase:'espresso',water:'glassWater'};
-const TRAY_LABEL={espresso:'ESPRESSO',shortshot:'RISTRETTO',glassShot:'GLASS SHOT',americano:'AMERICANO',latte:'LATTE',cortado:'CORTADO',mocha:'MOCHA',mochaBase:'+COCOA',water:'WATER'};
+const TRAY_LABEL={espresso:'ESPRESSO',lungo:'LUNGO',americano:'AMERICANO',latte:'LATTE',cortado:'CORTADO',mocha:'MOCHA',mochaBase:'+COCOA',water:'WATER'};
+const traySpr=t=>{
+  if(t.type==='espresso'||t.type==='mochaBase') return t.cup==='glass'?'glassShot':(t.cup==='cup'?'espressoCup':'demiShot');
+  if(t.type==='lungo') return 'espressoCup';
+  return {americano:'americano',latte:'latte',cortado:'cortado',mocha:'mocha',water:'glassWater'}[t.type]||'demiShot';
+};
+const SHOP={
+  beans:{name:'BEANS Ã—5',cost:6,amt:5,spr:'beans'},
+  whole:{name:'WHOLE MILK Ã—3',cost:4,amt:3,spr:'milkCarton'},
+  oat:{name:'OAT MILK Ã—3',cost:5,amt:3,spr:'milkCarton'},
+  cashew:{name:'CASHEW MILK Ã—3',cost:5,amt:3,spr:'milkCarton'},
+  cocoa:{name:'COCOA Ã—3',cost:5,amt:3,spr:'cocoa'},
+  cinnamon:{name:'CINNAMON Ã—3',cost:4,amt:3,spr:'cinnamon'},
+  sugar:{name:'SUGAR Ã—6',cost:3,amt:6,spr:'sugar'}
+};
+const MILK_LABEL={whole:'WHOLE',oat:'OAT',cashew:'CASHEW'};
 const NPC_NAMES=['Kenji','Britt','Grant','Naomi','Mateus','Marguerite','Priya','Darius','Bodhi','Zaria','Hiroshi','Valentina'];
 const TUT=[
   {k:'accept',t:'Someone\u2019s at the window. Tap their ticket to accept the order.'},
   {k:'view',t:'Good. Hit \u2630 MAKE up top to step over to the bar \u2014 the timer keeps running.'},
   {k:'beans',t:'Drag the coffee bag onto the grinder to load the hopper.'},
-  {k:'grind',t:'Press and hold GRIND until the grounds bin fills.'},
+  {k:'grind',t:'Press and hold GRIND until the grounds bin fills. Let go and it keeps its progress.'},
   {k:'fill',t:'Drag the portafilter onto the grinder to dose it with grounds.'},
   {k:'tamp',t:'Drag the tamp onto the filled portafilter.'},
   {k:'dock',t:'Drag a cup onto the machine, then dock the tamped portafilter.'},
-  {k:'shot',t:'Press BREW, let it finish, then tap the cup to pour the shot.'},
+  {k:'shot',t:'Press BREW and hit STOP inside the gold band, then tap the cup to set it on the tray.'},
   {k:'serve',t:'Back to \u2630 CUSTOMERS and drag the espresso onto their ticket.'}
 ];
 const money2=n=>(Math.round(n*100)/100).toFixed(2);
+const freshInv=()=>({beans:6,whole:3,oat:2,cashew:2,cocoa:3,cinnamon:3,sugar:6});
+const freshMachine=()=>({cup:null,glass:false,pf:null,brew:0,brewState:'idle',shot:null,wpos:0,wdir:1,wtarget:30,wactive:false});
+const freshSettings=()=>({fired:false,patience:false,modifications:false,dayLength:10});
+const clampRep=r=>Math.max(0,Math.min(5,r));
+const repTier=r=>{
+  if(r>=5) return {tier:5,trafficMult:1.5,tipPct:0.5,patienceMult:0.6};
+  if(r>=4) return {tier:4,trafficMult:1.3,tipPct:0.25,patienceMult:0.8};
+  if(r>=3) return {tier:3,trafficMult:1.15,tipPct:0.15,patienceMult:0.9};
+  if(r>=2.5) return {tier:2.5,trafficMult:1,tipPct:0.1,patienceMult:1};
+  if(r>=2) return {tier:2,trafficMult:0.85,tipPct:0.05,patienceMult:1};
+  if(r>=1) return {tier:1,trafficMult:0.7,tipPct:0,patienceMult:1};
+  return {tier:0,trafficMult:0.5,tipPct:0,patienceMult:1};
+};
+const REP_PERKS={
+  0:'Rock bottom. Foot traffic is 50% slower and nobody tips.',
+  1:'Bad word of mouth. Traffic is 30% slower and tips have dried up.',
+  2:'A few complaints going around. Traffic is 15% slower and tips are thin.',
+  2.5:'Steady and unremarkable â€” no bonuses, no penalties.',
+  3:'Building a following. Traffic is 15% faster, tips run ~15% of drink price, patience drains 10% slower.',
+  4:'A neighborhood favorite. Traffic is 30% faster, tips run ~25%, patience drains 20% slower.',
+  5:'The talk of the block. Traffic is 50% faster, tips run ~50%, patience drains 40% slower.'
+};
 
 class Component extends DCLogic {
   state={
     screen:'menu',view:'customer',barista:0,names:['Gabriel','Daniella'],scale:1,
     day:1,clock:360,money:20,lives:5,served:0,dayServed:0,dayMissed:0,dayCash:0,
-    inv:{beans:6,milk:4,cocoa:3},
+    reputation:2.5,settings:freshSettings(),
+    inv:freshInv(),
     orders:[],tray:[],toasts:[],unread:0,logOpen:false,
     grinder:{hopper:false,levels:0,prog:0},
     pf:'clean',
-    machine:{cup:null,glass:false,pf:null,brew:0,brewState:'idle',shot:null,wpos:0,wdir:1,wtarget:30,wactive:false},
-    wand:{milk:false,gauge:0,froth:false},
-    modal:null,tut:0,drag:null,selected:null,scores:[],pouring:false
+    machine:freshMachine(),
+    wand:{milk:false,gauge:0,froth:false,kind:null},
+    frother:'empty',frotherKind:null,counter:null,
+    modal:null,tut:0,drag:null,selected:null,scores:[]
   };
-  hold=null; spawnCd=6; uid=1; scripted=false;
+  hold=null; spawnCd=6; uid=1;
 
   componentDidMount(){
     try{this.setState({scores:JSON.parse(localStorage.getItem('cb_scores')||'[]')});}catch(e){}
     try{const n=JSON.parse(localStorage.getItem('cb_names')||'null'); if(n&&n.length===2) this.setState({names:n});}catch(e){}
+    try{ if(localStorage.getItem('cb_save')) this.load(); }catch(e){}
     this.pump();
     this.vis=()=>{ this.lastTick=Date.now(); this.pump(); };
     document.addEventListener('visibilitychange',this.vis);
@@ -496,7 +597,7 @@ class Component extends DCLogic {
   tut(k){
     const s=this.state; if(!s.tut) return;
     if(TUT[s.tut-1].k===k){
-      if(s.tut>=9){ this.setState({tut:0}); try{localStorage.setItem('cb_seen','1');}catch(e){} this.toast('Tutorial complete — the rush starts now.','good'); }
+      if(s.tut>=9){ this.setState({tut:0}); try{localStorage.setItem('cb_seen','1');}catch(e){} this.toast('Tutorial complete â€” the rush starts now.','good'); }
       else this.setState({tut:s.tut+1});
     }
   }
@@ -510,37 +611,49 @@ class Component extends DCLogic {
     if(s.screen!=='play') return;
     const paused=!!s.modal;
     const next={};
+    const tier=repTier(s.reputation);
     if(!paused){
-      let clock=s.clock+2.2*dt;
-      const orders=[]; let lives=s.lives, money=s.money, dayMissed=s.dayMissed, missed=0;
+      const clockRate=540/(Math.max(1,s.settings.dayLength)*60);
+      let clock=s.clock+clockRate*dt;
+      let lives=s.lives, money=s.money, dayMissed=s.dayMissed, missed=0, reputation=s.reputation;
+      const patienceOn=s.settings.patience;
+      const orders=[];
       s.orders.forEach(o=>{
-        const left=o.left-dt;
-        if(left<=0){ lives-=1; money=Math.max(0,money-2); dayMissed+=1; missed++; }
+        if(!patienceOn){ orders.push(o); return; }
+        const left=o.left-dt*tier.patienceMult;
+        if(left<=0){ lives-=1; money=Math.max(0,money-2); dayMissed+=1; missed++; reputation=clampRep(reputation-0.15); }
         else orders.push({...o,left});
       });
-      if(missed) this.toast('Missed order! −1 life, −$2','bad');
-      next.orders=orders; next.lives=lives; next.money=money; next.dayMissed=dayMissed;
+      if(missed) this.toast('Missed order! âˆ’1 life, âˆ’$2, reputation down.','bad');
+      next.orders=orders; next.money=money; next.dayMissed=dayMissed; next.reputation=reputation;
       if(clock>=900){ clock=900; }
       next.clock=clock;
       if(s.tut===0 && clock<895){
         this.spawnCd-=dt;
-        if(this.spawnCd<=0 && orders.length<2){ this.spawnCd=5+Math.random()*4; next.orders=[...orders,this.makeOrder(null,orders.map(o=>o.npc))]; }
+        if(this.spawnCd<=0 && orders.length<2){ this.spawnCd=(5+Math.random()*4)/tier.trafficMult; next.orders=[...orders,this.makeOrder(null,orders.map(o=>o.npc))]; }
       }
-      if(lives<=0){ this.endRun(next); return; }
+      if(lives<=0){
+        if(s.settings.fired){ next.lives=lives; this.endRun(next); return; }
+        next.lives=0;
+      } else next.lives=lives;
       if(clock>=900){ this.setState({...next,screen:'dayend',orders:[],tray:[],selected:null}); return; }
     }
-    // machine / grinder / wand always advance except when paused
     if(!paused){
       const g={...s.grinder};
       if(this.hold==='grind' && g.hopper){
         g.prog=Math.min(1,g.prog+dt/1.1);
-        if(g.prog>=1){ g.prog=0; g.hopper=false; g.levels=3; this.tut('grind'); this.toast('Ground and ready — 3 doses.','good'); }
+        if(g.prog>=1){ g.prog=0; g.hopper=false; g.levels=3; this.tut('grind'); this.toast('Ground and ready â€” 3 doses.','good'); }
         next.grinder=g;
       }
       const m={...s.machine};
       let mdirty=false;
-      if(m.brewState==='brewing'){ m.brew=Math.min(100,m.brew+26*dt);
-        if(m.brew>=100){ m.brewState='idle'; m.shot='full'; m.pf=null; next.pf='spent'; this.toast('Full shot pulled — tap the cup to pour.','good'); }
+      if(m.brewState==='brewing'){
+        m.brew=Math.min(100,m.brew+26*dt);
+        if(m.brew>=100){
+          m.brewState='idle'; m.pf=null; next.pf='spent';
+          if(m.cup==='cup'){ m.shot='lungo'; this.toast('Ran the full bar â€” a lungo. Tap the cup to set it down.','good'); }
+          else { m.brew=0; this.toast('Overpulled for that cup â€” shot binned. Re-dose and hit the band.','bad'); }
+        }
         mdirty=true;
       }
       if(m.wactive){ m.wpos+=m.wdir*46*dt; if(m.wpos>100){m.wpos=100;m.wdir=-1;} if(m.wpos<0){m.wpos=0;m.wdir=1;} mdirty=true; }
@@ -548,7 +661,7 @@ class Component extends DCLogic {
       const w={...s.wand};
       if(this.hold==='steam' && w.milk && !w.froth){
         w.gauge=Math.min(1,w.gauge+dt/2.2);
-        if(w.gauge>=1){ this.hold=null; w.milk=false; w.gauge=0; this.toast('Milk scalded — dump it and retry.','bad'); }
+        if(w.gauge>=1){ this.hold=null; w.milk=false; w.gauge=0; w.kind=null; this.toast('Milk scalded â€” dump it and retry.','bad'); }
         next.wand=w;
       }
     }
@@ -563,7 +676,21 @@ class Component extends DCLogic {
     const free=[0,1,2,3,4,5,6,7,8,9,10,11].filter(n=>taken.indexOf(n)<0);
     const pool=free.length?free:[0,1,2,3,4,5,6,7,8,9,10,11];
     const npc=pool[Math.floor(Math.random()*pool.length)];
-    return {id:this.uid++,drink,npc,who:'',dur,left:dur,accepted:false};
+    let mods=null;
+    if(this.state.settings.modifications && !forced){
+      mods={};
+      const shotEligible=['espresso','latte','mocha','americano'].indexOf(drink)>=0;
+      if(shotEligible && Math.random()<0.3) mods.extraShot=true;
+      if(Math.random()<0.35) mods.sugar=1+Math.floor(Math.random()*3);
+      const milkDrink=['latte','cortado','mocha'].indexOf(drink)>=0;
+      if(milkDrink && Math.random()<0.35) mods.milk=Math.random()<0.5?'oat':'cashew';
+      if(Math.random()<0.3){
+        const cocoa=Math.random()<0.5, cinnamon=Math.random()<0.5;
+        if(cocoa||cinnamon) mods.extras={cocoa,cinnamon};
+      }
+      if(Object.keys(mods).length===0) mods=null;
+    }
+    return {id:this.uid++,drink,npc,who:'',dur,left:dur,accepted:false,mods};
   }
   endRun(extra){
     const s=this.state;
@@ -586,20 +713,24 @@ class Component extends DCLogic {
   }
   onMove(e){ if(this.state.drag) this.setState(s=>({drag:{...s.drag,x:e.clientX,y:e.clientY}})); }
   onUp(e){
-    if(this.hold){ const h=this.hold; this.hold=null; if(h==='steam') this.releaseSteam(); else this.setState(s=>({grinder:{...s.grinder,prog:0}})); }
+    if(this.hold){ const h=this.hold; this.hold=null; if(h==='steam') this.releaseSteam(); }
     const d=this.state.drag; if(!d) return;
     this.setState({drag:null});
     const els=document.elementsFromPoint(e.clientX,e.clientY);
     let zone=null;
     for(const el of els){ const z=el.closest&&el.closest('[data-zone]'); if(z){ zone=z.getAttribute('data-zone'); break; } }
-    if(zone) this.drop(d.item,zone);
+    if(!zone) return;
+    const key=d.item+'>'+zone; const now=Date.now();
+    if(this._lastDropKey===key && now-this._lastDropAt<250) return;
+    this._lastDropKey=key; this._lastDropAt=now;
+    this.drop(d.item,zone);
   }
   releaseSteam(){
     const w={...this.state.wand};
     if(!w.milk||w.froth) return;
     if(w.gauge>=0.55&&w.gauge<=0.8){ w.froth=true; w.gauge=0; this.toast('Silky microfoam.','good'); }
-    else if(w.gauge<0.55){ this.toast('Too cold — keep steaming.','info'); this.setState({wand:w}); return; }
-    else { w.milk=false; w.gauge=0; this.toast('Scalded. Milk wasted.','bad'); }
+    else if(w.gauge<0.55){ this.toast('Too cold â€” keep steaming.','info'); this.setState({wand:w}); return; }
+    else { w.milk=false; w.gauge=0; w.kind=null; this.toast('Scalded. Milk wasted.','bad'); }
     this.setState({wand:w});
   }
 
@@ -613,8 +744,13 @@ class Component extends DCLogic {
     if(a==='bell') return this.setState({logOpen:!s.logOpen,unread:0});
     if(a==='close-log') return this.setState({logOpen:false,unread:0});
     if(a==='close') return this.setState({modal:null});
+    if(a==='fridge') return this.setState({modal:'fridge'});
+    if(a.indexOf('take-')===0) return this.takeFromFridge(a.slice(5));
     if(a.indexOf('modal-')===0) return this.setState({modal:a.slice(6)});
     if(a==='tutskip'){ try{localStorage.setItem('cb_seen','1');}catch(e){} return this.setState({tut:0}); }
+    if(a==='toggle-fired') return this.setState(st=>({settings:{...st.settings,fired:!st.settings.fired}}));
+    if(a==='toggle-patience') return this.setState(st=>({settings:{...st.settings,patience:!st.settings.patience}}));
+    if(a==='toggle-mods') return this.setState(st=>({settings:{...st.settings,modifications:!st.settings.modifications}}));
     if(a==='nextday') return this.nextDay();
     if(a==='tryagain') return this.setState({screen:'menu'});
     if(a==='save'){ this.save(); return this.toast('Shift saved.','good'); }
@@ -633,45 +769,55 @@ class Component extends DCLogic {
     if(!seen) first.dur=first.left=240;
     this.spawnCd=6;
     this.setState({screen:'play',view:'customer',day:1,clock:360,money:20,lives:5,served:0,dayServed:0,dayMissed:0,dayCash:0,
-      inv:{beans:6,milk:4,cocoa:3},orders:[first],tray:[],toasts:[],unread:0,logOpen:false,modal:null,tut:seen?0:1,selected:null,
-      grinder:{hopper:false,levels:0,prog:0},pf:'clean',
-      machine:{cup:null,glass:false,pf:null,brew:0,brewState:'idle',shot:null,wpos:0,wdir:1,wtarget:30,wactive:false},
-      wand:{milk:false,gauge:0,froth:false}});
+      reputation:2.5,
+      inv:freshInv(),orders:[first],tray:[],toasts:[],unread:0,logOpen:false,modal:null,tut:seen?0:1,selected:null,
+      grinder:{hopper:false,levels:0,prog:0},pf:'clean',machine:freshMachine(),
+      wand:{milk:false,gauge:0,froth:false,kind:null},frother:'empty',frotherKind:null,counter:null});
   }
   nextDay(){
     const s=this.state;
     this.spawnCd=4;
     this.setState({screen:'play',view:'customer',day:s.day+1,clock:360,dayServed:0,dayMissed:0,dayCash:0,
       orders:[this.makeOrder()],tray:[],modal:null,selected:null,
-      grinder:{hopper:false,levels:0,prog:0},pf:'clean',
-      machine:{cup:null,glass:false,pf:null,brew:0,brewState:'idle',shot:null,wpos:0,wdir:1,wtarget:30,wactive:false},
-      wand:{milk:false,gauge:0,froth:false}});
+      grinder:{hopper:false,levels:0,prog:0},pf:'clean',machine:freshMachine(),
+      wand:{milk:false,gauge:0,froth:false,kind:null},frother:'empty',frotherKind:null,counter:null});
   }
   save(){
     const s=this.state;
     const keep={day:s.day,clock:s.clock,money:s.money,lives:s.lives,served:s.served,inv:s.inv,barista:s.barista,names:s.names,view:s.view,
-      grinder:s.grinder,pf:s.pf,machine:s.machine,wand:s.wand,tray:s.tray,dayServed:s.dayServed,dayMissed:s.dayMissed,dayCash:s.dayCash};
+      grinder:s.grinder,pf:s.pf,machine:s.machine,wand:s.wand,tray:s.tray,frother:s.frother,frotherKind:s.frotherKind,counter:s.counter,
+      dayServed:s.dayServed,dayMissed:s.dayMissed,dayCash:s.dayCash,reputation:s.reputation,settings:s.settings};
     try{localStorage.setItem('cb_save',JSON.stringify(keep));}catch(e){}
   }
   load(){
     let d=null; try{d=JSON.parse(localStorage.getItem('cb_save')||'null');}catch(e){}
     if(!d) return this.toast('No saved shift found.','bad');
     this.spawnCd=4;
-    this.setState({...d,screen:'play',orders:[this.makeOrder()],modal:null,tut:0,selected:null});
+    this.setState({...d,inv:{...freshInv(),...(d.inv||{})},settings:{...freshSettings(),...(d.settings||{})},reputation:d.reputation!=null?d.reputation:2.5,screen:'play',orders:[this.makeOrder()],modal:null,tut:0,selected:null});
   }
   buy(k){
-    const cost={beans:6,milk:4,cocoa:5}[k], amt={beans:5,milk:3,cocoa:3}[k];
+    const p=SHOP[k]; if(!p) return;
     const s=this.state;
-    if(s.money<cost) return this.toast('Not enough in the till.','bad');
-    this.setState({money:s.money-cost,inv:{...s.inv,[k]:s.inv[k]+amt}});
-    this.toast('Restocked '+k+' +'+amt,'good');
+    if(s.money<p.cost) return this.toast('Not enough in the till.','bad');
+    this.setState({money:s.money-p.cost,inv:{...s.inv,[k]:(s.inv[k]||0)+p.amt}});
+    this.toast('Restocked '+k+' +'+p.amt,'good');
+  }
+
+  /* ------- fridge ------- */
+  takeFromFridge(k){
+    const s=this.state;
+    if(s.counter) return this.toast('Something\u2019s already on the counter.','info');
+    if((s.inv[k]||0)<=0) return this.toast('None left â€” buy more in Supplies.','bad');
+    if(k==='sugar'){ this.setState({counter:{item:'sugar'},modal:null}); return this.toast('Sugar cube on the counter â€” drop it on a finished drink.','info'); }
+    this.setState({counter:{item:'carton',kind:k},modal:null});
+    this.toast(MILK_LABEL[k]+' carton out. Drag it into the frother tin.','info');
   }
 
   /* ------- espresso pipeline ------- */
   brew(){
     const m={...this.state.machine};
-    if(m.brewState==='paused'){ m.brewState='brewing'; return this.setState({machine:m}); }
-    if(m.shot) return this.toast('Pour the shot in the cup first.','info');
+    if(m.brewState==='brewing') return;
+    if(m.shot) return this.toast('Set the cup on the tray first.','info');
     if(!m.cup) return this.toast('Dock a cup under the group head.','info');
     if(m.pf!=='tamped') return this.toast('Needs a tamped portafilter.','info');
     m.brewState='brewing'; m.brew=0; this.setState({machine:m});
@@ -679,25 +825,25 @@ class Component extends DCLogic {
   stopBrew(){
     const s=this.state; const m={...s.machine};
     if(m.brewState!=='brewing') return;
-    if(m.brew<40){ m.brewState='paused'; this.setState({machine:m}); return this.toast('Brew paused at '+Math.round(m.brew)+'%.','info'); }
-    if(m.brew<=58){ m.brewState='idle'; m.shot='short'; m.pf=null; this.setState({machine:m,pf:'spent'}); return this.toast('Ristretto! Short and syrupy.','good'); }
-    m.brewState='idle'; m.brew=0; m.pf=null; this.setState({machine:m,pf:'spent'});
-    this.toast('Stopped too late — shot ran thin and was binned.','bad');
+    const at=m.brew;
+    const band=at>=42&&at<=58;
+    const latte=m.cup==='cup';
+    m.brewState='idle'; m.pf=null;
+    if(band){ m.shot='espresso'; this.setState({machine:m,pf:'spent'}); return this.toast('Espresso â€” stopped right in the band.','good'); }
+    if(latte&&at>58){ m.shot='lungo'; this.setState({machine:m,pf:'spent'}); return this.toast('Lungo â€” long and mellow.','good'); }
+    m.brew=0; this.setState({machine:m,pf:'spent'});
+    this.toast(at<42?'Cut it short â€” nothing in the cup. Re-dose and hit the band.':'Missed the band â€” shot binned. Re-dose and try again.','bad');
   }
   pour(){
     const s=this.state; const m={...s.machine};
-    if(!m.shot||s.pouring) return;
-    if(s.tray.length>=3) return this.toast('Tray is full — ring one up first.','bad');
-    const type=m.cup==='glass'?'glassShot':(m.shot==='short'?'shortshot':'espresso');
-    const shot=m.shot;
-    this.setState({pouring:true});
-    setTimeout(()=>{
-      const st=this.state; const mm={...st.machine};
-      mm.shot=null; mm.cup=null; mm.brew=0;
-      this.setState({machine:mm,pouring:false,tray:[...st.tray,{id:this.uid++,type}]});
-      this.toast(type==='glassShot'?'Shot in a glass — add steamed milk for a cortado.':(shot==='short'?'Ristretto in the tray.':'Espresso in the tray.'),'good');
-      this.tut('shot');
-    },780);
+    if(!m.shot) return;
+    if(s.tray.length>=3) return this.toast('Tray is full â€” ring one up first.','bad');
+    const type=m.shot==='lungo'?'lungo':'espresso';
+    const cup=m.cup;
+    m.shot=null; m.cup=null; m.brew=0;
+    this.setState({machine:m,tray:[...s.tray,{id:this.uid++,type,cup}]});
+    this.toast(type==='lungo'?'Lungo on the tray.':(cup==='glass'?'Espresso in a glass â€” add steamed milk for a cortado.':'Espresso on the tray.'),'good');
+    this.tut('shot');
   }
   water(){
     const s=this.state; const m={...s.machine};
@@ -708,9 +854,9 @@ class Component extends DCLogic {
     if(hit){
       if(s.tray.length>=3){ this.setState({machine:m}); return this.toast('Tray is full.','bad'); }
       m.glass=false;
-      this.setState({machine:m,tray:[...s.tray,{id:this.uid++,type:'water'}]});
+      this.setState({machine:m,tray:[...s.tray,{id:this.uid++,type:'water',cup:'glass'}]});
       this.toast('Clean pour.','good');
-    } else { this.setState({machine:m}); this.toast('Sloppy pour — try again.','bad'); }
+    } else { this.setState({machine:m}); this.toast('Sloppy pour â€” try again.','bad'); }
   }
 
   /* ------- drops ------- */
@@ -721,8 +867,10 @@ class Component extends DCLogic {
       const id=+item.slice(6);
       if(zone.indexOf('ticket:')===0) return this.serve(id,+zone.slice(7));
       if(zone.indexOf('slot:')===0) return this.combine(id,+zone.slice(5));
+      if(zone==='machine') return this.addExtraShot(id);
       return;
     }
+    if(zone==='frother') return this.toFrother(item);
     if(zone.indexOf('slot:')===0) return this.addTo(+zone.slice(5),item);
     if(zone==='grinder') return this.toGrinder(item);
     if(zone==='pf') return this.toPf(item);
@@ -734,13 +882,26 @@ class Component extends DCLogic {
     const s=this.state;
     if(item.indexOf('drink:')===0){ const id=+item.slice(6); this.setState({tray:s.tray.filter(t=>t.id!==id),selected:null}); return this.toast('Binned.','info'); }
     if(item==='pf'&&s.pf!=='clean'){ this.setState({pf:'clean'}); return this.toast('Puck knocked out.','info'); }
-    if(item==='froth'&&s.wand.froth){ this.setState({wand:{milk:false,gauge:0,froth:false}}); return this.toast('Milk dumped.','info'); }
+    if(item==='froth'&&s.wand.froth){ this.setState({wand:{milk:false,gauge:0,froth:false,kind:null}}); return this.toast('Milk dumped.','info'); }
+    if(item==='frother'&&s.frother==='full'){ this.setState({frother:'empty',frotherKind:null}); return this.toast('Tin emptied.','info'); }
+    if(item==='carton'||item==='sugar'){ this.setState({counter:null}); return this.toast('Put back.','info'); }
+  }
+  toFrother(item){
+    const s=this.state;
+    if(item!=='carton'){ if(item==='sugar') this.toast('Sugar goes in a finished drink.','info'); return; }
+    if(s.frother==='full') return this.toast('The tin is already full.','info');
+    const kind=s.counter&&s.counter.kind;
+    if(!kind) return;
+    if((s.inv[kind]||0)<=0) return this.toast('That carton is empty.','bad');
+    this.setState({frother:'full',frotherKind:kind,counter:null,inv:{...s.inv,[kind]:s.inv[kind]-1}});
+    this.toast(MILK_LABEL[kind]+' milk in the tin â€” put it on the steam wand.','good');
   }
   toGrinder(item){
     const s=this.state; const g={...s.grinder};
     if(item==='beans'){
       if(g.hopper||g.levels>0) return this.toast('Grinder still has coffee in it.','info');
-      if(s.inv.beans<=0) return this.toast('Out of beans — check Supplies.','bad');
+      if(s.inv.beans<=0) return this.toast('Out of beans â€” check Supplies.','bad');
+      if(this.hold==='grind') this.hold=null;
       g.hopper=true; g.prog=0;
       this.setState({grinder:g,inv:{...s.inv,beans:s.inv.beans-1}});
       this.tut('beans'); return this.toast('Hopper loaded. Hold GRIND.','info');
@@ -748,7 +909,7 @@ class Component extends DCLogic {
     if(item==='pf'){
       if(s.pf==='spent'){ this.setState({pf:'clean'}); return this.toast('Knocked out the old puck.','info'); }
       if(s.pf!=='clean') return this.toast('Portafilter already dosed.','info');
-      if(g.levels<=0) return this.toast('No grounds yet — load beans and grind.','info');
+      if(g.levels<=0) return this.toast('No grounds yet â€” load beans and grind.','info');
       g.levels-=1;
       this.setState({grinder:g,pf:'grounds'});
       this.tut('fill'); return this.toast('Dosed. '+g.levels+' left in the bin.','good');
@@ -763,19 +924,20 @@ class Component extends DCLogic {
   toMachine(item){
     const s=this.state; const m={...s.machine};
     if(item==='cup'||item==='demi'){
-      if(m.shot) return this.toast('Pour the shot already in there.','info');
+      if(m.shot) return this.toast('Set the cup already in there on the tray.','info');
       m.cup=item; this.setState({machine:m});
       if(m.pf==='tamped') this.tut('dock');
-      return this.toast('Cup under the group head.','info');
+      return this.toast(item==='cup'?'Latte cup under the group head â€” stop in the band for an espresso, run long for a lungo.':'Demitasse under the group head â€” stop in the band.','info');
     }
     if(item==='glass'){
-      if(m.shot) return this.toast('Pour the shot already in there.','info');
+      if(m.shot) return this.toast('Set the cup already in there on the tray.','info');
       m.cup='glass'; this.setState({machine:m});
       if(m.pf==='tamped') this.tut('dock');
-      return this.toast('Glass under the group head — for a cortado.','info');
+      return this.toast('Glass under the group head â€” stop in the band.','info');
     }
     if(item==='pf'){
       if(s.pf!=='tamped') return this.toast('Dose and tamp it first.','info');
+      if(this.hold==='grind') this.hold=null;
       m.pf='tamped'; this.setState({machine:m,pf:'docked'});
       if(m.cup) this.tut('dock');
       return this.toast('Portafilter locked in.','good');
@@ -788,35 +950,55 @@ class Component extends DCLogic {
   }
   toWand(item){
     const s=this.state;
-    if(item!=='milk') return;
-    if(s.wand.milk||s.wand.froth) return this.toast('Pitcher already on the wand.','info');
-    if(s.inv.milk<=0) return this.toast('Out of milk — check Supplies.','bad');
-    this.setState({wand:{milk:true,gauge:0,froth:false},inv:{...s.inv,milk:s.inv.milk-1}});
-    this.toast('Hold STEAM — release in the green band.','info');
+    if(item!=='frother') return;
+    if(s.wand.milk||s.wand.froth) return this.toast('Tin already on the wand.','info');
+    if(s.frother!=='full') return this.toast('Fill the tin from the fridge first.','info');
+    this.setState({wand:{milk:true,gauge:0,froth:false,kind:s.frotherKind},frother:'empty',frotherKind:null});
+    this.toast('Hold STEAM â€” release in the green band.','info');
   }
   addTo(slot,item){
     const s=this.state; const d=s.tray[slot]; if(!d) return;
     if(item==='froth'){
       if(!s.wand.froth) return;
       let type=null;
-      if(d.type==='espresso') type='latte';
-      else if(d.type==='glassShot') type='cortado';
+      if(d.type==='espresso') type=d.cup==='glass'?'cortado':'latte';
       else if(d.type==='mochaBase') type='mocha';
-      else if(d.type==='shortshot') return this.toast('A ristretto needs a glass before milk.','bad');
+      else if(d.type==='lungo') return this.toast('A lungo is served black.','bad');
       if(!type) return this.toast('Milk doesn\u2019t belong in that.','bad');
-      this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,type}:t),wand:{milk:false,gauge:0,froth:false}});
+      this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,type,milk:s.wand.kind}:t),wand:{milk:false,gauge:0,froth:false,kind:null}});
       return this.toast(TRAY_LABEL[type]+' built.','good');
     }
     if(item==='glass'){
-      if(d.type!=='espresso'&&d.type!=='shortshot') return this.toast('Only a poured shot can move to a glass.','bad');
-      this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,type:'glassShot'}:t)});
-      return this.toast('Shot poured into a glass. Add steamed milk.','info');
+      if(d.type!=='espresso') return this.toast('Only a poured espresso can move to a glass.','bad');
+      this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,cup:'glass'}:t)});
+      return this.toast('Espresso poured into a glass. Add steamed milk for a cortado.','info');
     }
     if(item==='cocoa'){
-      if(d.type!=='espresso') return this.toast('Cocoa goes in an espresso.','bad');
-      if(s.inv.cocoa<=0) return this.toast('Out of cocoa — check Supplies.','bad');
-      this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,type:'mochaBase'}:t),inv:{...s.inv,cocoa:s.inv.cocoa-1}});
-      return this.toast('Cocoa in. Now steamed milk.','info');
+      if(d.type==='espresso'){
+        if(s.inv.cocoa<=0) return this.toast('Out of cocoa â€” check Supplies.','bad');
+        this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,type:'mochaBase'}:t),inv:{...s.inv,cocoa:s.inv.cocoa-1}});
+        return this.toast('Cocoa in. Now steamed milk.','info');
+      }
+      if(['lungo','americano','latte','cortado','mocha'].indexOf(d.type)>=0){
+        if(d.cocoaTop) return this.toast('Already has cocoa on top.','info');
+        if(s.inv.cocoa<=0) return this.toast('Out of cocoa â€” check Supplies.','bad');
+        this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,cocoaTop:true}:t),inv:{...s.inv,cocoa:s.inv.cocoa-1}});
+        return this.toast('Cocoa dusted on top.','good');
+      }
+      return this.toast('Cocoa doesn\u2019t belong there.','bad');
+    }
+    if(item==='sugar'){
+      const cur=d.sugar||0;
+      if(cur>=3) return this.toast('Plenty sweet already.','info');
+      if(s.inv.sugar<=0) return this.toast('Out of sugar cubes.','bad');
+      this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,sugar:cur+1}:t),inv:{...s.inv,sugar:s.inv.sugar-1},counter:null});
+      return this.toast('Sugar cube in ('+(cur+1)+').','good');
+    }
+    if(item==='cinnamon'){
+      if(d.dust) return this.toast('Already dusted.','info');
+      if(s.inv.cinnamon<=0) return this.toast('Out of cinnamon â€” check Supplies.','bad');
+      this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,dust:true}:t),inv:{...s.inv,cinnamon:s.inv.cinnamon-1}});
+      return this.toast('Dusted with cinnamon.','good');
     }
   }
   combine(fromId,slot){
@@ -825,10 +1007,30 @@ class Component extends DCLogic {
     if(a.type==='water'&&b.type==='espresso'){
       return this.setState({tray:s.tray.filter(t=>t.id!==a.id).map(t=>t.id===b.id?{...t,type:'americano'}:t),selected:null},()=>this.toast('Americano built.','good'));
     }
-    if(a.type==='shortshot'&&b.type==='shortshot'){
-      return this.setState({tray:s.tray.filter(t=>t.id!==a.id).map(t=>t.id===b.id?{...t,type:'espresso'}:t),selected:null},()=>this.toast('Two ristrettos make a full shot.','good'));
-    }
     this.toast('Those don\u2019t combine.','bad');
+  }
+  addExtraShot(id){
+    const s=this.state; const m=s.machine;
+    if(!m.shot) return this.toast('Pull a shot first.','info');
+    const d=s.tray.find(t=>t.id===id); if(!d) return;
+    const eligible=['espresso','latte','mocha','americano'].indexOf(d.type)>=0;
+    if(!eligible) return this.toast('Can\u2019t add a shot to that.','bad');
+    if(d.type==='espresso'&&d.cup!=='cup') return this.toast('Only a latte cup can take an extra shot.','bad');
+    if(d.extraShot) return this.toast('Already has an extra shot.','info');
+    this.setState({tray:s.tray.map(t=>t.id===id?{...t,extraShot:true}:t),machine:{...m,shot:null,cup:null,brew:0}});
+    this.toast('Extra shot pulled in.','good');
+  }
+  matchesMods(d,o){
+    const s=this.state;
+    if(!s.settings.modifications) return true;
+    const need=o.mods||{};
+    if(need.extraShot){ if(!d.extraShot) return false; if(o.drink==='espresso'&&d.cup!=='cup') return false; }
+    else if(d.extraShot) return false;
+    if(need.sugar){ if((d.sugar||0)!==need.sugar) return false; } else if(d.sugar) return false;
+    if(need.milk){ if(d.milk!==need.milk) return false; } else if(d.milk&&d.milk!=='whole') return false;
+    if(need.extras){ if(!!d.cocoaTop!==!!need.extras.cocoa) return false; if(!!d.dust!==!!need.extras.cinnamon) return false; }
+    else if(d.cocoaTop||d.dust) return false;
+    return true;
   }
   tapTicket(oid){
     const s=this.state;
@@ -845,11 +1047,18 @@ class Component extends DCLogic {
     const d=s.tray.find(t=>t.id===drinkId), o=s.orders.find(x=>x.id===orderId);
     if(!d||!o) return;
     if(!o.accepted) return this.toast('Tap the ticket to accept it first.','bad');
-    if(d.type!==o.drink) return this.toast('Not their order!','bad');
-    const pay=DRINKS[o.drink].price+(o.left/o.dur>0.5?0.5:0);
+    if(d.type!==o.drink||!this.matchesMods(d,o)){
+      this.setState({reputation:clampRep(s.reputation-0.05)});
+      return this.toast('Not their order!','bad');
+    }
+    const tier=repTier(s.reputation);
+    const speed=o.left/o.dur;
+    const tip=DRINKS[o.drink].price*tier.tipPct;
+    const pay=DRINKS[o.drink].price+tip+(speed>0.5?0.5:0)+(d.sugar?0.1*d.sugar:0)+(d.dust?0.25:0)+(d.cocoaTop?0.25:0);
+    const reputation=clampRep(s.reputation+0.02+speed*0.08);
     this.setState({tray:s.tray.filter(t=>t.id!==drinkId),orders:s.orders.filter(x=>x.id!==orderId),
-      money:s.money+pay,served:s.served+1,dayServed:s.dayServed+1,dayCash:s.dayCash+pay,selected:null});
-    this.toast('Served '+(o.who||NPC_NAMES[o.npc])+' · +$'+money2(pay),'good');
+      money:s.money+pay,served:s.served+1,dayServed:s.dayServed+1,dayCash:s.dayCash+pay,selected:null,reputation});
+    this.toast('Served '+(o.who||NPC_NAMES[o.npc])+' Â· +$'+money2(pay),'good');
     this.tut('serve');
   }
 
@@ -879,26 +1088,40 @@ class Component extends DCLogic {
     const hh=Math.floor(s.clock/60), mm=Math.floor(s.clock%60);
     const ampm=hh>=12?'PM':'AM'; const h12=hh>12?hh-12:hh;
     const hearts='\u2665'.repeat(Math.max(0,s.lives))+'\u2661'.repeat(Math.max(0,5-s.lives));
+    const m=s.machine;
     const spr={...SPR, avatar:s.barista?SPR.h1:SPR.h0,
       grinder:(s.grinder.hopper?(this.hold==='grind'?SPR.g2:SPR.g1):[SPR.g0,SPR.g5,SPR.g4,SPR.g3][s.grinder.levels]),
-      machine:s.machine.pf?SPR.mPf:SPR.mIdle,
+      machine:m.pf?SPR.mPf:SPR.mIdle,
       pf:{clean:SPR.pfClean,grounds:SPR.pfGrounds,tamped:SPR.pfTamped,spent:SPR.pfGrounds}[s.pf]||SPR.pfClean,
-      dockCup:s.machine.cup==='glass'?(s.machine.shot?SPR.glassShot:SPR.glassEmpty):(s.machine.shot?(s.machine.shot==='short'?SPR.demiShot:SPR.espresso):(s.machine.cup==='demi'?SPR.demiEmpty:SPR.cupEmpty)),
+      frother:s.frother==='full'?SPR.pitcherMilk:SPR.pitcherEmpty,
+      counter:s.counter?(s.counter.item==='sugar'?SPR.sugar:SPR.milkCarton):SPR.milkCarton,
+      dockCup:m.cup==='glass'?(m.shot?SPR.glassShot:SPR.glassEmpty)
+        :m.cup==='demi'?(m.shot?SPR.demiShot:SPR.demiEmpty)
+        :(m.shot==='lungo'?SPR.americano:(m.shot?SPR.espressoCup:SPR.cupEmpty)),
       wandPitcher:s.wand.froth?SPR.pitcherFroth:SPR.pitcherMilk
     };
     const pick=on=>({width:96,border:on?'3px solid #e8b661':'3px solid #3a2a1c',background:on?'#3d2a17':'#1a120c',boxShadow:on?'0 0 0 2px rgba(232,182,97,.3)':'none',cursor:'pointer',padding:'4px 2px 0'});
-    const slots=[0,1,2];
-    const trayView=slots.map(i=>{
+    const trayView=[0,1,2].map(i=>{
       const t=s.tray[i];
       const sel=t&&s.selected===t.id;
+      const extras=t?[t.sweet?'S':'',t.dust?'C':''].filter(Boolean).join(''):'';
       return {wrap:{position:'relative',width:78,height:78,border:sel?'3px solid #e8b661':'2px solid #3a2a1c',background:sel?'#33220f':'#231710'},
         filled:!!t,empty:!t,
         dragId:t?'drink:'+t.id:'',zoneId:'slot:'+i,
-        spr:t?{...SPR[TRAY_SPR[t.type]]}:null, label:t?TRAY_LABEL[t.type]:''};
+        spr:t?{...SPR[traySpr(t)]}:null, label:t?TRAY_LABEL[t.type]:'',
+        extra:extras,
+        extraStyle:{position:'absolute',top:1,right:1,fontFamily:"'Silkscreen',monospace",fontSize:8,color:'#0a0705',background:extras?'#e8b661':'transparent',padding:extras?'0 2px':0}};
     });
     const ordersView=s.orders.slice(0,2).map((o,i)=>{
       const pct=Math.max(0,Math.min(100,100*o.left/o.dur));
       const col=pct>50?'#2f6d3f':pct>22?'#e8b661':'#8a3b1f';
+      const modsParts=[];
+      if(o.mods){
+        if(o.mods.extraShot) modsParts.push('+SHOT');
+        if(o.mods.sugar) modsParts.push(o.mods.sugar+'Ã—SUGAR');
+        if(o.mods.milk) modsParts.push(o.mods.milk.toUpperCase());
+        if(o.mods.extras){ if(o.mods.extras.cocoa) modsParts.push('+COCOA'); if(o.mods.extras.cinnamon) modsParts.push('+CINN'); }
+      }
       return {wrap:{position:'absolute',left:i===0?'3%':'55%',top:'1.5%',width:'42%',zIndex:30},
         card:{background:o.accepted?'#f3e2bd':'#e9dcc4',border:o.accepted?'3px solid #e8b661':'3px dashed #8a6b45',
           boxShadow:'0 4px 0 rgba(0,0,0,.45)',padding:'5px 5px 3px',cursor:'pointer',position:'relative'},
@@ -906,22 +1129,25 @@ class Component extends DCLogic {
         bar:{height:'100%',width:pct.toFixed(1)+'%',background:col},
         tag:o.accepted?'ACCEPTED':'TAP TO ACCEPT',
         tagStyle:{fontFamily:"'Silkscreen',monospace",fontSize:8,textAlign:'center',marginTop:3,color:o.accepted?'#2f6d3f':'#8a3b1f'},
-        zone:'ticket:'+o.id, tap:'ticket-'+o.id
+        zone:'ticket:'+o.id, tap:'ticket-'+o.id,
+        hasMods:modsParts.length>0, modsLabel:modsParts.join(' ')
       };
     });
-    const npcsView=s.orders.slice(0,2).map((o,i)=>{
-      const b=NPC_BOX[o.npc]||NPC_BOX[0];
-      return {wrap:{position:'absolute',left:i===0?'17%':'51%',bottom:'44%',width:'31%',height:(40*b[3]/540).toFixed(2)+'%',zIndex:10,cursor:'pointer'},
-      spr:npcSpr(o.npc), zone:'ticket:'+o.id, tap:'ticket-'+o.id};
-    });
+    const npcsView=s.orders.slice(0,2).map((o,i)=>({
+      wrap:{position:'absolute',left:i===0?'17%':'51%',bottom:'44%',width:'31%',height:'38%',zIndex:10,cursor:'pointer'},
+      spr:{...SPR['n'+o.npc],backgroundPosition:'center bottom'}, zone:'ticket:'+o.id, tap:'ticket-'+o.id}));
     const logView=s.toasts.map((t,i)=>({text:t.text,time:t.time,
       row:{display:'flex',gap:7,alignItems:'flex-start',padding:'7px 9px',borderBottom:'1px solid #2a1d12',background:i===0?'#1c1409':'transparent'},
       dot:{width:8,height:8,marginTop:5,flex:'none',background:t.kind==='bad'?'#8a3b1f':t.kind==='good'?'#2f6d3f':'#8a6b45',border:'1px solid '+(t.kind==='bad'?'#f0b48c':t.kind==='good'?'#7fd39a':'#6b5236')}}));
-    const m=s.machine;
     const recipesView=Object.keys(DRINKS).map(k=>({name:DRINKS[k].label,how:DRINKS[k].how,spr:{...SPR[DRINKS[k].spr]}}));
+    const shopView=Object.keys(SHOP).map(k=>({name:SHOP[k].name,have:s.inv[k]||0,price:'$'+SHOP[k].cost,tap:'buy-'+k,spr:{...SPR[SHOP[k].spr]}}));
     const other=s.view==='customer'?'crafting':'customer';
     const servable=s.tray.some(t=>s.orders.some(o=>o.accepted&&o.drink===t.type));
     const badge=other==='customer'?(s.orders.some(o=>!o.accepted)||servable):(!!m.shot||s.wand.froth);
+    const tier=repTier(s.reputation);
+    const firedOn=s.settings.fired, patienceOn=s.settings.patience;
+    const repStarsView=[0,1,2,3,4].map(i=>({fillWrap:{position:'absolute',left:0,top:0,bottom:0,overflow:'hidden',width:(Math.max(0,Math.min(1,s.reputation-i))*100)+'%'}}));
+    const swStyle=on=>({width:40,textAlign:'center',fontFamily:"'Silkscreen',monospace",fontSize:9,padding:'4px 0',background:on?'#2f6d3f':'#3a2a1c',border:'2px solid '+(on?'#7fd39a':'#5a4530'),color:on?'#eafbef':'#c9b394'});
     return {
       scaleStyle:{transform:'scale('+s.scale+')',transformOrigin:'center center'},
       isMenu:s.screen==='menu',isPlay:s.screen==='play',isDayEnd:s.screen==='dayend',isOver:s.screen==='gameover',
@@ -932,26 +1158,36 @@ class Component extends DCLogic {
       baristaUpper:(s.names[s.barista]||'BARISTA').toUpperCase(),
       day:s.day,nextDay:s.day+1,clockStr:h12+':'+(mm<10?'0':'')+mm+' '+ampm,moneyStr:money2(s.money),heartsStr:hearts,
       served:s.served,dayServed:s.dayServed,dayMissed:s.dayMissed,dayCashStr:money2(s.dayCash),inv:s.inv,
-      toggleLabel:other==='crafting'?'\u2630 MAKE':'\u2630 CUSTOMERS',badge,
-      ordersView,npcsView,trayView,recipesView,
+      stockLine:'Beans '+s.inv.beans+' Â· Milk '+(s.inv.whole+s.inv.oat+s.inv.cashew)+' Â· Cocoa '+s.inv.cocoa+' Â· Sugar '+s.inv.sugar,
+      toggleLabel:other==='crafting'?'MAKE':'CUSTOMERS',badge,firedOn,patienceOn,
+      ordersView,npcsView,trayView,recipesView,shopView,
       logOpen:s.logOpen,logView,logEmpty:s.toasts.length===0,
       unread:s.unread>0,unreadCount:s.unread>9?'9+':s.unread,
       unreadStyle:{position:'absolute',top:-7,right:-7,minWidth:16,height:16,padding:'0 3px',borderRadius:9,background:'#8a3b1f',border:'2px solid #f0e2cd',color:'#fff6e6',fontFamily:"'Silkscreen',monospace",fontSize:8,display:'flex',alignItems:'center',justifyContent:'center'},
+      badgeStyle:{position:'absolute',top:-8,right:-8,minWidth:18,height:18,borderRadius:9,background:'#3d2a17',border:'2px solid #e8b661',color:'#f0e2cd',fontFamily:"'Silkscreen',monospace",fontSize:9,display:'flex',alignItems:'center',justifyContent:'center'},
       pfOnShelf:s.pf!=='docked',
       pfTag:{clean:'CLEAN',grounds:'DOSED',tamped:'TAMPED',spent:'SPENT'}[s.pf]||'',
       pfTagStyle:{position:'absolute',left:0,bottom:-2,fontFamily:"'Silkscreen',monospace",fontSize:8,color:'#f0e2cd',background:'#2a1a0e',border:'1px solid #6b5236',padding:'0 2px'},
+      frotherOnShelf:!s.wand.milk&&!s.wand.froth,
+      frotherTag:s.frother==='full'?(MILK_LABEL[s.frotherKind]||'FULL'):'EMPTY',
+      frotherTagStyle:{position:'absolute',left:0,bottom:-2,fontFamily:"'Silkscreen',monospace",fontSize:8,color:s.frother==='full'?'#eafbef':'#c9b394',background:s.frother==='full'?'#2f6d3f':'#2a1a0e',border:'1px solid #6b5236',padding:'0 2px'},
+      counterItem:!!s.counter,
+      counterDragId:s.counter?s.counter.item:'',
+      counterLabel:s.counter?(s.counter.item==='sugar'?'SUGAR':MILK_LABEL[s.counter.kind]):'',
+      counterWrap:s.counter&&s.counter.item==='sugar'
+        ?{position:'absolute',left:'70%',bottom:'15%',width:'7.5%',height:'6%',zIndex:19,cursor:'grab'}
+        :{position:'absolute',left:'68%',bottom:'14%',width:'9%',height:'15%',zIndex:19,cursor:'grab'},
       showDockCup:!!m.cup||!!m.shot,
-      pouring:s.pouring,
-      dockCupWrap:{position:'absolute',left:m.cup==='glass'?'54.35%':(m.cup==='demi'?'52.85%':'51.35%'),bottom:'18%',width:m.cup==='glass'?'10.1%':(m.cup==='demi'?'13.1%':'16.1%'),height:m.cup==='glass'?'8%':(m.cup==='demi'?'7.5%':'10%'),cursor:m.shot?'pointer':'default',animation:m.shot?'cbpulse 1s infinite':'none',zIndex:15},
+      brewing:m.brewState==='brewing',
+      dockCupWrap:{position:'absolute',left:m.cup==='glass'?'44.95%':(m.cup==='demi'?'43.45%':'41.95%'),bottom:'18%',width:m.cup==='glass'?'10.1%':(m.cup==='demi'?'13.1%':'16.1%'),height:m.cup==='glass'?'8%':(m.cup==='demi'?'7.5%':'10%'),cursor:m.shot?'pointer':'default',animation:m.shot?'cbpulse 1s infinite':'none',zIndex:15},
       showGlass:!!m.glass,
       wandItem:s.wand.milk||s.wand.froth,
-      wandWrap:{position:'absolute',left:'32%',bottom:'26.5%',width:'17%',height:'11%',zIndex:16,cursor:s.wand.froth?'grab':'default'},
+      wandWrap:{position:'absolute',left:'20.55%',bottom:'26.5%',width:'17%',height:'11%',zIndex:16,cursor:s.wand.froth?'grab':'default'},
       showGrind:s.grinder.hopper,
       grindBar:{height:'100%',width:(s.grinder.prog*100).toFixed(0)+'%',background:'#e8b661'},
       showBrew:(!!m.cup&&m.pf==='tamped')||m.brewState!=='idle'||!!m.shot,
-      brewBtnLabel:m.brewState==='paused'?'RESUME':'BREW',
-      brewBtnStyle:{background:'#2f6d3f',border:'2px solid #7fd39a',padding:'5px 8px',fontFamily:"'Silkscreen',monospace",fontSize:9,color:'#eafbef',cursor:'pointer',flex:'none'},
-      brewBar:{position:'absolute',left:0,top:0,bottom:0,width:m.brew.toFixed(1)+'%',background:m.brewState==='paused'?'#8a6b45':'#c46a2a'},
+      showLungoZone:m.cup==='cup',
+      brewBar:{position:'absolute',left:0,top:0,bottom:0,width:m.brew.toFixed(1)+'%',background:'#c46a2a'},
       showSteam:s.wand.milk&&!s.wand.froth,
       steamBar:{position:'absolute',left:0,top:0,bottom:0,width:(s.wand.gauge*100).toFixed(0)+'%',background:'rgba(240,226,205,.75)'},
       showWater:!!m.glass,
@@ -960,23 +1196,35 @@ class Component extends DCLogic {
       waterZone:{position:'absolute',left:m.wtarget.toFixed(1)+'%',width:'18%',top:0,bottom:0,background:'rgba(127,211,154,.25)',border:'1px solid #7fd39a'},
       waterPin:{position:'absolute',left:m.wpos.toFixed(1)+'%',top:-2,bottom:-2,width:4,background:'#e8b661'},
       tutOn:s.tut>0,tutStep:s.tut,tutText:s.tut>0?TUT[s.tut-1].t:'',
-      modalOn:!!s.modal,modalTitle:{menu:'CAFÉ MENU',shop:'SUPPLIES',recipes:'RECIPE CARD',instructions:'HOW TO PLAY',scores:'HIGHSCORES',settings:'SETTINGS',note:'A NOTE'}[s.modal]||'',
+      modalOn:!!s.modal,modalTitle:{menu:'SETTINGS',shop:'SUPPLIES',recipes:'RECIPE CARD',instructions:'HOW TO PLAY',scores:'HIGHSCORES',settings:'GAMEPLAY',note:'A NOTE',fridge:'FRIDGE',reputation:'REPUTATION'}[s.modal]||'',
       mMenu:s.modal==='menu',mShop:s.modal==='shop',mRecipes:s.modal==='recipes',mInstr:s.modal==='instructions',
-      mScores:s.modal==='scores',mSettings:s.modal==='settings',mNote:s.modal==='note',
+      mScores:s.modal==='scores',mSettings:s.modal==='settings',mNote:s.modal==='note',mFridge:s.modal==='fridge',mRep:s.modal==='reputation',
       scoresView:s.scores.map((x,i)=>({rank:'#'+(i+1),day:x.day,cash:x.cash})),noScores:s.scores.length===0,
+      repStarsView,
+      repNumber:s.reputation.toFixed(1),
+      repTierLabel:tier.tier+' STAR TIER',
+      repPerkText:REP_PERKS[tier.tier],
+      toggleFiredStyle:swStyle(s.settings.fired), toggleFiredLabel:s.settings.fired?'ON':'OFF',
+      togglePatienceStyle:swStyle(s.settings.patience), togglePatienceLabel:s.settings.patience?'ON':'OFF',
+      toggleModsStyle:swStyle(s.settings.modifications), toggleModsLabel:s.settings.modifications?'ON':'OFF',
+      dayLengthLabel:s.settings.dayLength+' MIN/DAY', dayLengthVal:s.settings.dayLength,
+      onDayLength:e=>this.setState(st=>({settings:{...st.settings,dayLength:Math.max(1,Math.min(60,+e.target.value))}})),
       dragging:!!s.drag,
       ghostStyle:s.drag?{position:'fixed',left:s.drag.x,top:s.drag.y,width:64,height:64,transform:'translate(-50%,-50%)',pointerEvents:'none',zIndex:999,opacity:.9}:null,
       ghostSpr:s.drag?this.ghost(s.drag.item):null
     };
   }
   ghost(item){
-    if(item.indexOf('drink:')===0){ const d=this.state.tray.find(t=>t.id===+item.slice(6)); return d?{...SPR[TRAY_SPR[d.type]]}:null; }
-    const map={beans:'beans',milk:'pitcherMilk',cocoa:'cocoa',cup:'cupEmpty',demi:'demiEmpty',glass:'glassEmpty',tamp:'tamp',froth:'pitcherFroth'};
-    if(item==='pf') return {...SPR[{clean:'pfClean',grounds:'pfGrounds',tamped:'pfTamped',spent:'pfGrounds'}[this.state.pf]||'pfClean']};
+    const s=this.state;
+    if(item.indexOf('drink:')===0){ const d=s.tray.find(t=>t.id===+item.slice(6)); return d?{...SPR[traySpr(d)]}:null; }
+    if(item==='pf') return {...SPR[{clean:'pfClean',grounds:'pfGrounds',tamped:'pfTamped',spent:'pfGrounds'}[s.pf]||'pfClean']};
+    if(item==='frother') return {...SPR[s.frother==='full'?'pitcherMilk':'pitcherEmpty']};
+    if(item==='carton') return {...SPR.milkCarton};
+    const map={beans:'beans',cocoa:'cocoa',cinnamon:'cinnamon',sugar:'sugar',cup:'cupEmpty',demi:'demiEmpty',glass:'glassEmpty',tamp:'tamp',froth:'pitcherFroth'};
     return map[item]?{...SPR[map[item]]}:null;
   }
 }
-
 </script>
 </body>
 </html>
+
