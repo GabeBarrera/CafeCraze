@@ -100,7 +100,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
         <div data-zone="{{ n.zone }}" data-tap="{{ n.tap }}" style="{{ n.wrap }}"><div style="{{ n.spr }}"></div></div>
       </sc-for>
       <div style="position:absolute;inset:0;background-image:url(assets/scene_customer_top.webp);background-size:cover;background-position:center;pointer-events:none;z-index:20"></div>
-      <div data-tap="modal-note" style="position:absolute;left:calc(30% + 50px);top:calc(65.5% - 40px);width:13.1%;height:8.5%;cursor:pointer;z-index:25"><div style="{{ spr.note }}"></div></div>
+      <div data-tap="modal-note" style="position:absolute;left:calc(30% + 60px);top:calc(65.5% + 10px);width:13.1%;height:8.5%;cursor:pointer;z-index:25"><div style="{{ spr.note }}"></div></div>
       <sc-for list="{{ ordersView }}" as="o" hint-placeholder-count="1">
         <div style="{{ o.wrap }}">
           <div data-zone="{{ o.zone }}" data-tap="{{ o.tap }}" style="{{ o.card }}">
@@ -142,9 +142,9 @@ a{color:#e8b661}a:hover{color:#f5d69a}
         </div>
       </sc-if>
 
-      <div data-zone="grinder" style="position:absolute;left:calc(5% - 15px);bottom:calc(16% + 38px);width:24.7%;height:30%"><div style="{{ spr.grinder }}"></div></div>
+      <div data-zone="grinder" style="position:absolute;left:calc(5% - 25px);bottom:calc(16% + 88px);width:24.7%;height:30%"><div style="{{ spr.grinder }}"></div></div>
 
-      <div data-zone="machine" style="position:absolute;left:24.55%;bottom:calc(16% + 20px);width:50.9%;height:33%"><div style="{{ spr.machine }}"></div></div>
+      <div data-zone="machine" style="position:absolute;left:24.55%;bottom:calc(16% + 100px);width:50.9%;height:33%"><div style="{{ spr.machine }}"></div></div>
       <sc-if value="{{ showDockCup }}" hint-placeholder-val="{{ false }}">
         <div data-tap="pour" style="{{ dockCupWrap }}"><div style="{{ spr.dockCup }}"></div></div>
       </sc-if>
@@ -152,11 +152,11 @@ a{color:#e8b661}a:hover{color:#f5d69a}
         <div style="position:absolute;left:49.45%;top:calc(68.5% - 20px);width:1.4%;height:7%;background:linear-gradient(#4a2410,#7a3f18);transform-origin:top center;animation:cbstream .5s ease-out;z-index:18;box-shadow:0 0 3px rgba(0,0,0,.5)"></div>
         <div style="position:absolute;left:48.75%;top:calc(75% - 20px);width:2.8%;height:1.2%;border-radius:50%;background:rgba(122,63,24,.85);animation:cbdrip .4s linear infinite;z-index:18"></div>
       </sc-if>
-      <div data-zone="nozzle" style="position:absolute;left:64.55%;bottom:calc(16% + 20px);width:11%;height:19%;border-right:2px dashed rgba(232,182,97,.25)"></div>
+      <div data-zone="nozzle" style="position:absolute;left:64.55%;bottom:calc(16% + 100px);width:11%;height:19%;border-right:2px dashed rgba(232,182,97,.25)"></div>
       <sc-if value="{{ showGlass }}" hint-placeholder-val="{{ false }}">
-        <div style="position:absolute;left:65%;bottom:calc(18.5% + 20px);width:10.1%;height:8%"><div style="{{ spr.glassEmpty }}"></div></div>
+        <div style="position:absolute;left:65%;bottom:calc(18.5% + 100px);width:10.1%;height:8%"><div style="{{ spr.glassEmpty }}"></div></div>
       </sc-if>
-      <div data-zone="wand" style="position:absolute;left:23.55%;bottom:calc(16% + 20px);width:11%;height:19%;border-left:2px dashed rgba(232,182,97,.25)"></div>
+      <div data-zone="wand" style="position:absolute;left:23.55%;bottom:calc(16% + 160px);width:11%;height:19%;border-left:2px dashed rgba(232,182,97,.25)"></div>
       <sc-if value="{{ wandItem }}" hint-placeholder-val="{{ false }}">
         <div data-item="froth" style="{{ wandWrap }}"><div style="{{ spr.wandPitcher }}"></div></div>
       </sc-if>
@@ -168,9 +168,10 @@ a{color:#e8b661}a:hover{color:#f5d69a}
         <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#9fd8ff;background:rgba(10,7,5,.78);border:1px solid #3a2a1c;padding:1px 4px;transform:translateX(15px)">FRIDGE</div>
       </div>
       <sc-if value="{{ frotherOnShelf }}" hint-placeholder-val="{{ true }}">
-        <div data-item="frother" data-zone="frother" style="position:absolute;left:calc(78% + 10px);bottom:calc(12% + 50px);width:14%;height:10%;cursor:grab"><div style="{{ spr.frother }}"></div>
+        <div data-item="frother" data-zone="frother" style="position:absolute;left:calc(78% + 10px);bottom:calc(12% + 70px);width:14%;height:10%;cursor:grab"><div style="{{ spr.frother }}"></div>
           <div style="{{ frotherTagStyle }}">{{ frotherTag }}</div>
         </div>
+        <div data-zone="frother" style="position:absolute;left:calc(78% + 10px);bottom:calc(12% + 50px);width:14%;height:20px"></div>
       </sc-if>
       <sc-if value="{{ counterItem }}" hint-placeholder-val="{{ false }}">
         <div data-item="{{ counterDragId }}" style="{{ counterWrap }}"><div style="{{ spr.counter }}"></div>
@@ -178,7 +179,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
         </div>
       </sc-if>
 
-      <div style="position:absolute;left:2%;right:2%;bottom:1.5%;display:flex;flex-direction:column;gap:4px;z-index:20">
+      <div style="position:absolute;left:2%;right:2%;bottom:calc(1.5% + 40px);display:flex;flex-direction:column;gap:4px;z-index:20">
         <sc-if value="{{ showGrind }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;align-items:center;gap:6px;background:rgba(10,7,5,.86);border:2px solid #3a2a1c;padding:4px 6px">
             <div data-hold="grind" style="background:#3d2a17;border:2px solid #e8b661;padding:5px 8px;font-family:'Silkscreen',monospace;font-size:9px;color:#e8b661;cursor:pointer;flex:none">HOLD GRIND</div>
@@ -555,6 +556,7 @@ class Component extends DCLogic {
   hold=null; spawnCd=6; uid=1;
 
   componentDidMount(){
+    Object.values(SPR).forEach(s=>{ const m=/url\((.*)\)/.exec(s.backgroundImage); if(m){ const img=new Image(); img.src=m[1]; } });
     try{this.setState({scores:JSON.parse(localStorage.getItem('cb_scores')||'[]')});}catch(e){}
     try{const n=JSON.parse(localStorage.getItem('cb_names')||'null'); if(n&&n.length===2) this.setState({names:n});}catch(e){}
     try{ if(localStorage.getItem('cb_save')) this.load(); }catch(e){}
@@ -1179,10 +1181,10 @@ class Component extends DCLogic {
         :{position:'absolute',left:'68%',bottom:'14%',width:'9%',height:'15%',zIndex:19,cursor:'grab'},
       showDockCup:!!m.cup||!!m.shot,
       brewing:m.brewState==='brewing',
-      dockCupWrap:{position:'absolute',left:m.cup==='glass'?'44.95%':(m.cup==='demi'?'43.45%':'41.95%'),bottom:'18%',width:m.cup==='glass'?'10.1%':(m.cup==='demi'?'13.1%':'16.1%'),height:m.cup==='glass'?'8%':(m.cup==='demi'?'7.5%':'10%'),cursor:m.shot?'pointer':'default',animation:m.shot?'cbpulse 1s infinite':'none',zIndex:15},
+      dockCupWrap:{position:'absolute',left:m.cup==='glass'?'44.95%':(m.cup==='demi'?'43.45%':'41.95%'),bottom:'calc(18% + 100px)',width:m.cup==='glass'?'10.1%':(m.cup==='demi'?'13.1%':'16.1%'),height:m.cup==='glass'?'8%':(m.cup==='demi'?'7.5%':'10%'),cursor:m.shot?'pointer':'default',animation:m.shot?'cbpulse 1s infinite':'none',zIndex:15},
       showGlass:!!m.glass,
       wandItem:s.wand.milk||s.wand.froth,
-      wandWrap:{position:'absolute',left:'20.55%',bottom:'26.5%',width:'17%',height:'11%',zIndex:16,cursor:s.wand.froth?'grab':'default'},
+      wandWrap:{position:'absolute',left:'20.55%',bottom:'32%',width:'17%',height:'11%',zIndex:16,cursor:s.wand.froth?'grab':'default'},
       showGrind:s.grinder.hopper,
       grindBar:{height:'100%',width:(s.grinder.prog*100).toFixed(0)+'%',background:'#e8b661'},
       showBrew:(!!m.cup&&m.pf==='tamped')||m.brewState!=='idle'||!!m.shot,
@@ -1192,8 +1194,8 @@ class Component extends DCLogic {
       steamBar:{position:'absolute',left:0,top:0,bottom:0,width:(s.wand.gauge*100).toFixed(0)+'%',background:'rgba(240,226,205,.75)'},
       showWater:!!m.glass,
       waterBtnLabel:m.wactive?'STOP':'WATER',
-      waterBtnStyle:{background:m.wactive?'#8a3b1f':'#2f6d3f',border:'2px solid '+(m.wactive?'#f0b48c':'#7fd39a'),padding:'5px 8px',fontFamily:"'Silkscreen',monospace",fontSize:9,color:'#fff6e6',cursor:'pointer',flex:'none'},
-      waterZone:{position:'absolute',left:m.wtarget.toFixed(1)+'%',width:'18%',top:0,bottom:0,background:'rgba(127,211,154,.25)',border:'1px solid #7fd39a'},
+      waterBtnStyle:{background:m.wactive?'#8a3b1f':'#2a5a78',border:'2px solid '+(m.wactive?'#f0b48c':'#9fd8ff'),padding:'5px 8px',fontFamily:"'Silkscreen',monospace",fontSize:9,color:'#fff6e6',cursor:'pointer',flex:'none'},
+      waterZone:{position:'absolute',left:m.wtarget.toFixed(1)+'%',width:'18%',top:0,bottom:0,background:'rgba(159,216,255,.25)',border:'1px solid #9fd8ff'},
       waterPin:{position:'absolute',left:m.wpos.toFixed(1)+'%',top:-2,bottom:-2,width:4,background:'#e8b661'},
       tutOn:s.tut>0,tutStep:s.tut,tutText:s.tut>0?TUT[s.tut-1].t:'',
       modalOn:!!s.modal,modalTitle:{menu:'SETTINGS',shop:'SUPPLIES',recipes:'RECIPE CARD',instructions:'HOW TO PLAY',scores:'HIGHSCORES',settings:'GAMEPLAY',note:'A NOTE',fridge:'FRIDGE',reputation:'REPUTATION'}[s.modal]||'',
