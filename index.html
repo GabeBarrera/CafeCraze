@@ -100,7 +100,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
         <div data-zone="{{ n.zone }}" data-tap="{{ n.tap }}" style="{{ n.wrap }}"><div style="{{ n.spr }}"></div></div>
       </sc-for>
       <div style="position:absolute;inset:0;background-image:url(assets/scene_customer_top.webp);background-size:cover;background-position:center;pointer-events:none;z-index:20"></div>
-      <div data-tap="modal-note" style="position:absolute;left:calc(30% + 60px);top:calc(65.5% + 10px);width:13.1%;height:8.5%;cursor:pointer;z-index:25"><div style="{{ spr.note }}"></div></div>
+      <div data-tap="modal-note" style="position:absolute;left:calc(80% + 20px);top:calc(80.5% + 30px);width:13.1%;height:8.5%;cursor:pointer;z-index:25;transform:rotateY(180deg) rotate(-5deg)"><div style="{{ spr.note }}"></div></div>
       <sc-for list="{{ ordersView }}" as="o" hint-placeholder-count="1">
         <div style="{{ o.wrap }}">
           <div data-zone="{{ o.zone }}" data-tap="{{ o.tap }}" style="{{ o.card }}">
@@ -420,7 +420,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 
       <sc-if value="{{ mNote }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;gap:10px;align-items:flex-start">
-          <div style="position:relative;width:56px;height:60px;flex:none"><div style="{{ spr.note }}"></div></div>
+          <div style="position:relative;width:56px;height:60px;flex:none;transform:rotateY(180deg) rotate(-5deg)"><div style="{{ spr.note }}"></div></div>
           <div style="font-size:20px;line-height:1.2;color:#e2d2b8">Dear Mi Mariposita,<br><br>I hope these games bring you as much joy as it has been for me to make them for you.<br><br>I love you times infinity &lt;3<br><br>Love,<br>Your Oso</div>
         </div>
       </sc-if>
