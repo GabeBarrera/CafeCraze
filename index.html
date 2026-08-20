@@ -33,7 +33,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 
 <sc-if value="{{ isMenu }}" hint-placeholder-val="{{ true }}">
 <div style="position:absolute;inset:0;background:#120b07;display:flex;flex-direction:column;align-items:center;padding:28px 22px">
-  <div style="font-family:'Silkscreen',monospace;font-size:13px;color:#8a6b45;letter-spacing:3px">EST. 1998 Â· CORNER LOT</div>
+  <div style="font-family:'Silkscreen',monospace;font-size:13px;color:#8a6b45;letter-spacing:3px">EST. 2026 &middot; A COZY GAME</div>
   <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:34px;color:#e8b661;margin-top:10px;text-shadow:0 4px 0 #5a3a12">CAFE</div>
   <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:34px;color:#e8b661;text-shadow:0 4px 0 #5a3a12">CRAZE</div>
   <div style="font-size:19px;color:#c9b394;margin-top:8px;text-align:center;line-height:1.15">The Coffee Cart simulator that's as addicting the caffeine addiction you swear you don't have.</div>
@@ -68,7 +68,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 <div style="position:absolute;inset:0">
 
   <div style="position:absolute;left:0;right:0;top:0;height:52px;background:#150e09;border-bottom:3px solid #3a2a1c;display:flex;align-items:center;gap:6px;padding:0 6px;z-index:60">
-    <div data-tap="modal-menu" style="width:34px;height:34px;border:2px solid #3a2a1c;background:#231710;display:flex;align-items:center;justify-content:center;font-size:20px;color:#e8b661;cursor:pointer">â˜°</div>
+    <div data-tap="modal-menu" style="width:34px;height:34px;border:2px solid #3a2a1c;background:#231710;display:flex;align-items:center;justify-content:center;font-size:20px;color:#e8b661;cursor:pointer">&#9776;</div>
     <div style="width:34px;height:34px;border:2px solid #3a2a1c;background:#231710;position:relative;overflow:hidden"><div style="{{ spr.avatar_h0 }}"></div><div style="{{ spr.avatar_h1 }}"></div></div>
     <div style="flex:1;display:flex;flex-direction:column;gap:2px;min-width:0">
       <div style="display:flex;gap:8px;align-items:baseline;font-family:'Silkscreen',monospace;font-size:10px;color:#8a6b45">
@@ -78,7 +78,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
         <div style="font-size:15px;color:#8a3b1f;letter-spacing:2px;line-height:1">{{ heartsStr }}</div>
       </sc-if>
     </div>
-    <div data-tap="bell" style="position:relative;width:36px;height:38px;background:#231710;border:2px solid #3a2a1c;display:flex;align-items:center;justify-content:center;font-size:19px;color:#e8b661;cursor:pointer;flex:none">ðŸ””
+    <div data-tap="bell" style="position:relative;width:36px;height:38px;background:#231710;border:2px solid #3a2a1c;display:flex;align-items:center;justify-content:center;font-size:19px;color:#e8b661;cursor:pointer;flex:none">&#128276;
       <sc-if value="{{ unread }}" hint-placeholder-val="{{ false }}">
         <div style="{{ unreadStyle }}">{{ unreadCount }}</div>
       </sc-if>
@@ -228,7 +228,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
       <div style="position:absolute;left:6px;right:6px;bottom:6px;background:#150e09;border:3px solid #e8b661;padding:6px 8px;z-index:40;animation:cbpop .2s">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#e8b661">STEP {{ tutStep }}/9</div>
-          <div data-tap="tutskip" style="font-family:'Silkscreen',monospace;font-size:9px;color:#8a6b45;cursor:pointer">SKIP â€º</div>
+          <div data-tap="tutskip" style="font-family:'Silkscreen',monospace;font-size:9px;color:#8a6b45;cursor:pointer">SKIP &rsaquo;</div>
         </div>
         <div style="font-size:18px;line-height:1.1;color:#f0e2cd;margin-top:2px">{{ tutText }}</div>
       </div>
@@ -244,7 +244,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
             <div style="position:absolute;left:0;right:0;bottom:0;font-family:'Silkscreen',monospace;font-size:8px;text-align:center;color:#f0e2cd;background:rgba(10,7,5,.7)">{{ t.label }}</div>
             <div style="{{ t.extraStyle }}">{{ t.extra }}</div>
             <sc-if value="{{ t.hasX2 }}" hint-placeholder-val="{{ false }}">
-              <div style="{{ t.x2Style }}">Ã—2</div>
+              <div style="{{ t.x2Style }}">&times;2</div>
             </sc-if>
           </div>
         </sc-if>
@@ -259,8 +259,8 @@ a{color:#e8b661}a:hover{color:#f5d69a}
       <div data-tap="modal-reputation" style="border:2px solid #3a2a1c;background:#231710;padding:4px 7px;display:flex;gap:2px;cursor:pointer">
         <sc-for list="{{ repStarsView }}" as="st" hint-placeholder-count="5">
           <div style="position:relative;width:9px;height:11px;font-family:'Silkscreen',monospace;font-size:11px;line-height:1;flex:none">
-            <div style="position:absolute;inset:0;color:#4a3728">â˜…</div>
-            <div style="{{ st.fillWrap }}"><div style="color:#e8b661">â˜…</div></div>
+            <div style="position:absolute;inset:0;color:#4a3728">&#9733;</div>
+            <div style="{{ st.fillWrap }}"><div style="color:#e8b661">&#9733;</div></div>
           </div>
         </sc-for>
       </div>
@@ -271,7 +271,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 
 <sc-if value="{{ isDayEnd }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;inset:0;background:#120b07;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px">
-  <div style="font-family:'Silkscreen',monospace;font-size:11px;color:#8a6b45;letter-spacing:3px">{{ baristaUpper }} Â· 3:00 PM</div>
+  <div style="font-family:'Silkscreen',monospace;font-size:11px;color:#8a6b45;letter-spacing:3px">{{ baristaUpper }} &middot; 3:00 PM</div>
   <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:26px;color:#e8b661;margin:10px 0 20px">DAY {{ day }} DONE</div>
   <div style="width:100%;border:3px solid #3a2a1c;background:#1a120c">
     <div style="display:flex;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #3a2a1c"><span style="font-size:19px">Drinks served</span><span style="font-family:'Silkscreen',monospace;font-size:13px;color:#7fd39a">{{ dayServed }}</span></div>
@@ -304,7 +304,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
   <div style="width:100%;max-height:100%;overflow:auto;background:#1a120c;border:3px solid #e8b661;box-shadow:0 10px 0 rgba(0,0,0,.5)">
     <div style="display:flex;justify-content:space-between;align-items:center;background:#3d2a17;padding:7px 9px">
       <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:12px;color:#e8b661">{{ modalTitle }}</div>
-      <div data-tap="close" style="font-family:'Silkscreen',monospace;font-size:12px;color:#f0e2cd;cursor:pointer;padding:0 3px">âœ•</div>
+      <div data-tap="close" style="font-family:'Silkscreen',monospace;font-size:12px;color:#f0e2cd;cursor:pointer;padding:0 3px">&#10005;</div>
     </div>
     <div style="padding:12px">
 
@@ -347,7 +347,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
       </sc-if>
 
       <sc-if value="{{ mShop }}" hint-placeholder-val="{{ false }}">
-        <div style="font-size:19px;color:#c9b394;margin-bottom:10px">Till: <span style="color:#7fd39a">${{ moneyStr }}</span> â€” the clock is paused while you shop.</div>
+        <div style="font-size:19px;color:#c9b394;margin-bottom:10px">Till: <span style="color:#7fd39a">${{ moneyStr }}</span> &mdash; the clock is paused while you shop.</div>
         <div style="display:flex;flex-direction:column;gap:8px">
           <sc-for list="{{ shopView }}" as="p" hint-placeholder-count="7">
             <div style="display:flex;align-items:center;gap:9px;border:2px solid #3a2a1c;background:#231710;padding:7px">
@@ -370,13 +370,13 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 
       <sc-if value="{{ mInstr }}" hint-placeholder-val="{{ false }}">
         <div style="font-size:19px;line-height:1.2;color:#e2d2b8">
-          <p style="margin:0 0 9px"><b style="color:#e8b661">Two views, one clock.</b> Tickets keep counting down no matter which view you're in â€” switching costs you time.</p>
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Two views, one clock.</b> Tickets keep counting down no matter which view you're in &mdash; switching costs you time.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Window:</b> tap a ticket to accept it. Drag a finished drink from the tray onto an accepted ticket to ring it up.</p>
-          <p style="margin:0 0 9px"><b style="color:#e8b661">Bar:</b> beans â†’ grinder, hold GRIND (it keeps its progress if you let go), dose the portafilter, tamp it, set a cup and the portafilter on the machine, then BREW.</p>
-          <p style="margin:0 0 9px"><b style="color:#e8b661">Stopping a brew:</b> hit STOP inside the gold band for an espresso. Miss the band with a demitasse or a glass and the shot is binned â€” re-dose and try again. In a latte cup, stopping past the band (or letting it run out) gives you a lungo.</p>
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Bar:</b> beans &rarr; grinder, hold GRIND (it keeps its progress if you let go), dose the portafilter, tamp it, set a cup and the portafilter on the machine, then BREW.</p>
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Stopping a brew:</b> hit STOP inside the gold band for an espresso. Miss the band with a demitasse or a glass and the shot is binned &mdash; re-dose and try again. In a latte cup, stopping past the band (or letting it run out) gives you a lungo.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Milk:</b> open the FRIDGE by the trash, pick whole, oat or cashew, then drag the carton into the frother tin on the left of the counter. Put the full tin on the steam wand and hold STEAM.</p>
-          <p style="margin:0">Sugar cubes and cinnamon dust on a finished drink earn a bigger tip. Miss five tickets and the run is over â€” unless You're Fired! is switched off in GAMEPLAY.</p>
-          <p style="margin:9px 0 0"><b style="color:#e8b661">Reputation:</b> tucked under RECIPES. Fast, accurate service builds it; missed or wrong orders cost you â€” it quietly shifts customer traffic, tips, and patience. House rules (game over, patience, modifications, day length) live under GAMEPLAY in the menu.</p>
+          <p style="margin:0">Sugar cubes and cinnamon dust on a finished drink earn a bigger tip. Miss five tickets and the run is over &mdash; unless You're Fired! is switched off in GAMEPLAY.</p>
+          <p style="margin:9px 0 0"><b style="color:#e8b661">Reputation:</b> tucked under RECIPES. Fast, accurate service builds it; missed or wrong orders cost you &mdash; it quietly shifts customer traffic, tips, and patience. House rules (game over, patience, modifications, day length) live under GAMEPLAY in the menu.</p>
         </div>
       </sc-if>
 
@@ -432,7 +432,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
       </sc-if>
 
       <sc-if value="{{ mRep }}" hint-placeholder-val="{{ false }}">
-        <div style="font-family:'Silkscreen',monospace;font-size:24px;color:#e8b661;text-align:center">{{ repNumber }} â˜…</div>
+        <div style="font-family:'Silkscreen',monospace;font-size:24px;color:#e8b661;text-align:center">{{ repNumber }} &#9733;</div>
         <div style="font-family:'Silkscreen',monospace;font-size:10px;color:#8a6b45;text-align:center;letter-spacing:2px;margin-top:4px">{{ repTierLabel }}</div>
         <div style="margin-top:12px;font-size:19px;line-height:1.3;color:#e2d2b8">{{ repPerkText }}</div>
       </sc-if>
@@ -448,7 +448,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
   <div style="position:absolute;right:6px;top:6px;width:274px;max-height:380px;overflow:auto;background:#150e09;border:3px solid #e8b661;box-shadow:0 8px 0 rgba(0,0,0,.5)">
     <div style="display:flex;justify-content:space-between;align-items:center;background:#3d2a17;padding:6px 8px;position:sticky;top:0">
       <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:10px;color:#e8b661">SERVICE LOG</div>
-      <div data-tap="close-log" style="font-family:'Silkscreen',monospace;font-size:11px;color:#f0e2cd;cursor:pointer;padding:0 3px">âœ•</div>
+      <div data-tap="close-log" style="font-family:'Silkscreen',monospace;font-size:11px;color:#f0e2cd;cursor:pointer;padding:0 3px">&#10005;</div>
     </div>
     <sc-for list="{{ logView }}" as="l" hint-placeholder-count="3">
       <div style="{{ l.row }}">
@@ -512,7 +512,7 @@ const BAND_LO=34, BAND_HI=66;
 
 const DRINKS={
   espresso:{label:'ESPRESSO',price:3.5,spr:'demiShot',dur:46,w:3,how:'Stop the brew inside the gold band. Any cup will do.'},
-  lungo:{label:'LUNGO',price:4.25,spr:'espressoCup',dur:50,w:2,how:'Latte cup only â€” let the brew run past the band.'},
+  lungo:{label:'LUNGO',price:4.25,spr:'espressoCup',dur:50,w:2,how:'Latte cup only \u2014 let the brew run past the band.'},
   americano:{label:'AMERICANO',price:4,spr:'americano',dur:52,w:2,how:'Espresso + a glass of water, combined in the tray.'},
   latte:{label:'LATTE',price:5,spr:'latte',dur:58,w:3,how:'Espresso + steamed milk.'},
   cortado:{label:'CORTADO',price:4.5,spr:'cortado',dur:56,w:1,how:'Espresso pulled into a GLASS + steamed milk.'},
@@ -526,13 +526,13 @@ const traySpr=t=>{
   return {americano:'americano',latte:'latte',cortado:'cortado',mocha:'mocha',water:'glassWater'}[t.type]||'demiShot';
 };
 const SHOP={
-  beans:{name:'BEANS Ã—5',cost:6,amt:5,spr:'beans'},
-  whole:{name:'WHOLE MILK Ã—3',cost:4,amt:3,spr:'milkCarton'},
-  oat:{name:'OAT MILK Ã—3',cost:5,amt:3,spr:'milkCarton'},
-  cashew:{name:'CASHEW MILK Ã—3',cost:5,amt:3,spr:'milkCarton'},
-  cocoa:{name:'COCOA Ã—3',cost:5,amt:3,spr:'cocoa'},
-  cinnamon:{name:'CINNAMON Ã—3',cost:4,amt:3,spr:'cinnamon'},
-  sugar:{name:'SUGAR Ã—6',cost:3,amt:6,spr:'sugar'}
+  beans:{name:'BEANS \u00D75',cost:6,amt:5,spr:'beans'},
+  whole:{name:'WHOLE MILK \u00D73',cost:4,amt:3,spr:'milkCarton'},
+  oat:{name:'OAT MILK \u00D73',cost:5,amt:3,spr:'milkCarton'},
+  cashew:{name:'CASHEW MILK \u00D73',cost:5,amt:3,spr:'milkCarton'},
+  cocoa:{name:'COCOA \u00D73',cost:5,amt:3,spr:'cocoa'},
+  cinnamon:{name:'CINNAMON \u00D73',cost:4,amt:3,spr:'cinnamon'},
+  sugar:{name:'SUGAR \u00D76',cost:3,amt:6,spr:'sugar'}
 };
 const MILK_LABEL={whole:'WHOLE',oat:'OAT',cashew:'CASHEW'};
 const NPC_NAMES=['Kenji','Britt','Grant','Naomi','Mateus','Marguerite','Priya','Darius','Bodhi','Zaria','Hiroshi','Valentina'];
@@ -567,7 +567,7 @@ const REP_PERKS={
   0:'Rock bottom. Foot traffic is 50% slower and nobody tips.',
   1:'Bad word of mouth. Traffic is 30% slower and tips have dried up.',
   2:'A few complaints going around. Traffic is 15% slower and tips are thin.',
-  2.5:'Steady and unremarkable â€” no bonuses, no penalties.',
+  2.5:'Steady and unremarkable \u2014 no bonuses, no penalties.',
   3:'Building a following. Traffic is 15% faster, tips run ~15% of drink price, patience drains 10% slower.',
   4:'A neighborhood favorite. Traffic is 30% faster, tips run ~25%, patience drains 20% slower.',
   5:'The talk of the block. Traffic is 50% faster, tips run ~50%, patience drains 40% slower.'
@@ -660,7 +660,7 @@ class Component extends DCLogic {
   tut(k){
     const s=this.state; if(!s.tut) return;
     if(TUT[s.tut-1].k===k){
-      if(s.tut>=9){ this.setState({tut:0}); try{localStorage.setItem('cb_seen','1');}catch(e){} this.toast('Tutorial complete â€” the rush starts now.','good'); }
+      if(s.tut>=9){ this.setState({tut:0}); try{localStorage.setItem('cb_seen','1');}catch(e){} this.toast('Tutorial complete \u2014 the rush starts now.','good'); }
       else this.setState({tut:s.tut+1});
     }
   }
@@ -687,7 +687,7 @@ class Component extends DCLogic {
         if(left<=0){ lives-=1; money=Math.max(0,money-2); dayMissed+=1; missed++; reputation=clampRep(reputation-0.15); }
         else orders.push({...o,left});
       });
-      if(missed) this.toast('Missed order! âˆ’1 life, âˆ’$2, reputation down.','bad');
+      if(missed) this.toast('Missed order! \u22121 life, \u2212$2, reputation down.','bad');
       next.orders=orders; next.money=money; next.dayMissed=dayMissed; next.reputation=reputation;
       if(clock>=900){ clock=900; }
       next.clock=clock;
@@ -703,7 +703,7 @@ class Component extends DCLogic {
       const g={...s.grinder};
       if(this.hold==='grind' && g.hopper){
         g.prog=Math.min(1,g.prog+dt/1.1);
-        if(g.prog>=1){ g.prog=0; g.hopper=false; g.levels=3; this.tut('grind'); this.toast('Ground and ready â€” 3 doses.','good'); }
+        if(g.prog>=1){ g.prog=0; g.hopper=false; g.levels=3; this.tut('grind'); this.toast('Ground and ready \u2014 3 doses.','good'); }
         next.grinder=g;
       }
       const m={...s.machine};
@@ -713,8 +713,8 @@ class Component extends DCLogic {
         m.brew=Math.min(100,m.brew+(fastCup?52:26)*dt);
         if(m.brew>=100){
           m.brewState='idle'; m.pf=null; next.pf='spent'; m.brew=0;
-          if(fastCup){ m.shot='espresso'; this.toast('Espresso pulled â€” full shot.','good'); }
-          else { m.shot='lungo'; this.toast('Ran the full bar â€” a lungo. Tap the cup to collect it.','good'); }
+          if(fastCup){ m.shot='espresso'; this.toast('Espresso pulled \u2014 full shot.','good'); }
+          else { m.shot='lungo'; this.toast('Ran the full bar \u2014 a lungo. Tap the cup to collect it.','good'); }
         }
         mdirty=true;
       }
@@ -723,7 +723,7 @@ class Component extends DCLogic {
       const w={...s.wand};
       if(this.hold==='steam' && w.milk && !w.froth){
         w.gauge=Math.min(1,w.gauge+dt/2.2);
-        if(w.gauge>=1){ this.hold=null; w.milk=false; w.gauge=0; w.kind=null; this.toast('Milk scalded â€” dump it and retry.','bad'); }
+        if(w.gauge>=1){ this.hold=null; w.milk=false; w.gauge=0; w.kind=null; this.toast('Milk scalded \u2014 dump it and retry.','bad'); }
         next.wand=w;
       }
     }
@@ -793,7 +793,7 @@ class Component extends DCLogic {
     const w={...this.state.wand};
     if(!w.milk||w.froth) return;
     if(w.gauge>=0.55&&w.gauge<=0.8){ w.froth=true; w.gauge=0; this.toast('Silky microfoam.','good'); }
-    else if(w.gauge<0.55){ this.toast('Too cold â€” keep steaming.','info'); this.setState({wand:w}); return; }
+    else if(w.gauge<0.55){ this.toast('Too cold \u2014 keep steaming.','info'); this.setState({wand:w}); return; }
     else { w.milk=false; w.gauge=0; w.kind=null; this.toast('Scalded. Milk wasted.','bad'); }
     this.setState({wand:w});
   }
@@ -867,8 +867,8 @@ class Component extends DCLogic {
   takeFromFridge(k){
     const s=this.state;
     if(s.counter) return this.toast('Something\u2019s already on the counter.','info');
-    if((s.inv[k]||0)<=0) return this.toast('None left â€” buy more in Supplies.','bad');
-    if(k==='sugar'){ this.setState({counter:{item:'sugar'},modal:null}); return this.toast('Sugar cube on the counter â€” drop it on a finished drink.','info'); }
+    if((s.inv[k]||0)<=0) return this.toast('None left \u2014 buy more in Supplies.','bad');
+    if(k==='sugar'){ this.setState({counter:{item:'sugar'},modal:null}); return this.toast('Sugar cube on the counter \u2014 drop it on a finished drink.','info'); }
     this.setState({counter:{item:'carton',kind:k},modal:null});
     this.toast(MILK_LABEL[k]+' carton out. Drag it into the frother tin.','info');
   }
@@ -898,18 +898,18 @@ class Component extends DCLogic {
     const s=this.state; const m={...s.machine};
     if(m.brewState!=='brewing') return;
     const at=m.brew;
-    if(at<BAND_LO){ m.brewState='paused'; this.setState({machine:m}); return this.toast('Paused early â€” hit BREW again to reach the band.','info'); }
-    if(at<=BAND_HI){ m.brewState='paused'; this.setState({machine:m}); return this.toast('Paused in the sweet spot â€” grab it now, or keep brewing for a lungo.','good'); }
+    if(at<BAND_LO){ m.brewState='paused'; this.setState({machine:m}); return this.toast('Paused early \u2014 hit BREW again to reach the band.','info'); }
+    if(at<=BAND_HI){ m.brewState='paused'; this.setState({machine:m}); return this.toast('Paused in the sweet spot \u2014 grab it now, or keep brewing for a lungo.','good'); }
     m.brewState='idle'; m.pf=null; m.brew=0; m.shot='lungo';
     this.setState({machine:m,pf:'spent'});
-    this.toast('Ran past the band â€” a lungo. Tap the cup to collect it.','good');
+    this.toast('Ran past the band \u2014 a lungo. Tap the cup to collect it.','good');
   }
   pour(){
     const s=this.state; const m={...s.machine};
     if(m.brewState==='paused'){
       const band=m.brew>=BAND_LO&&m.brew<=BAND_HI;
       if(!band) return;
-      if(s.tray.length>=3) return this.toast('Tray is full â€” ring one up first.','bad');
+      if(s.tray.length>=3) return this.toast('Tray is full \u2014 ring one up first.','bad');
       const cup=m.cup;
       const m2={...m,cup:null,pf:null,shot:null,brew:0,brewState:'idle'};
       this.setState({machine:m2,pf:'spent',tray:[...s.tray,{id:this.uid++,type:'espresso',cup}]});
@@ -918,12 +918,12 @@ class Component extends DCLogic {
       return;
     }
     if(!m.shot) return;
-    if(s.tray.length>=3) return this.toast('Tray is full â€” ring one up first.','bad');
+    if(s.tray.length>=3) return this.toast('Tray is full \u2014 ring one up first.','bad');
     const type=m.shot==='lungo'?'lungo':'espresso';
     const cup=m.cup;
     m.shot=null; m.cup=null; m.brew=0;
     this.setState({machine:m,tray:[...s.tray,{id:this.uid++,type,cup}]});
-    this.toast(type==='lungo'?'Lungo on the tray.':(cup==='glass'?'Espresso in a glass â€” add steamed milk for a cortado.':'Espresso on the tray.'),'good');
+    this.toast(type==='lungo'?'Lungo on the tray.':(cup==='glass'?'Espresso in a glass \u2014 add steamed milk for a cortado.':'Espresso on the tray.'),'good');
     this.tut('shot');
   }
   water(){
@@ -937,7 +937,7 @@ class Component extends DCLogic {
       m.glass=false;
       this.setState({machine:m,tray:[...s.tray,{id:this.uid++,type:'water',cup:'glass'}]});
       this.toast('Clean pour.','good');
-    } else { this.setState({machine:m}); this.toast('Sloppy pour â€” try again.','bad'); }
+    } else { this.setState({machine:m}); this.toast('Sloppy pour \u2014 try again.','bad'); }
   }
 
   /* ------- drops ------- */
@@ -975,13 +975,13 @@ class Component extends DCLogic {
     if(!kind) return;
     if((s.inv[kind]||0)<=0) return this.toast('That carton is empty.','bad');
     this.setState({frother:'full',frotherKind:kind,counter:null,inv:{...s.inv,[kind]:s.inv[kind]-1}});
-    this.toast(MILK_LABEL[kind]+' milk in the tin â€” put it on the steam wand.','good');
+    this.toast(MILK_LABEL[kind]+' milk in the tin \u2014 put it on the steam wand.','good');
   }
   toGrinder(item){
     const s=this.state; const g={...s.grinder};
     if(item==='beans'){
       if(g.hopper||g.levels>0) return this.toast('Grinder still has coffee in it.','info');
-      if(s.inv.beans<=0) return this.toast('Out of beans â€” check Supplies.','bad');
+      if(s.inv.beans<=0) return this.toast('Out of beans \u2014 check Supplies.','bad');
       if(this.hold==='grind') this.hold=null;
       g.hopper=true; g.prog=0;
       this.setState({grinder:g,inv:{...s.inv,beans:s.inv.beans-1}});
@@ -990,7 +990,7 @@ class Component extends DCLogic {
     if(item==='pf'){
       if(s.pf==='spent'){ this.setState({pf:'clean'}); return this.toast('Knocked out the old puck.','info'); }
       if(s.pf!=='clean') return this.toast('Portafilter already dosed.','info');
-      if(g.levels<=0) return this.toast('No grounds yet â€” load beans and grind.','info');
+      if(g.levels<=0) return this.toast('No grounds yet \u2014 load beans and grind.','info');
       g.levels-=1;
       this.setState({grinder:g,pf:'grounds'});
       this.tut('fill'); return this.toast('Dosed. '+g.levels+' left in the bin.','good');
@@ -1008,13 +1008,13 @@ class Component extends DCLogic {
       if(m.shot) return this.toast('Set the cup already in there on the tray.','info');
       m.cup=item; this.setState({machine:m});
       if(m.pf==='tamped') this.tut('dock');
-      return this.toast(item==='cup'?'Latte cup under the group head â€” stop in the band for an espresso, run long for a lungo.':'Demitasse under the group head â€” stop in the band.','info');
+      return this.toast(item==='cup'?'Latte cup under the group head \u2014 stop in the band for an espresso, run long for a lungo.':'Demitasse under the group head \u2014 stop in the band.','info');
     }
     if(item==='glass'){
       if(m.shot) return this.toast('Set the cup already in there on the tray.','info');
       m.cup='glass'; this.setState({machine:m});
       if(m.pf==='tamped') this.tut('dock');
-      return this.toast('Glass under the group head â€” stop in the band.','info');
+      return this.toast('Glass under the group head \u2014 stop in the band.','info');
     }
     if(item==='pf'){
       if(s.pf!=='tamped') return this.toast('Dose and tamp it first.','info');
@@ -1035,7 +1035,7 @@ class Component extends DCLogic {
     if(s.wand.milk||s.wand.froth) return this.toast('Tin already on the wand.','info');
     if(s.frother!=='full') return this.toast('Fill the tin from the fridge first.','info');
     this.setState({wand:{milk:true,gauge:0,froth:false,kind:s.frotherKind},frother:'empty',frotherKind:null});
-    this.toast('Hold STEAM â€” release in the green band.','info');
+    this.toast('Hold STEAM \u2014 release in the green band.','info');
   }
   addTo(slot,item){
     const s=this.state; const d=s.tray[slot]; if(!d) return;
@@ -1056,13 +1056,13 @@ class Component extends DCLogic {
     }
     if(item==='cocoa'){
       if(d.type==='espresso'){
-        if(s.inv.cocoa<=0) return this.toast('Out of cocoa â€” check Supplies.','bad');
+        if(s.inv.cocoa<=0) return this.toast('Out of cocoa \u2014 check Supplies.','bad');
         this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,type:'mochaBase'}:t),inv:{...s.inv,cocoa:s.inv.cocoa-1}});
         return this.toast('Cocoa in. Now steamed milk.','info');
       }
       if(['lungo','americano','latte','cortado','mocha'].indexOf(d.type)>=0){
         if(d.cocoaTop) return this.toast('Already has cocoa on top.','info');
-        if(s.inv.cocoa<=0) return this.toast('Out of cocoa â€” check Supplies.','bad');
+        if(s.inv.cocoa<=0) return this.toast('Out of cocoa \u2014 check Supplies.','bad');
         this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,cocoaTop:true}:t),inv:{...s.inv,cocoa:s.inv.cocoa-1}});
         return this.toast('Cocoa dusted on top.','good');
       }
@@ -1077,7 +1077,7 @@ class Component extends DCLogic {
     }
     if(item==='cinnamon'){
       if(d.dust) return this.toast('Already dusted.','info');
-      if(s.inv.cinnamon<=0) return this.toast('Out of cinnamon â€” check Supplies.','bad');
+      if(s.inv.cinnamon<=0) return this.toast('Out of cinnamon \u2014 check Supplies.','bad');
       this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,dust:true}:t),inv:{...s.inv,cinnamon:s.inv.cinnamon-1}});
       return this.toast('Dusted with cinnamon.','good');
     }
@@ -1138,7 +1138,7 @@ class Component extends DCLogic {
     const reputation=clampRep(s.reputation+0.02+speed*0.08);
     this.setState({tray:s.tray.filter(t=>t.id!==drinkId),orders:s.orders.filter(x=>x.id!==orderId),
       money:s.money+pay,served:s.served+1,dayServed:s.dayServed+1,dayCash:s.dayCash+pay,reputation});
-    this.toast('Served '+NPC_NAMES[o.npc]+' Â· +$'+money2(pay),'good');
+    this.toast('Served '+NPC_NAMES[o.npc]+' \u00B7 +$'+money2(pay),'good');
     this.tut('serve');
   }
 
@@ -1185,7 +1185,7 @@ class Component extends DCLogic {
       const modsParts=[];
       if(o.mods){
         if(o.mods.extraShot) modsParts.push('+SHOT');
-        if(o.mods.sugar) modsParts.push(o.mods.sugar+'Ã—SUGAR');
+        if(o.mods.sugar) modsParts.push(o.mods.sugar+'\u00D7SUGAR');
         if(o.mods.milk) modsParts.push(o.mods.milk.toUpperCase());
         if(o.mods.extras){ if(o.mods.extras.cocoa) modsParts.push('+COCOA'); if(o.mods.extras.cinnamon) modsParts.push('+CINN'); }
       }
@@ -1225,7 +1225,7 @@ class Component extends DCLogic {
       baristaUpper:(s.names[s.barista]||'BARISTA').toUpperCase(),
       day:s.day,nextDay:s.day+1,clockStr:h12+':'+(mm<10?'0':'')+mm+' '+ampm,moneyStr:money2(s.money),heartsStr:hearts,
       served:s.served,dayServed:s.dayServed,dayMissed:s.dayMissed,dayCashStr:money2(s.dayCash),inv:s.inv,
-      stockLine:'Beans '+s.inv.beans+' Â· Milk '+(s.inv.whole+s.inv.oat+s.inv.cashew)+' Â· Cocoa '+s.inv.cocoa+' Â· Sugar '+s.inv.sugar,
+      stockLine:'Beans '+s.inv.beans+' \u00B7 Milk '+(s.inv.whole+s.inv.oat+s.inv.cashew)+' \u00B7 Cocoa '+s.inv.cocoa+' \u00B7 Sugar '+s.inv.sugar,
       toggleLabel:other==='crafting'?'MAKE':'CUSTOMERS',badge,firedOn,patienceOn,
       ordersView,npcsView,trayView,recipesView,shopView,
       logOpen:s.logOpen,logView,logEmpty:s.toasts.length===0,
