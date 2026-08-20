@@ -451,7 +451,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
           <p style="margin:0 0 9px"><b style="color:#e8b661">Two views, one clock.</b> Tickets keep counting down no matter which view you're in &mdash; switching costs you time.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Window:</b> tap a ticket to accept it. Drag a finished drink from the tray onto an accepted ticket to ring it up. Drinks can also rest on the counter beside the register &mdash; each one shows a card listing exactly what is in it, and can be dragged back to the tray or straight to a ticket.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Bar:</b> beans &rarr; grinder, hold GRIND (it keeps its progress if you let go), dose the portafilter, tamp it, set a cup and the portafilter on the machine, then BREW.</p>
-          <p style="margin:0 0 9px"><b style="color:#e8b661">Stopping a brew:</b> hit STOP inside the gold band for an espresso. Miss the band with a demitasse or a glass and the shot is binned &mdash; re-dose and try again. In a latte cup, stopping past the band (or letting it run out) gives you a lungo.</p>
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Stopping a brew:</b> hit STOP inside the gold band for an espresso. Miss the band with a demitasse or a glass and the shot is binned &mdash; re-dose and try again. In a latte cup, stopping past the band (or letting it run out) gives you a lungo. A lungo can go out black or stand in for the shot: steam milk into it for a latte (cocoa first for a mocha) provided no water went in, or pour a glass of water into it for an americano provided no milk went in.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Cups:</b> any cup can sit in the tray, full or empty, and be picked up again â€” the cup on the machine too, unless a shot is mid-pull. Ingredients go into any cup in play. Only a latte cup takes a pour from another cup: it holds two shots and inherits whatever that cup was carrying. An espresso cup never takes milk or water.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Milk:</b> open the FRIDGE by the trash, pick whole, oat or cashew, then drag the carton into the frother tin on the left of the counter. Put the full tin on the steam wand and hold STEAM.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Prices:</b> set them per drink in RECIPES &mdash; any number you like, and the chalkboard by the window updates to match. Each card shows the fair price for your current reputation, how big a crowd it pulls, and whether the change is actually earning you more. Underprice and you get a queue and fat tips; overprice and the crowd thins, people walk out, stop tipping and talk. The sweet spot sits just above fair, and further above it on a mocha than on an espresso or a glass of water.</p>
@@ -595,11 +595,11 @@ const BAND_LO=34, BAND_HI=66;
 
 const DRINKS={
   espresso:{label:'ESPRESSO',price:3.5,spr:'demiShot',dur:46,w:3,how:'Stop the brew inside the gold band. Any cup will do.'},
-  lungo:{label:'LUNGO',price:4.25,spr:'espressoCup',dur:50,w:2,how:'Latte cup only \u2014 let the brew run past the band.'},
-  americano:{label:'AMERICANO',price:4,spr:'americano',dur:52,w:2,how:'Espresso + a glass of water, poured together in a latte cup.'},
-  latte:{label:'LATTE',price:5,spr:'latte',dur:58,w:3,how:'Espresso + steamed milk.'},
+  lungo:{label:'LUNGO',price:4.25,spr:'espressoCup',dur:50,w:2,how:'Latte cup only \u2014 let the brew run past the band. Serve it black, or build on it.'},
+  americano:{label:'AMERICANO',price:4,spr:'americano',dur:52,w:2,how:'Espresso (or a lungo) + a glass of water, poured together in a latte cup.'},
+  latte:{label:'LATTE',price:5,spr:'latte',dur:58,w:3,how:'Espresso (or a lungo, no water in it) + steamed milk.'},
   cortado:{label:'CORTADO',price:4.5,spr:'cortado',dur:56,w:1,how:'Espresso pulled into a GLASS + steamed milk.'},
-  mocha:{label:'MOCHA',price:5.5,spr:'mocha',dur:64,w:1,how:'Espresso + cocoa + steamed milk.'},
+  mocha:{label:'MOCHA',price:5.5,spr:'mocha',dur:64,w:1,how:'Espresso (or a lungo) + cocoa + steamed milk.'},
   water:{label:'ICE WATER',price:1,spr:'glassWater',dur:42,w:1,how:'Glass on the nozzle, time the pour.'}
 };
 const TRAY_LABEL={espresso:'ESPRESSO',lungo:'LUNGO',americano:'AMERICANO',latte:'LATTE',cortado:'CORTADO',mocha:'MOCHA',mochaBase:'+COCOA',water:'WATER',milkOnly:'MILK'};
@@ -615,7 +615,7 @@ const traySpr=t=>{
 const SHOT_TYPES=['espresso','mochaBase','latte','cortado','mocha','americano'];
 const flagsOf=t=>({
   shots:t.shots!=null?t.shots:((SHOT_TYPES.indexOf(t.type)>=0?1:0)+(t.extraShot?1:0)),
-  lungo:t.type==='lungo',
+  lungo:t.type==='lungo'||!!t.lungo,
   water:t.type==='water'||t.type==='americano',
   milk:['latte','cortado','mocha','milkOnly'].indexOf(t.type)>=0,
   cocoaBase:t.type==='mochaBase'||t.type==='mocha',
@@ -623,15 +623,16 @@ const flagsOf=t=>({
 });
 const buildItem=(cup,f)=>{
   let type='empty';
-  if(f.lungo) type='lungo';
-  else if(f.milk&&f.cocoaBase) type='mocha';
-  else if(f.milk&&f.shots) type=(cup==='glass'?'cortado':'latte');
+  if(f.milk&&f.cocoaBase) type='mocha';
+  else if(f.milk&&(f.shots||f.lungo)) type=(cup==='glass'?'cortado':'latte');
   else if(f.milk) type='milkOnly';
   else if(f.cocoaBase) type='mochaBase';
-  else if(f.water&&f.shots) type='americano';
+  else if(f.water&&(f.shots||f.lungo)) type='americano';
   else if(f.water) type='water';
+  else if(f.lungo) type='lungo';
   else if(f.shots) type='espresso';
   const it={type,cup,shots:f.shots||0};
+  if(f.lungo) it.lungo=true;
   if(f.shots>1) it.extraShot=true;
   if(f.sugar) it.sugar=Math.min(3,f.sugar);
   if(f.dust) it.dust=true;
@@ -670,10 +671,11 @@ const itemName=t=>t.type==='empty'?(CUP_LABEL[t.cup]||'CUP'):(TRAY_LABEL[t.type]
 const addFill=(item,kind)=>{
   const f=flagsOf(item);
   if(kind==='lungo'){
-    if(f.shots||f.lungo||f.milk||f.cocoaBase||f.water) return {item,ok:false,msg:'That cup was already busy \u2014 the lungo went down the drain.'};
-    return {item:buildItem(item.cup,{...f,lungo:true}),ok:true,msg:'Ran the full bar \u2014 a lungo. Take the cup off the machine.'};
+    if(f.shots||f.lungo||f.water) return {item,ok:false,msg:'That cup was already busy \u2014 the lungo went down the drain.'};
+    const lit=buildItem(item.cup,{...f,lungo:true});
+    return {item:lit,ok:true,msg:'Ran the full bar \u2014 '+itemName(lit).toLowerCase()+'. Take the cup off the machine.'};
   }
-  if(f.lungo) return {item,ok:false,msg:'A lungo stands alone \u2014 that shot was wasted.'};
+  if(f.lungo) return {item,ok:false,msg:'A lungo already fills that cup \u2014 that shot was wasted.'};
   if(f.shots>=2) return {item,ok:false,msg:'The cup already held two shots \u2014 shot wasted.'};
   const it=buildItem(item.cup,{...f,shots:f.shots+1});
   return {item:it,ok:true,msg:f.shots?'Second shot in \u2014 a double.':'Espresso pulled. Take the cup off the machine.'};
@@ -684,12 +686,13 @@ const pourInto=(target,src,pending)=>{
   if(target.cup!=='cup') return {err:'Only a latte cup takes a pour from another cup.'};
   if(src.type==='empty') return {err:'That cup is empty.'};
   const tf=flagsOf(target), sf=flagsOf(src);
-  if(tf.lungo||sf.lungo) return {err:'A lungo goes out as it is.'};
+  if(tf.lungo&&sf.lungo) return {err:'Two lungos won\u2019t share a cup.'};
+  if((tf.lungo||sf.lungo)&&tf.shots+sf.shots+(pending||0)>0) return {err:'A lungo already fills the cup \u2014 no room for a shot.'};
   if(tf.shots+sf.shots+(pending||0)>2) return {err:'A latte cup holds two shots at most.'};
   if(tf.milk&&sf.milk) return {err:'That would be all milk.'};
   if(tf.water&&sf.water) return {err:'That already has water in it.'};
   if((tf.milk&&sf.water)||(tf.water&&sf.milk)) return {err:'Milk and water don\u2019t share a cup.'};
-  const it=buildItem('cup',{shots:tf.shots+sf.shots,lungo:false,water:tf.water||sf.water,
+  const it=buildItem('cup',{shots:tf.shots+sf.shots,lungo:tf.lungo||sf.lungo,water:tf.water||sf.water,
     milk:tf.milk||sf.milk,cocoaBase:tf.cocoaBase||sf.cocoaBase,sugar:tf.sugar+sf.sugar,
     dust:tf.dust||sf.dust,cocoaTop:tf.cocoaTop||sf.cocoaTop,milkKind:tf.milkKind||sf.milkKind});
   return {item:it,msg:'Poured in \u2014 '+itemName(it)+' now.'};
@@ -815,6 +818,7 @@ class Component extends DCLogic {
       window.removeEventListener('pointerup',prev.pu); window.removeEventListener('pointercancel',prev.pu);
       if(prev.fit) window.removeEventListener('resize',prev.fit);
       if(prev.ck) window.removeEventListener('click',prev.ck);
+      if(prev.bl) window.removeEventListener('blur',prev.bl);
     }
     this.pd=e=>this.onDown(e); this.pm=e=>this.onMove(e); this.pu=e=>this.onUp(e);
     this.ck=e=>{ const t=e.target instanceof Element?e.target:null; if(!t) return;
@@ -826,16 +830,18 @@ class Component extends DCLogic {
     window.addEventListener('pointermove',this.pm);
     window.addEventListener('pointerup',this.pu);
     window.addEventListener('pointercancel',this.pu);
+    this.bl=()=>{ if(!this.hold) return; const held=this.hold; this.hold=null; if(held==='steam') this.releaseSteam(); };
+    window.addEventListener('blur',this.bl);
     this.fit=()=>this.setState({scale:Math.min(window.innerWidth/420,window.innerHeight/800)});
     window.addEventListener('resize',this.fit);
-    window.__cbHandlers={pd:this.pd,pm:this.pm,pu:this.pu,fit:this.fit,ck:this.ck};
+    window.__cbHandlers={pd:this.pd,pm:this.pm,pu:this.pu,fit:this.fit,ck:this.ck,bl:this.bl};
     setTimeout(this.fit,0);
   }
   pump(){
     clearTimeout(this.pumpId);
     const step=()=>{
       this.pumpId=null;
-      try{ this.tick(); }catch(e){ }
+      try{ this.tick(); }catch(e){ console.error('tick',e); }
       this.pumpId=setTimeout(step,100);
     };
     this.pumpId=setTimeout(step,100);
@@ -851,6 +857,7 @@ class Component extends DCLogic {
     if(this.blockCopy){ ['copy','cut','dragstart','contextmenu'].forEach(e=>document.removeEventListener(e,this.blockCopy)); }
     if(this.vis){ document.removeEventListener('visibilitychange',this.vis); window.removeEventListener('focus',this.vis); }
     if(this.ck) window.removeEventListener('click',this.ck);
+    if(this.bl) window.removeEventListener('blur',this.bl);
     if(window.__cbHandlers&&window.__cbHandlers.pd===this.pd) window.__cbHandlers=null;
     if(this.fit) window.removeEventListener('resize',this.fit);
     window.removeEventListener('pointerdown',this.pd);
@@ -904,7 +911,7 @@ class Component extends DCLogic {
         if(this.spawnCd<=0 && orders.length<2){
           const dm=this.demandInfo().mult;
           this.spawnCd=(5+Math.random()*4)/(tier.trafficMult*Math.max(0.12,dm));
-          if(dm<0.98 && Math.random()<Math.min(0.75,(1-dm)*1.1)){
+          if(dm<=0 || (dm<0.98 && Math.random()<Math.min(0.75,(1-dm)*1.1))){
             const who=NPC_NAMES[Math.floor(Math.random()*NPC_NAMES.length)];
             this.toast(who+' '+WALKOUT_LINES[Math.floor(Math.random()*WALKOUT_LINES.length)],'bad');
             this.spawnCd*=0.5;
@@ -1035,7 +1042,8 @@ class Component extends DCLogic {
     for(const el of els){ const z=el.closest&&el.closest('[data-zone]'); if(z){ zone=z.getAttribute('data-zone'); break; } }
     if(!zone) return;
     const key=d.item+'>'+zone; const now=Date.now();
-    if(this._lastDropKey===key && now-this._lastDropAt<250) return;
+    const guard=(d.item.indexOf('drink:')===0||d.item==='mcup')?250:120;
+    if(this._lastDropKey===key && now-this._lastDropAt<guard) return;
     this._lastDropKey=key; this._lastDropAt=now;
     this.drop(d.item,zone);
   }
@@ -1155,7 +1163,7 @@ class Component extends DCLogic {
   }
   save(){
     const s=this.state;
-    const keep={day:s.day,clock:s.clock,money:s.money,lives:s.lives,served:s.served,inv:s.inv,barista:s.barista,names:s.names,view:s.view,
+    const keep={uid:this.uid,orders:s.orders,day:s.day,clock:s.clock,money:s.money,lives:s.lives,served:s.served,inv:s.inv,barista:s.barista,names:s.names,view:s.view,
       grinder:s.grinder,pf:s.pf,machine:s.machine,wand:s.wand,tray:s.tray,frother:s.frother,frotherKind:s.frotherKind,counter:s.counter,
       dayServed:s.dayServed,dayMissed:s.dayMissed,dayCash:s.dayCash,reputation:s.reputation,settings:s.settings,prices:s.prices};
     try{localStorage.setItem('cb_save',JSON.stringify(keep));}catch(e){}
@@ -1163,12 +1171,18 @@ class Component extends DCLogic {
   load(){
     let d=null; try{d=JSON.parse(localStorage.getItem('cb_save')||'null');}catch(e){}
     if(!d) return this.toast('No saved shift found.','bad');
-    this.spawnCd=4;
+    /* ids must never collide with the restored tray/queue, or a drag hits the wrong cup */
+    const ids=[...(d.tray||[]),...(d.orders||[])].map(x=>+x.id||0);
+    this.uid=Math.max(d.uid||1,ids.length?Math.max(...ids)+1:1);
+    delete d.uid;
+    /* restored tickets come back with a full clock rather than mid-countdown */
+    const orders=(d.orders||[]).map(o=>({...o,left:o.dur}));
+    this.spawnCd=orders.length?6:0.5;
     const prices={...freshPrices(),...(d.prices||{})};
     const mach=(()=>{ const o=d.machine||{}; const m={...freshMachine(),...o};
       if(o.item===undefined){ m.item=o.cup?{type:o.shot?(o.shot==='lungo'?'lungo':'espresso'):'empty',cup:o.cup}:null; }
       delete m.cup; delete m.shot; return m; })();
-    this.setState({...d,machine:mach,prices,priceDraft:{},inv:{...freshInv(),...(d.inv||{})},settings:{...freshSettings(),...(d.settings||{})},reputation:d.reputation!=null?d.reputation:2.5,screen:'play',orders:[],modal:null,tut:0},()=>{const o=this.makeOrder(); if(o) this.setState({orders:[o]});});
+    this.setState({...d,machine:mach,prices,priceDraft:{},inv:{...freshInv(),...(d.inv||{})},settings:{...freshSettings(),...(d.settings||{})},reputation:d.reputation!=null?d.reputation:2.5,screen:'play',orders,modal:null,tut:0});
   }
   setPrice(k,n){
     let v=Math.round(n*100)/100;
@@ -1232,7 +1246,7 @@ class Component extends DCLogic {
     if(!m.item) return this.toast('Dock a cup under the group head.','info');
     if(m.pf!=='tamped') return this.toast('Needs a tamped portafilter.','info');
     const f=flagsOf(m.item);
-    if(f.lungo) return this.toast('A lungo goes out as it is \u2014 take the cup off first.','info');
+    if(f.lungo) return this.toast('A lungo already fills that cup \u2014 take it off the machine first.','info');
     if(m.item.cup==='cup'?f.shots>=2:f.shots>0) return this.toast('That cup is full \u2014 take it off the machine first.','info');
     m.brewState='brewing'; m.brew=0; this.setState({machine:m});
   }
@@ -1266,8 +1280,8 @@ class Component extends DCLogic {
       return this.toast('Tipped out.','info');
     }
     if(zone==='nozzle'){
-      const r=this.settleCup(m);
       if(m.glass) return this.toast('There\u2019s already a glass on the nozzle.','info');
+      const r=this.settleCup(m);
       if(r.item.cup!=='glass'||r.item.type!=='empty') return this.toast('Only an empty glass fits the water nozzle.','info');
       const next={machine:{...m,item:null,brew:0,brewState:'idle',glass:true,pf:r.spent?null:m.pf}};
       if(r.spent) next.pf='spent';
@@ -1316,7 +1330,6 @@ class Component extends DCLogic {
 
   /* ------- drops ------- */
   drop(item,zone){
-    const s=this.state;
     if(item==='mcup') return this.moveMachineCup(zone);
     if(zone==='trash') return this.trash(item);
     if(item.indexOf('drink:')===0){
@@ -1417,7 +1430,6 @@ class Component extends DCLogic {
     if(it==='froth'){
       if(!s.wand.froth) return {err:'Steam the milk first.'};
       if(t.cup==='demi') return {err:'An espresso cup takes no milk.'};
-      if(f.lungo) return {err:'A lungo is served black.'};
       if(f.water) return {err:'That has water in it \u2014 no milk on top.'};
       if(f.milk) return {err:'That already has milk in it.'};
       const item=buildItem(t.cup,{...f,milk:true,milkKind:s.wand.kind});
@@ -1430,7 +1442,6 @@ class Component extends DCLogic {
     }
     if(it==='cocoa'){
       if(s.inv.cocoa<=0) return {err:'Out of cocoa \u2014 check Supplies.'};
-      if(f.lungo) return {err:'A lungo is served black.'};
       if(!f.milk&&!f.water&&!f.cocoaBase) return {item:buildItem(t.cup,{...f,cocoaBase:true}),use:'cocoa',msg:'Cocoa in. Now espresso and steamed milk.'};
       if(f.cocoaTop) return {err:'Already has cocoa on top.'};
       return {item:buildItem(t.cup,{...f,cocoaTop:true}),use:'cocoa',msg:'Cocoa dusted on top.'};
@@ -1559,7 +1570,7 @@ class Component extends DCLogic {
     const d=s.tray.find(t=>t.id===drinkId), o=s.orders.find(x=>x.id===orderId);
     if(!d||!o) return;
     if(!o.accepted) return this.toast('Tap the ticket to accept it first.','bad');
-    if(d.type!==o.drink||!this.matchesMods(d,o)){
+    if(d.type!==o.drink||(o.drink==='mocha'&&d.cup!=='cup')||!this.matchesMods(d,o)){
       this.setState({reputation:clampRep(s.reputation-0.05)});
       return this.toast('Not their order!','bad');
     }

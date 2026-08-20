@@ -1,17 +1,40 @@
 # Cafe Craze
 
-A pixel-art barista sim for the phone. One shift, one clock, two views: the **window** where customers queue with tickets, and the **bar** where you actually pull the shots. The timer never stops — stepping between the two costs you seconds you don't have.
+A pixel-art barista sim for the phone. Two views: the **window** where customers queue with tickets, and the **bar** where you actually pull the shots. The timer never stops — stepping between the two costs you seconds you don't have. Survive to 3 PM and you get a day summary, then keep going: day 2, day 3, with the till, stock, prices and reputation you finished on.
 
-Runs from a single file (`index.html`). Save/load, high scores, barista names and tutorial progress live in the browser's local storage.
+Runs from a single file (`index.html`) and installs as a phone app (offline manifest + icons). Save/load, high scores, barista names and tutorial progress live in the browser's local storage. A first-run tutorial walks the nine steps of the first espresso and can be skipped.
 
 ## The loop
 
 1. A customer shows up at the window with a ticket. Tap it to accept.
 2. Switch to the bar and build the drink: beans into the grinder, hold GRIND, dose the portafilter, tamp, set a cup, dock the portafilter, BREW.
-3. Stop the brew inside the gold band for an espresso. Run it long in a latte cup for a lungo. Miss the band with a demitasse or a glass and the shot is binned.
+3. Stop the brew inside the gold band for an espresso. Run it long in a latte cup for a lungo. Miss the band with a demitasse or a glass and the shot is binned. (Demitasse and glass brews run twice as fast — the band comes up quick.)
 4. Milk: open the FRIDGE, take whole, oat or cashew, drag the carton into the frother tin, put the tin on the steam wand, hold STEAM and release inside the green band.
-5. Combine on the tray (espresso + steamed milk = latte, + cocoa = mocha, espresso in a glass + milk = cortado).
+5. Combine on the tray (espresso + steamed milk = latte, + cocoa = mocha, espresso in a glass + milk = cortado, espresso + a glass of water = americano). Ice water is its own drink: empty glass on the water nozzle, tap WATER and stop the meter in the band.
 6. Drag the finished drink onto the customer's accepted ticket to ring it up.
+
+## Cups, pours and the counter
+
+Any cup can sit on the tray (four slots), full or empty, and be picked up again — including the cup on the machine, unless a shot is mid-pull. Only a **latte cup** can be poured into: it takes two shots and inherits whatever the other cup was carrying. A demitasse and a glass swap contents with each other, and neither takes milk or water in the espresso cup. Up to two drinks can also rest on the **counter by the register**, each showing a card of exactly what is in it, and be dragged back to the tray or straight onto a ticket.
+
+Ingredients (sugar, cocoa, cinnamon) drop into any cup in play, wherever it sits. Brews can be **paused**: stop before the band and hit BREW again to carry on.
+
+### Building on a lungo
+
+A lungo is a base, not a dead end. Pulled long into a latte cup it can go out black — or become something else, as long as nothing contradicts it:
+
+- **Lungo + steamed milk = latte** (cocoa in first = mocha) — only if no water has gone in.
+- **Lungo + a glass of water = americano** — only if no milk has gone in.
+- Order doesn't matter: steam milk into the cup (or dust cocoa in) *first* and then run the brew long, and you still get the latte or mocha.
+- No second shot goes into a lungo: it already fills the cup. Two lungos don't share a cup either.
+
+### Modifications
+
+Switch **MODIFICATIONS** on in GAMEPLAY and tickets start asking for extra shots, one to three sugars, oat or cashew milk, and cocoa or cinnamon on top. The drink has to match the ticket exactly — a stray sugar cube is a wrong order.
+
+## House rules
+
+Under **GAMEPLAY** in the menu: **You're Fired!** (off = missing five tickets doesn't end the run), **PATIENCE** (off = tickets never time out), **MODIFICATIONS**, and **day length** from 1 to 60 real minutes per 6 AM–3 PM shift.
 
 Miss five tickets and the run is over — unless **You're Fired!** is switched off in GAMEPLAY. Patience, modifications and day length are also house rules you control there.
 
