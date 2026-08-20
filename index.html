@@ -118,6 +118,18 @@ a{color:#e8b661}a:hover{color:#f5d69a}
           <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1px;white-space:nowrap;font-size:9px;line-height:1;letter-spacing:-0.5px"><span style="color:#ddd8ca">{{ b.name }}</span><span style="color:#a8bfae">{{ b.price }}</span></div>
         </sc-for>
       </div>
+      <div data-zone="window" style="position:absolute;left:26%;width:32%;bottom:24%;height:12%;z-index:21"></div>
+      <sc-for list="{{ windowView }}" as="w" hint-placeholder-count="0">
+        <div style="{{ w.wrap }}">
+          <div data-zone="{{ w.zoneId }}" data-item="{{ w.dragId }}" style="position:absolute;inset:0;cursor:grab"><div style="{{ w.spr }}"></div></div>
+          <div style="{{ w.card }}">
+            <div style="font-family:'Silkscreen',monospace;font-size:8px;color:#e8b661;letter-spacing:1px;border-bottom:1px solid #3a2a1c;padding-bottom:2px;margin-bottom:2px;white-space:nowrap;overflow:hidden">{{ w.name }}</div>
+            <sc-for list="{{ w.lines }}" as="l" hint-placeholder-count="2">
+              <div style="display:flex;justify-content:space-between;gap:5px;font-family:'Silkscreen',monospace;font-size:7px;line-height:1.6;color:#c9b394;white-space:nowrap"><span>{{ l.n }}</span><span style="color:#f0e2cd">{{ l.a }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
       <div data-tap="modal-note" style="position:absolute;left:calc(80% + 20px);top:calc(80.5% + 30px);width:13.1%;height:8.5%;cursor:pointer;z-index:25;transform:rotateY(180deg) rotate(-5deg)"><div style="{{ spr.note }}"></div></div>
       <sc-for list="{{ ordersView }}" as="o" hint-placeholder-count="1">
         <div style="{{ o.wrap }}">
@@ -174,7 +186,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 
       <div data-zone="machine" style="position:absolute;left:24.55%;bottom:calc(16% + 100px);width:50.9%;height:33%"><div style="{{ spr.machine_mIdle }}"></div><div style="{{ spr.machine_mPf }}"></div></div>
       <sc-if value="{{ showDockCup }}" hint-placeholder-val="{{ false }}">
-        <div data-tap="pour" style="{{ dockCupWrap }}"><div style="{{ spr.dock_glassShot }}"></div><div style="{{ spr.dock_glassEmpty }}"></div><div style="{{ spr.dock_demiShot }}"></div><div style="{{ spr.dock_demiEmpty }}"></div><div style="{{ spr.dock_espressoCup }}"></div><div style="{{ spr.dock_cupEmpty }}"></div></div>
+        <div data-tap="pour" data-item="mcup" style="{{ dockCupWrap }}"><div style="{{ spr.dock_glassShot }}"></div><div style="{{ spr.dock_glassEmpty }}"></div><div style="{{ spr.dock_demiShot }}"></div><div style="{{ spr.dock_demiEmpty }}"></div><div style="{{ spr.dock_espressoCup }}"></div><div style="{{ spr.dock_cupEmpty }}"></div></div>
       </sc-if>
       <sc-if value="{{ brewing }}" hint-placeholder-val="{{ false }}">
         <div style="{{ pourStreamStyle }}"></div>
@@ -279,7 +291,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
   <div style="position:absolute;left:0;right:0;bottom:0;height:100px;background:#150e09;border-top:3px solid #3a2a1c;display:flex;align-items:center;gap:8px;padding:0 8px;z-index:50">
     <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#8a6b45;writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:2px">TRAY</div>
     <sc-for list="{{ trayView }}" as="t" hint-placeholder-count="3">
-      <div style="{{ t.wrap }}">
+      <div data-zone="{{ t.zoneId }}" style="{{ t.wrap }}">
         <sc-if value="{{ t.filled }}" hint-placeholder-val="{{ false }}">
           <div data-item="{{ t.dragId }}" data-zone="{{ t.zoneId }}" style="position:absolute;inset:0;cursor:grab"><div style="{{ t.spr }}"></div>
             <div style="position:absolute;left:0;right:0;bottom:0;font-family:'Silkscreen',monospace;font-size:8px;text-align:center;color:#f0e2cd;background:rgba(10,7,5,.7)">{{ t.label }}</div>
@@ -437,9 +449,10 @@ a{color:#e8b661}a:hover{color:#f5d69a}
       <sc-if value="{{ mInstr }}" hint-placeholder-val="{{ false }}">
         <div style="font-size:19px;line-height:1.2;color:#e2d2b8">
           <p style="margin:0 0 9px"><b style="color:#e8b661">Two views, one clock.</b> Tickets keep counting down no matter which view you're in &mdash; switching costs you time.</p>
-          <p style="margin:0 0 9px"><b style="color:#e8b661">Window:</b> tap a ticket to accept it. Drag a finished drink from the tray onto an accepted ticket to ring it up.</p>
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Window:</b> tap a ticket to accept it. Drag a finished drink from the tray onto an accepted ticket to ring it up. Drinks can also rest on the counter beside the register &mdash; each one shows a card listing exactly what is in it, and can be dragged back to the tray or straight to a ticket.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Bar:</b> beans &rarr; grinder, hold GRIND (it keeps its progress if you let go), dose the portafilter, tamp it, set a cup and the portafilter on the machine, then BREW.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Stopping a brew:</b> hit STOP inside the gold band for an espresso. Miss the band with a demitasse or a glass and the shot is binned &mdash; re-dose and try again. In a latte cup, stopping past the band (or letting it run out) gives you a lungo.</p>
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Cups:</b> any cup can sit in the tray, full or empty, and be picked up again â€” the cup on the machine too, unless a shot is mid-pull. Ingredients go into any cup in play. Only a latte cup takes a pour from another cup: it holds two shots and inherits whatever that cup was carrying. An espresso cup never takes milk or water.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Milk:</b> open the FRIDGE by the trash, pick whole, oat or cashew, then drag the carton into the frother tin on the left of the counter. Put the full tin on the steam wand and hold STEAM.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Prices:</b> set them per drink in RECIPES &mdash; any number you like, and the chalkboard by the window updates to match. Each card shows the fair price for your current reputation, how big a crowd it pulls, and whether the change is actually earning you more. Underprice and you get a queue and fat tips; overprice and the crowd thins, people walk out, stop tipping and talk. The sweet spot sits just above fair, and further above it on a mocha than on an espresso or a glass of water.</p>
           <p style="margin:0">Sugar cubes, cinnamon dust, cocoa, alt milk and extra shots all carry a surcharge, so garnishing pays. Miss five tickets and the run is over &mdash; unless You're Fired! is switched off in GAMEPLAY.</p>
@@ -583,17 +596,103 @@ const BAND_LO=34, BAND_HI=66;
 const DRINKS={
   espresso:{label:'ESPRESSO',price:3.5,spr:'demiShot',dur:46,w:3,how:'Stop the brew inside the gold band. Any cup will do.'},
   lungo:{label:'LUNGO',price:4.25,spr:'espressoCup',dur:50,w:2,how:'Latte cup only \u2014 let the brew run past the band.'},
-  americano:{label:'AMERICANO',price:4,spr:'americano',dur:52,w:2,how:'Espresso + a glass of water, combined in the tray.'},
+  americano:{label:'AMERICANO',price:4,spr:'americano',dur:52,w:2,how:'Espresso + a glass of water, poured together in a latte cup.'},
   latte:{label:'LATTE',price:5,spr:'latte',dur:58,w:3,how:'Espresso + steamed milk.'},
   cortado:{label:'CORTADO',price:4.5,spr:'cortado',dur:56,w:1,how:'Espresso pulled into a GLASS + steamed milk.'},
   mocha:{label:'MOCHA',price:5.5,spr:'mocha',dur:64,w:1,how:'Espresso + cocoa + steamed milk.'},
   water:{label:'ICE WATER',price:1,spr:'glassWater',dur:42,w:1,how:'Glass on the nozzle, time the pour.'}
 };
-const TRAY_LABEL={espresso:'ESPRESSO',lungo:'LUNGO',americano:'AMERICANO',latte:'LATTE',cortado:'CORTADO',mocha:'MOCHA',mochaBase:'+COCOA',water:'WATER'};
+const TRAY_LABEL={espresso:'ESPRESSO',lungo:'LUNGO',americano:'AMERICANO',latte:'LATTE',cortado:'CORTADO',mocha:'MOCHA',mochaBase:'+COCOA',water:'WATER',milkOnly:'MILK'};
+const CUP_LABEL={cup:'LATTE CUP',demi:'ESPRESSO CUP',glass:'GLASS'};
 const traySpr=t=>{
+  if(t.type==='empty'||t.type==='milkOnly') return t.cup==='glass'?'glassEmpty':(t.cup==='demi'?'demiEmpty':'cupEmpty');
   if(t.type==='espresso'||t.type==='mochaBase') return t.cup==='glass'?'glassShot':(t.cup==='cup'?'espressoCup':'demiShot');
   if(t.type==='lungo') return 'espressoCup';
   return {americano:'americano',latte:'latte',cortado:'cortado',mocha:'mocha',water:'glassWater'}[t.type]||'demiShot';
+};
+/* Every cup in play is one object: a cup shape plus what is in it. Flags in,
+   flags out â€” the drink NAME is always derived from the contents. */
+const SHOT_TYPES=['espresso','mochaBase','latte','cortado','mocha','americano'];
+const flagsOf=t=>({
+  shots:t.shots!=null?t.shots:((SHOT_TYPES.indexOf(t.type)>=0?1:0)+(t.extraShot?1:0)),
+  lungo:t.type==='lungo',
+  water:t.type==='water'||t.type==='americano',
+  milk:['latte','cortado','mocha','milkOnly'].indexOf(t.type)>=0,
+  cocoaBase:t.type==='mochaBase'||t.type==='mocha',
+  sugar:t.sugar||0,dust:!!t.dust,cocoaTop:!!t.cocoaTop,milkKind:t.milk||null
+});
+const buildItem=(cup,f)=>{
+  let type='empty';
+  if(f.lungo) type='lungo';
+  else if(f.milk&&f.cocoaBase) type='mocha';
+  else if(f.milk&&f.shots) type=(cup==='glass'?'cortado':'latte');
+  else if(f.milk) type='milkOnly';
+  else if(f.cocoaBase) type='mochaBase';
+  else if(f.water&&f.shots) type='americano';
+  else if(f.water) type='water';
+  else if(f.shots) type='espresso';
+  const it={type,cup,shots:f.shots||0};
+  if(f.shots>1) it.extraShot=true;
+  if(f.sugar) it.sugar=Math.min(3,f.sugar);
+  if(f.dust) it.dust=true;
+  if(f.cocoaTop) it.cocoaTop=true;
+  if(f.milk&&f.milkKind) it.milk=f.milkKind;
+  return it;
+};
+const TRANSFER_PAIR={demi:'glass',glass:'demi'};
+const transferInto=(target,src)=>{
+  if(target.type!=='empty') return {err:'That cup already has something in it.'};
+  if(src.type==='empty') return {err:'That cup is empty.'};
+  if(TRANSFER_PAIR[target.cup]!==src.cup) return {err:'Those two cups don\u2019t pour into each other.'};
+  const f=flagsOf(src);
+  if(target.cup==='demi'&&(f.milk||f.water)) return {err:'An espresso cup takes no milk or water.'};
+  const it=buildItem(target.cup,f);
+  return {item:it,msg:itemName(it)+' moved to the '+(target.cup==='glass'?'glass':'espresso cup')+'.'};
+};
+/* what is actually in a cup, for the counter infographic */
+const itemParts=t=>{
+  const f=flagsOf(t), out=[];
+  if(f.lungo) out.push({n:'LUNGO',a:'\u00D71'});
+  if(f.shots) out.push({n:'ESPRESSO',a:'\u00D7'+f.shots});
+  if(f.water) out.push({n:'WATER',a:'\u00D71'});
+  if(f.milk) out.push({n:'MILK',a:MILK_LABEL[f.milkKind]||'WHOLE'});
+  if(f.cocoaBase) out.push({n:'COCOA',a:'\u00D71'});
+  if(f.cocoaTop) out.push({n:'COCOA TOP',a:'\u00D71'});
+  if(f.dust) out.push({n:'CINNAMON',a:'\u00D71'});
+  if(f.sugar) out.push({n:'SUGAR',a:'\u00D7'+f.sugar});
+  if(!out.length) out.push({n:'EMPTY',a:'\u2014'});
+  return out;
+};
+const WINDOW_MAX=2;
+const bareItem=t=>{const c={...t}; delete c.id; return c;};
+const itemName=t=>t.type==='empty'?(CUP_LABEL[t.cup]||'CUP'):(TRAY_LABEL[t.type]||'DRINK');
+/* a shot landing in whatever cup is under the group head */
+const addFill=(item,kind)=>{
+  const f=flagsOf(item);
+  if(kind==='lungo'){
+    if(f.shots||f.lungo||f.milk||f.cocoaBase||f.water) return {item,ok:false,msg:'That cup was already busy \u2014 the lungo went down the drain.'};
+    return {item:buildItem(item.cup,{...f,lungo:true}),ok:true,msg:'Ran the full bar \u2014 a lungo. Take the cup off the machine.'};
+  }
+  if(f.lungo) return {item,ok:false,msg:'A lungo stands alone \u2014 that shot was wasted.'};
+  if(f.shots>=2) return {item,ok:false,msg:'The cup already held two shots \u2014 shot wasted.'};
+  const it=buildItem(item.cup,{...f,shots:f.shots+1});
+  return {item:it,ok:true,msg:f.shots?'Second shot in \u2014 a double.':'Espresso pulled. Take the cup off the machine.'};
+};
+/* cup-to-cup pour: only a latte cup can be poured INTO, and it inherits
+   everything the source cup was carrying. */
+const pourInto=(target,src,pending)=>{
+  if(target.cup!=='cup') return {err:'Only a latte cup takes a pour from another cup.'};
+  if(src.type==='empty') return {err:'That cup is empty.'};
+  const tf=flagsOf(target), sf=flagsOf(src);
+  if(tf.lungo||sf.lungo) return {err:'A lungo goes out as it is.'};
+  if(tf.shots+sf.shots+(pending||0)>2) return {err:'A latte cup holds two shots at most.'};
+  if(tf.milk&&sf.milk) return {err:'That would be all milk.'};
+  if(tf.water&&sf.water) return {err:'That already has water in it.'};
+  if((tf.milk&&sf.water)||(tf.water&&sf.milk)) return {err:'Milk and water don\u2019t share a cup.'};
+  const it=buildItem('cup',{shots:tf.shots+sf.shots,lungo:false,water:tf.water||sf.water,
+    milk:tf.milk||sf.milk,cocoaBase:tf.cocoaBase||sf.cocoaBase,sugar:tf.sugar+sf.sugar,
+    dust:tf.dust||sf.dust,cocoaTop:tf.cocoaTop||sf.cocoaTop,milkKind:tf.milkKind||sf.milkKind});
+  return {item:it,msg:'Poured in \u2014 '+itemName(it)+' now.'};
 };
 const SHOP={
   beans:{name:'BEANS \u00D75',cost:6,amt:5,spr:'beans'},
@@ -621,7 +720,7 @@ const TUT=[
 ];
 const money2=n=>(Math.round(n*100)/100).toFixed(2);
 const freshInv=()=>({beans:6,whole:3,oat:2,cashew:2,cocoa:3,cinnamon:3,sugar:6});
-const freshMachine=()=>({cup:null,glass:false,pf:null,brew:0,brewState:'idle',shot:null,wpos:0,wdir:1,wtarget:30,wactive:false});
+const freshMachine=()=>({item:null,glass:false,pf:null,brew:0,brewState:'idle',wpos:0,wdir:1,wtarget:30,wactive:false});
 const freshStations=()=>({grinder:{hopper:false,levels:0,prog:0},pf:'clean',machine:freshMachine(),
   wand:{milk:false,gauge:0,froth:false,kind:null},frother:'empty',frotherKind:null,counter:null});
 const freshSettings=()=>({fired:false,patience:false,modifications:false,dayLength:10});
@@ -828,13 +927,13 @@ class Component extends DCLogic {
       }
       const m={...s.machine};
       let mdirty=false;
-      if(m.brewState==='brewing'){
-        const fastCup=m.cup==='demi'||m.cup==='glass';
+      if(m.brewState==='brewing'&&m.item){
+        const fastCup=m.item.cup==='demi'||m.item.cup==='glass';
         m.brew=Math.min(100,m.brew+(fastCup?26:13)*dt);
         if(m.brew>=100){
           m.brewState='idle'; m.pf=null; next.pf='spent'; m.brew=0;
-          if(fastCup){ m.shot='espresso'; this.toast('Espresso pulled \u2014 full shot.','good'); }
-          else { m.shot='lungo'; this.toast('Ran the full bar \u2014 a lungo. Tap the cup to collect it.','good'); }
+          const r=addFill(m.item,fastCup?'espresso':'lungo');
+          m.item=r.item; this.toast(r.msg,r.ok?'good':'bad');
         }
         mdirty=true;
       }
@@ -914,9 +1013,12 @@ class Component extends DCLogic {
     const hold=t.closest('[data-hold]');
     if(hold){ this.hold=hold.getAttribute('data-hold'); e.preventDefault(); return; }
     const tap=t.closest('[data-tap]');
-    if(tap){ e.preventDefault(); this.lastTap=Date.now(); const act=tap.getAttribute('data-tap'); this.clickSfx(act); this.pressFx(tap); this.doTap(act); return; }
+    if(tap&&!tap.hasAttribute('data-item')){ e.preventDefault(); this.lastTap=Date.now(); const act=tap.getAttribute('data-tap'); this.clickSfx(act); this.pressFx(tap); this.doTap(act); return; }
     const item=t.closest('[data-item]');
-    if(item){ e.preventDefault(); this.dragEl=item; item.style.visibility='hidden'; this.setState({drag:{item:item.getAttribute('data-item'),x:e.clientX,y:e.clientY}}); }
+    if(item){ e.preventDefault(); this.dragEl=item;
+      this.dragTap=item.hasAttribute('data-tap')?item.getAttribute('data-tap'):null;
+      item.style.visibility='hidden';
+      this.setState({drag:{item:item.getAttribute('data-item'),x:e.clientX,y:e.clientY,x0:e.clientX,y0:e.clientY}}); }
   }
   onMove(e){ if(this.state.drag){ if(this.dragEl) this.dragEl.style.visibility='hidden'; this.setState(s=>({drag:{...s.drag,x:e.clientX,y:e.clientY}})); } }
   clearDragEl(){ if(this.dragEl){ this.dragEl.style.visibility=''; this.dragEl=null; } }
@@ -925,6 +1027,9 @@ class Component extends DCLogic {
     const d=this.state.drag; if(!d) return;
     this.clearDragEl();
     this.setState({drag:null});
+    const moved=Math.abs(e.clientX-(d.x0!=null?d.x0:d.x))+Math.abs(e.clientY-(d.y0!=null?d.y0:d.y));
+    if(this.dragTap&&moved<10){ const act=this.dragTap; this.dragTap=null; this.lastTap=Date.now(); this.doTap(act); return; }
+    this.dragTap=null;
     const els=document.elementsFromPoint(e.clientX,e.clientY);
     let zone=null;
     for(const el of els){ const z=el.closest&&el.closest('[data-zone]'); if(z){ zone=z.getAttribute('data-zone'); break; } }
@@ -1060,7 +1165,10 @@ class Component extends DCLogic {
     if(!d) return this.toast('No saved shift found.','bad');
     this.spawnCd=4;
     const prices={...freshPrices(),...(d.prices||{})};
-    this.setState({...d,prices,priceDraft:{},inv:{...freshInv(),...(d.inv||{})},settings:{...freshSettings(),...(d.settings||{})},reputation:d.reputation!=null?d.reputation:2.5,screen:'play',orders:[],modal:null,tut:0},()=>{const o=this.makeOrder(); if(o) this.setState({orders:[o]});});
+    const mach=(()=>{ const o=d.machine||{}; const m={...freshMachine(),...o};
+      if(o.item===undefined){ m.item=o.cup?{type:o.shot?(o.shot==='lungo'?'lungo':'espresso'):'empty',cup:o.cup}:null; }
+      delete m.cup; delete m.shot; return m; })();
+    this.setState({...d,machine:mach,prices,priceDraft:{},inv:{...freshInv(),...(d.inv||{})},settings:{...freshSettings(),...(d.settings||{})},reputation:d.reputation!=null?d.reputation:2.5,screen:'play',orders:[],modal:null,tut:0},()=>{const o=this.makeOrder(); if(o) this.setState({orders:[o]});});
   }
   setPrice(k,n){
     let v=Math.round(n*100)/100;
@@ -1121,41 +1229,75 @@ class Component extends DCLogic {
   brew(){
     const m={...this.state.machine};
     if(m.brewState==='brewing') return;
-    if(m.shot) return this.toast('Set the cup on the tray first.','info');
-    if(!m.cup) return this.toast('Dock a cup under the group head.','info');
+    if(!m.item) return this.toast('Dock a cup under the group head.','info');
     if(m.pf!=='tamped') return this.toast('Needs a tamped portafilter.','info');
+    const f=flagsOf(m.item);
+    if(f.lungo) return this.toast('A lungo goes out as it is \u2014 take the cup off first.','info');
+    if(m.item.cup==='cup'?f.shots>=2:f.shots>0) return this.toast('That cup is full \u2014 take it off the machine first.','info');
     m.brewState='brewing'; m.brew=0; this.setState({machine:m});
+  }
+  /* null when the cup on the machine can be handled or added to. A latte cup
+     is free once the meter is in the espresso band or beyond. */
+  cupLock(m){
+    if(!m.item) return null;
+    if(m.brewState!=='brewing') return null;
+    if(m.item.cup==='cup'&&m.brew>=BAND_LO) return null;
+    return 'Mid-brew \u2014 let the shot land first.';
+  }
+  settleCup(m){
+    let item=m.item, spent=false;
+    if(m.brewState!=='idle'){
+      spent=true;
+      if(m.brew>BAND_HI){ item=addFill(item,'lungo').item; }
+      else if(m.brew>=BAND_LO){ item=addFill(item,'espresso').item; }
+    }
+    return {item,spent};
+  }
+  moveMachineCup(zone){
+    const s=this.state, m=s.machine;
+    if(!m.item||zone==='machine') return;
+    const lock=this.cupLock(m); if(lock) return this.toast(lock,'info');
+    if(zone.indexOf('slot:')===0) return this.pour();
+    if(zone==='trash'){
+      const r=this.settleCup(m);
+      const next={machine:{...m,item:null,brew:0,brewState:'idle',pf:r.spent?null:m.pf}};
+      if(r.spent) next.pf='spent';
+      this.setState(next);
+      return this.toast('Tipped out.','info');
+    }
+    if(zone==='nozzle'){
+      const r=this.settleCup(m);
+      if(m.glass) return this.toast('There\u2019s already a glass on the nozzle.','info');
+      if(r.item.cup!=='glass'||r.item.type!=='empty') return this.toast('Only an empty glass fits the water nozzle.','info');
+      const next={machine:{...m,item:null,brew:0,brewState:'idle',glass:true,pf:r.spent?null:m.pf}};
+      if(r.spent) next.pf='spent';
+      this.setState(next);
+      return this.toast('Glass on the water nozzle.','info');
+    }
   }
   stopBrew(){
     const s=this.state; const m={...s.machine};
     if(m.brewState!=='brewing') return;
     const at=m.brew;
     if(at<BAND_LO){ m.brewState='paused'; this.setState({machine:m}); return this.toast('Paused early \u2014 hit BREW again to reach the band.','info'); }
-    if(at<=BAND_HI){ m.brewState='paused'; this.setState({machine:m}); return this.toast('Paused in the sweet spot \u2014 grab it now, or keep brewing for a lungo.','good'); }
-    m.brewState='idle'; m.pf=null; m.brew=0; m.shot='lungo';
+    if(at<=BAND_HI){ m.brewState='paused'; this.setState({machine:m}); return this.toast('Paused in the sweet spot \u2014 take the cup now, or keep brewing for a lungo.','good'); }
+    m.brewState='idle'; m.pf=null; m.brew=0;
+    const r=addFill(m.item,'lungo'); m.item=r.item;
     this.setState({machine:m,pf:'spent'});
-    this.toast('Ran past the band \u2014 a lungo. Tap the cup to collect it.','good');
+    this.toast(r.msg,r.ok?'good':'bad');
   }
   pour(){
     const s=this.state; const m={...s.machine};
-    if(m.brewState==='paused'){
-      const band=m.brew>=BAND_LO&&m.brew<=BAND_HI;
-      if(!band) return;
-      if(s.tray.length>=4) return this.toast('Tray is full \u2014 ring one up first.','bad');
-      const cup=m.cup;
-      const m2={...m,cup:null,pf:null,shot:null,brew:0,brewState:'idle'};
-      this.setState({machine:m2,pf:'spent',tray:[...s.tray,{id:this.uid++,type:'espresso',cup}]});
-      this.toast('Espresso grabbed before the lungo.','good');
-      this.tut('shot');
-      return;
-    }
-    if(!m.shot) return;
-    if(s.tray.length>=4) return this.toast('Tray is full \u2014 ring one up first.','bad');
-    const type=m.shot==='lungo'?'lungo':'espresso';
-    const cup=m.cup;
-    m.shot=null; m.cup=null; m.brew=0;
-    this.setState({machine:m,tray:[...s.tray,{id:this.uid++,type,cup}]});
-    this.toast(type==='lungo'?'Lungo on the tray.':(cup==='glass'?'Espresso in a glass \u2014 add steamed milk for a cortado.':'Espresso on the tray.'),'good');
+    if(!m.item) return;
+    const lock=this.cupLock(m); if(lock) return this.toast(lock,'info');
+    if(this.trayList().length>=4) return this.toast('Tray is full \u2014 ring one up first.','bad');
+    const r=this.settleCup(m);
+    const it={...r.item,id:this.uid++};
+    const next={machine:{...m,item:null,brew:0,brewState:'idle',pf:r.spent?null:m.pf},tray:[...s.tray,it]};
+    if(r.spent) next.pf='spent';
+    this.setState(next);
+    if(it.type==='empty') return this.toast(itemName(it)+' on the tray.','info');
+    this.toast(itemName(it)+' on the tray.','good');
     this.tut('shot');
   }
   water(){
@@ -1165,7 +1307,7 @@ class Component extends DCLogic {
     const hit=m.wpos>=m.wtarget&&m.wpos<=m.wtarget+18;
     m.wactive=false;
     if(hit){
-      if(s.tray.length>=4){ this.setState({machine:m}); return this.toast('Tray is full.','bad'); }
+      if(this.trayList().length>=4){ this.setState({machine:m}); return this.toast('Tray is full.','bad'); }
       m.glass=false;
       this.setState({machine:m,tray:[...s.tray,{id:this.uid++,type:'water',cup:'glass'}]});
       this.toast('Clean pour.','good');
@@ -1175,16 +1317,17 @@ class Component extends DCLogic {
   /* ------- drops ------- */
   drop(item,zone){
     const s=this.state;
+    if(item==='mcup') return this.moveMachineCup(zone);
     if(zone==='trash') return this.trash(item);
     if(item.indexOf('drink:')===0){
       const id=+item.slice(6);
       if(zone.indexOf('ticket:')===0) return this.serve(id,+zone.slice(7));
-      if(zone.indexOf('slot:')===0) return this.combine(id,+zone.slice(5));
-      if(zone==='machine') return this.addExtraShot(id);
-      return;
+      if(zone==='machine') return this.trayToMachine(id);
+      if(zone==='nozzle') return this.trayToNozzle(id);
+      return this.drinkDrop(id,zone);
     }
     if(zone==='frother') return this.toFrother(item);
-    if(zone.indexOf('slot:')===0) return this.addTo(+zone.slice(5),item);
+    if(zone.indexOf('slot:')===0||zone.indexOf('wslot:')===0) return this.addToZone(zone,item);
     if(zone==='grinder') return this.toGrinder(item);
     if(zone==='pf') return this.toPf(item);
     if(zone==='machine') return this.toMachine(item);
@@ -1236,25 +1379,24 @@ class Component extends DCLogic {
   }
   toMachine(item){
     const s=this.state; const m={...s.machine};
-    if(item==='cup'||item==='demi'){
-      if(m.shot) return this.toast('Set the cup already in there on the tray.','info');
-      m.cup=item; this.setState({machine:m});
+    if(item==='cup'||item==='demi'||item==='glass'){
+      if(m.item) return this.toast('There\u2019s already a cup under the group head.','info');
+      m.item={type:'empty',cup:item}; this.setState({machine:m});
       if(m.pf==='tamped') this.tut('dock');
-      return this.toast(item==='cup'?'Latte cup under the group head \u2014 stop in the band for an espresso, run long for a lungo.':'Demitasse under the group head \u2014 stop in the band.','info');
-    }
-    if(item==='glass'){
-      if(m.shot) return this.toast('Set the cup already in there on the tray.','info');
-      m.cup='glass'; this.setState({machine:m});
-      if(m.pf==='tamped') this.tut('dock');
-      return this.toast('Glass under the group head \u2014 stop in the band.','info');
+      return this.toast(item==='cup'?'Latte cup under the group head \u2014 stop in the band for an espresso, run long for a lungo.':(item==='demi'?'Demitasse under the group head \u2014 stop in the band.':'Glass under the group head \u2014 stop in the band.'),'info');
     }
     if(item==='pf'){
       if(s.pf!=='tamped') return this.toast('Dose and tamp it first.','info');
       if(this.hold==='grind') this.hold=null;
       m.pf='tamped'; this.setState({machine:m,pf:'docked'});
-      if(m.cup) this.tut('dock');
+      if(m.item) this.tut('dock');
       return this.toast('Portafilter locked in.','good');
     }
+    if(!m.item) return this.toast('Dock a cup first.','info');
+    const lock=this.cupLock(m); if(lock) return this.toast(lock,'info');
+    const r=this.ingredientInto(m.item,item);
+    if(!r) return;
+    this.applyResult(r,it=>({machine:{...m,item:it}}));
   }
   toNozzle(item){
     if(item!=='glass') return this.toast('Only a glass fits the water nozzle.','info');
@@ -1269,69 +1411,127 @@ class Component extends DCLogic {
     this.setState({wand:{milk:true,gauge:0,froth:false,kind:s.frotherKind},frother:'empty',frotherKind:null});
     this.toast('Hold STEAM \u2014 release in the green band.','info');
   }
-  addTo(slot,item){
-    const s=this.state; const d=s.tray[slot]; if(!d) return;
-    if(item==='froth'){
-      if(!s.wand.froth) return;
-      let type=null;
-      if(d.type==='espresso') type=d.cup==='glass'?'cortado':'latte';
-      else if(d.type==='mochaBase') type='mocha';
-      else if(d.type==='lungo') return this.toast('A lungo is served black.','bad');
-      if(!type) return this.toast('Milk doesn\u2019t belong in that.','bad');
-      this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,type,milk:s.wand.kind}:t),wand:{milk:false,gauge:0,froth:false,kind:null}});
-      return this.toast(TRAY_LABEL[type]+' built.','good');
+  /* one rulebook for dropping an ingredient in a cup, wherever that cup sits */
+  ingredientInto(t,it){
+    const s=this.state; const f=flagsOf(t);
+    if(it==='froth'){
+      if(!s.wand.froth) return {err:'Steam the milk first.'};
+      if(t.cup==='demi') return {err:'An espresso cup takes no milk.'};
+      if(f.lungo) return {err:'A lungo is served black.'};
+      if(f.water) return {err:'That has water in it \u2014 no milk on top.'};
+      if(f.milk) return {err:'That already has milk in it.'};
+      const item=buildItem(t.cup,{...f,milk:true,milkKind:s.wand.kind});
+      return {item,clearWand:true,msg:itemName(item)+' built.'};
+    }
+    if(it==='sugar'){
+      if(f.sugar>=3) return {err:'Plenty sweet already.'};
+      if(s.inv.sugar<=0) return {err:'Out of sugar cubes.'};
+      return {item:buildItem(t.cup,{...f,sugar:f.sugar+1}),use:'sugar',clearCounter:true,msg:'Sugar cube in ('+(f.sugar+1)+').'};
+    }
+    if(it==='cocoa'){
+      if(s.inv.cocoa<=0) return {err:'Out of cocoa \u2014 check Supplies.'};
+      if(f.lungo) return {err:'A lungo is served black.'};
+      if(!f.milk&&!f.water&&!f.cocoaBase) return {item:buildItem(t.cup,{...f,cocoaBase:true}),use:'cocoa',msg:'Cocoa in. Now espresso and steamed milk.'};
+      if(f.cocoaTop) return {err:'Already has cocoa on top.'};
+      return {item:buildItem(t.cup,{...f,cocoaTop:true}),use:'cocoa',msg:'Cocoa dusted on top.'};
+    }
+    if(it==='cinnamon'){
+      if(f.dust) return {err:'Already dusted.'};
+      if(s.inv.cinnamon<=0) return {err:'Out of cinnamon \u2014 check Supplies.'};
+      return {item:buildItem(t.cup,{...f,dust:true}),use:'cinnamon',msg:'Dusted with cinnamon.'};
+    }
+    return null;
+  }
+  applyResult(r,writeItem){
+    const s=this.state;
+    if(r.err) return this.toast(r.err,'bad');
+    const next=writeItem(r.item);
+    if(r.use) next.inv={...s.inv,[r.use]:s.inv[r.use]-1};
+    if(r.clearWand) next.wand={milk:false,gauge:0,froth:false,kind:null};
+    if(r.clearCounter) next.counter=null;
+    this.setState(next);
+    this.toast(r.msg,'good');
+  }
+  trayList(){ return this.state.tray.filter(t=>t.at!=='window'); }
+  windowList(){ return this.state.tray.filter(t=>t.at==='window'); }
+  targetFor(zone){
+    if(zone.indexOf('slot:')===0) return this.trayList()[+zone.slice(5)]||null;
+    if(zone.indexOf('wslot:')===0) return this.windowList()[+zone.slice(6)]||null;
+    return null;
+  }
+  writeItem(id,it){
+    return {tray:this.state.tray.map(t=>t.id===id?{...it,id:t.id,at:t.at}:t)};
+  }
+  addToZone(zone,item){
+    const s=this.state; const d=this.targetFor(zone);
+    if(!d){
+      if(zone.indexOf('slot:')===0&&(item==='cup'||item==='demi'||item==='glass')){
+        if(this.trayList().length>=4) return this.toast('Tray is full \u2014 ring one up first.','bad');
+        this.setState({tray:[...s.tray,{id:this.uid++,type:'empty',cup:item}]});
+        return this.toast((CUP_LABEL[item]||'Cup')+' on the tray.','info');
+      }
+      return;
     }
     if(item==='glass'){
-      if(d.type!=='espresso') return this.toast('Only a poured espresso can move to a glass.','bad');
-      this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,cup:'glass'}:t)});
+      if(d.type!=='espresso'||d.cup==='glass') return this.toast('Only a poured espresso can move to a glass.','bad');
+      this.setState(this.writeItem(d.id,{...d,cup:'glass'}));
       return this.toast('Espresso poured into a glass. Add steamed milk for a cortado.','info');
     }
-    if(item==='cocoa'){
-      if(d.type==='espresso'){
-        if(s.inv.cocoa<=0) return this.toast('Out of cocoa \u2014 check Supplies.','bad');
-        this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,type:'mochaBase'}:t),inv:{...s.inv,cocoa:s.inv.cocoa-1}});
-        return this.toast('Cocoa in. Now steamed milk.','info');
+    if(item==='cup'||item==='demi') return this.toast('That spot is taken.','info');
+    const r=this.ingredientInto(d,item);
+    if(!r) return;
+    this.applyResult(r,it=>this.writeItem(d.id,it));
+  }
+  /* one drink dragged onto another cup, onto the counter, or back to the tray */
+  drinkDrop(id,zone){
+    const s=this.state; const a=s.tray.find(t=>t.id===id); if(!a) return;
+    const b=this.targetFor(zone);
+    if(b&&b.id===a.id) return;
+    if(b){
+      const r=b.cup==='cup'?pourInto(b,a,0):transferInto(b,a);
+      if(r.err) return this.toast(r.err,'bad');
+      if(b.cup==='cup'){
+        this.setState({tray:s.tray.filter(t=>t.id!==a.id).map(t=>t.id===b.id?{...r.item,id:b.id,at:b.at}:t)});
+      } else {
+        this.setState({tray:s.tray.map(t=>t.id===b.id?{...r.item,id:b.id,at:b.at}
+          :(t.id===a.id?{id:t.id,type:'empty',cup:a.cup,at:t.at}:t))});
       }
-      if(['lungo','americano','latte','cortado','mocha'].indexOf(d.type)>=0){
-        if(d.cocoaTop) return this.toast('Already has cocoa on top.','info');
-        if(s.inv.cocoa<=0) return this.toast('Out of cocoa \u2014 check Supplies.','bad');
-        this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,cocoaTop:true}:t),inv:{...s.inv,cocoa:s.inv.cocoa-1}});
-        return this.toast('Cocoa dusted on top.','good');
-      }
-      return this.toast('Cocoa doesn\u2019t belong there.','bad');
+      return this.toast(r.msg,'good');
     }
-    if(item==='sugar'){
-      const cur=d.sugar||0;
-      if(cur>=3) return this.toast('Plenty sweet already.','info');
-      if(s.inv.sugar<=0) return this.toast('Out of sugar cubes.','bad');
-      this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,sugar:cur+1}:t),inv:{...s.inv,sugar:s.inv.sugar-1},counter:null});
-      return this.toast('Sugar cube in ('+(cur+1)+').','good');
+    if(zone==='window'||zone.indexOf('wslot:')===0){
+      if(a.at==='window') return;
+      if(this.windowList().length>=WINDOW_MAX) return this.toast('No room left on the counter.','info');
+      this.setState({tray:s.tray.map(t=>t.id===a.id?{...t,at:'window'}:t)});
+      return this.toast(itemName(a)+' set down on the counter.','info');
     }
-    if(item==='cinnamon'){
-      if(d.dust) return this.toast('Already dusted.','info');
-      if(s.inv.cinnamon<=0) return this.toast('Out of cinnamon \u2014 check Supplies.','bad');
-      this.setState({tray:s.tray.map((t,i)=>i===slot?{...t,dust:true}:t),inv:{...s.inv,cinnamon:s.inv.cinnamon-1}});
-      return this.toast('Dusted with cinnamon.','good');
+    if(zone.indexOf('slot:')===0){
+      if(a.at!=='window') return;
+      if(this.trayList().length>=4) return this.toast('Tray is full \u2014 ring one up first.','bad');
+      this.setState({tray:s.tray.map(t=>t.id===a.id?{...t,at:null}:t)});
+      return this.toast(itemName(a)+' back on the tray.','info');
     }
   }
-  combine(fromId,slot){
-    const s=this.state; const a=s.tray.find(t=>t.id===fromId); const b=s.tray[slot];
-    if(!a||!b||a.id===b.id) return;
-    if(a.type==='water'&&b.type==='espresso'){
-      return this.setState({tray:s.tray.filter(t=>t.id!==a.id).map(t=>t.id===b.id?{...t,type:'americano'}:t)},()=>this.toast('Americano built.','good'));
+  trayToMachine(id){
+    const s=this.state, m=s.machine;
+    const src=s.tray.find(t=>t.id===id); if(!src) return;
+    if(!m.item){
+      this.setState({machine:{...m,item:bareItem(src)},tray:s.tray.filter(t=>t.id!==id)});
+      return this.toast(itemName(src)+' under the group head.','info');
     }
-    this.toast('Those don\u2019t combine.','bad');
+    const lock=this.cupLock(m); if(lock) return this.toast(lock,'info');
+    const pending=(m.brewState!=='idle'&&m.brew>=BAND_LO)?1:0;
+    const r=pourInto(m.item,src,pending);
+    if(r.err) return this.toast(r.err,'bad');
+    this.setState({machine:{...m,item:r.item},tray:s.tray.filter(t=>t.id!==id)});
+    this.toast(r.msg,'good');
   }
-  addExtraShot(id){
-    const s=this.state; const m=s.machine;
-    if(!m.shot) return this.toast('Pull a shot first.','info');
-    const d=s.tray.find(t=>t.id===id); if(!d) return;
-    const eligible=['espresso','latte','mocha','americano'].indexOf(d.type)>=0;
-    if(!eligible) return this.toast('Can\u2019t add a shot to that.','bad');
-    if(d.type==='espresso'&&d.cup!=='cup') return this.toast('Only a latte cup can take an extra shot.','bad');
-    if(d.extraShot) return this.toast('Already has an extra shot.','info');
-    this.setState({tray:s.tray.map(t=>t.id===id?{...t,extraShot:true}:t),machine:{...m,shot:null,cup:null,brew:0}});
-    this.toast('Extra shot pulled in.','good');
+  trayToNozzle(id){
+    const s=this.state, m=s.machine;
+    const src=s.tray.find(t=>t.id===id); if(!src) return;
+    if(m.glass) return this.toast('There\u2019s already a glass on the nozzle.','info');
+    if(src.cup!=='glass'||src.type!=='empty') return this.toast('Only an empty glass fits the water nozzle.','info');
+    this.setState({machine:{...m,glass:true},tray:s.tray.filter(t=>t.id!==id)});
+    this.toast('Glass on the water nozzle.','info');
   }
   matchesMods(d,o){
     const s=this.state;
@@ -1392,11 +1592,12 @@ class Component extends DCLogic {
     const ampm=hh>=12?'PM':'AM'; const h12=hh>12?hh-12:hh;
     const hearts='\u2665'.repeat(Math.max(0,s.lives))+'\u2661'.repeat(Math.max(0,5-s.lives));
     const m=s.machine;
+    const mi=m.item, mcup=mi?mi.cup:null, mfill=!!(mi&&mi.type!=='empty'), mfree=!!mi&&!this.cupLock(m);
     const grinderKey=s.grinder.hopper?((s.grinder.prog>0||this.hold==='grind')?'g2':'g1'):['g0','g5','g4','g3'][s.grinder.levels];
     const pfKey={clean:'pfClean',grounds:'pfGrounds',tamped:'pfTamped',spent:'pfGrounds'}[s.pf]||'pfClean';
-    const dockKey=m.cup==='glass'?(m.shot?'glassShot':'glassEmpty')
-      :m.cup==='demi'?(m.shot?'demiShot':'demiEmpty')
-      :((m.shot||m.brew>=BAND_LO)?'espressoCup':'cupEmpty');
+    const dockKey=mcup==='glass'?(mfill?'glassShot':'glassEmpty')
+      :mcup==='demi'?(mfill?'demiShot':'demiEmpty')
+      :((mfill||m.brew>=BAND_LO)?'espressoCup':'cupEmpty');
     const spr={...SPR,
       ...STACKS.grinder[grinderKey],
       ...STACKS.pf[pfKey],
@@ -1408,13 +1609,23 @@ class Component extends DCLogic {
       ...STACKS.avatar[s.barista?'h1':'h0']
     };
     const pick=on=>({width:96,border:on?'3px solid #e8b661':'3px solid #3a2a1c',background:on?'#3d2a17':'#1a120c',boxShadow:on?'0 0 0 2px rgba(232,182,97,.3)':'none',cursor:'pointer',padding:'4px 2px 0'});
+    const trayItems=this.trayList();
+    const windowView=this.windowList().slice(0,WINDOW_MAX).map((t,i)=>({
+      wrap:{position:'absolute',left:(25.5+i*19)+'%',bottom:'24.5%',width:'14%',height:'9%',zIndex:22,cursor:'grab'},
+      zoneId:'wslot:'+i, dragId:'drink:'+t.id,
+      spr:{...SPR[traySpr(t)]},
+      name:t.type==='empty'?(CUP_LABEL[t.cup]||'CUP'):(TRAY_LABEL[t.type]||''),
+      lines:itemParts(t),
+      card:{position:'absolute',left:'-17%',top:'calc(100% + 7px)',width:'134%',background:'rgba(10,7,5,.93)',
+        border:'2px solid #6b5236',boxShadow:'0 3px 0 rgba(0,0,0,.5)',padding:'3px 5px 4px',zIndex:23,pointerEvents:'none'}
+    }));
     const trayView=[0,1,2,3].map(i=>{
-      const t=s.tray[i];
+      const t=trayItems[i];
       const extras=t?[t.sugar?'S':'',t.dust?'C':''].filter(Boolean).join(''):'';
       return {wrap:{position:'relative',width:78,height:78,border:'2px solid #3a2a1c',background:'#231710'},
         filled:!!t,empty:!t,
         dragId:t?'drink:'+t.id:'',zoneId:'slot:'+i,
-        spr:t?{...SPR[traySpr(t)]}:null, label:t?TRAY_LABEL[t.type]:'',
+        spr:t?{...SPR[traySpr(t)]}:null, label:t?(t.type==='empty'?(CUP_LABEL[t.cup]||'CUP'):(TRAY_LABEL[t.type]||'')):'',
         extra:extras,
         extraStyle:{position:'absolute',top:1,right:1,fontFamily:"'Silkscreen',monospace",fontSize:8,color:'#0a0705',background:extras?'#e8b661':'transparent',padding:extras?'0 2px':0},
         hasX2:!!(t&&t.extraShot),
@@ -1480,7 +1691,7 @@ class Component extends DCLogic {
     const shopView=Object.keys(SHOP).map(k=>({name:SHOP[k].name,have:s.inv[k]||0,price:'$'+SHOP[k].cost,tap:'buy-'+k,spr:{...SPR[SHOP[k].spr]}}));
     const other=s.view==='customer'?'crafting':'customer';
     const servable=s.tray.some(t=>s.orders.some(o=>o.accepted&&o.drink===t.type));
-    const badge=other==='customer'?(s.orders.some(o=>!o.accepted)||servable):(!!m.shot||s.wand.froth);
+    const badge=other==='customer'?(s.orders.some(o=>!o.accepted)||servable):(mfill||s.wand.froth);
     const tier=repTier(s.reputation);
     const firedOn=s.settings.fired, patienceOn=s.settings.patience;
     const repStarsView=[0,1,2,3,4].map(i=>({fillWrap:{position:'absolute',left:0,top:0,bottom:0,overflow:'hidden',width:(Math.max(0,Math.min(1,s.reputation-i))*100)+'%'}}));
@@ -1497,7 +1708,7 @@ class Component extends DCLogic {
       served:s.served,dayServed:s.dayServed,dayMissed:s.dayMissed,dayCashStr:money2(s.dayCash),inv:s.inv,
       stockLine:'Beans '+s.inv.beans+' \u00B7 Milk '+(s.inv.whole+s.inv.oat+s.inv.cashew)+' \u00B7 Cocoa '+s.inv.cocoa+' \u00B7 Sugar '+s.inv.sugar,
       toggleLabel:other==='crafting'?'MAKE':'CUSTOMERS',badge,firedOn,patienceOn,
-      ordersView,npcsView,trayView,recipesView,shopView,boardView,
+      ordersView,npcsView,trayView,windowView,recipesView,shopView,boardView,
       logOpen:s.logOpen,logView,logEmpty:s.toasts.length===0,
       unread:s.unread>0,unreadCount:s.unread>9?'9+':s.unread,
       unreadStyle:{position:'absolute',top:-7,right:-7,minWidth:16,height:16,padding:'0 3px',borderRadius:9,background:'#8a3b1f',border:'2px solid #f0e2cd',color:'#fff6e6',fontFamily:"'Silkscreen',monospace",fontSize:8,display:'flex',alignItems:'center',justifyContent:'center'},
@@ -1514,21 +1725,21 @@ class Component extends DCLogic {
       counterWrap:s.counter&&s.counter.item==='sugar'
         ?{position:'absolute',left:'70%',bottom:'15%',width:'7.5%',height:'6%',zIndex:19,cursor:'grab'}
         :{position:'absolute',left:'21.5%',bottom:'calc(12% + 62px)',width:'9%',height:'15%',zIndex:19,cursor:'grab'},
-      showDockCup:!!m.cup||!!m.shot,
+      showDockCup:!!mi,
       brewing:m.brewState==='brewing',
-      pourStreamStyle:{position:'absolute',left:'49.3%',bottom:'calc(18% + 100px + '+(m.cup==='glass'?8:(m.cup==='demi'?7.5:10))+'%)',width:'1.4%',height:'62px',background:'linear-gradient(#4a2410,#7a3f18)',transformOrigin:'top center',animation:'cbstream .5s ease-out',zIndex:18,boxShadow:'0 0 3px rgba(0,0,0,.5)'},
-      pourDripStyle:{position:'absolute',left:'48.6%',bottom:'calc(18% + 100px + '+(m.cup==='glass'?8:(m.cup==='demi'?7.5:10))+'% - 6px)',width:'2.8%',height:'1.2%',borderRadius:'50%',background:'rgba(122,63,24,.85)',animation:'cbdrip .4s linear infinite',zIndex:18},
-      dockCupWrap:{position:'absolute',left:m.cup==='glass'?'44.95%':(m.cup==='demi'?'43.45%':'41.95%'),bottom:'calc(18% + 100px)',width:m.cup==='glass'?'10.1%':(m.cup==='demi'?'13.1%':'16.1%'),height:m.cup==='glass'?'8%':(m.cup==='demi'?'7.5%':'10%'),cursor:(m.shot||(m.brewState==='paused'&&m.brew>=BAND_LO&&m.brew<=BAND_HI))?'pointer':'default',animation:(m.shot||(m.brewState==='paused'&&m.brew>=BAND_LO&&m.brew<=BAND_HI))?'cbpulse 1s infinite':'none',zIndex:15},
+      pourStreamStyle:{position:'absolute',left:'49.3%',bottom:'calc(18% + 100px + '+(mcup==='glass'?8:(mcup==='demi'?7.5:10))+'%)',width:'1.4%',height:'62px',background:'linear-gradient(#4a2410,#7a3f18)',transformOrigin:'top center',animation:'cbstream .5s ease-out',zIndex:18,boxShadow:'0 0 3px rgba(0,0,0,.5)'},
+      pourDripStyle:{position:'absolute',left:'48.6%',bottom:'calc(18% + 100px + '+(mcup==='glass'?8:(mcup==='demi'?7.5:10))+'% - 6px)',width:'2.8%',height:'1.2%',borderRadius:'50%',background:'rgba(122,63,24,.85)',animation:'cbdrip .4s linear infinite',zIndex:18},
+      dockCupWrap:{position:'absolute',left:mcup==='glass'?'44.95%':(mcup==='demi'?'43.45%':'41.95%'),bottom:'calc(18% + 100px)',width:mcup==='glass'?'10.1%':(mcup==='demi'?'13.1%':'16.1%'),height:mcup==='glass'?'8%':(mcup==='demi'?'7.5%':'10%'),cursor:mfree?'grab':'default',animation:(mfree&&(mfill||m.brew>=BAND_LO))?'cbpulse 1s infinite':'none',zIndex:15},
       showGlass:!!m.glass,
       wandItem:s.wand.milk||s.wand.froth,
       wandWrap:{position:'absolute',left:'20.55%',bottom:'32%',width:'17%',height:'11%',zIndex:16,cursor:s.wand.froth?'grab':'default'},
       showGrind:s.grinder.hopper,
       grindBar:{height:'100%',width:(s.grinder.prog*100).toFixed(0)+'%',background:'#e8b661'},
-      showBrew:!!m.cup&&m.pf==='tamped',
-      isLatteCup:m.cup==='cup',
-      showLungoZone:m.cup==='cup',
+      showBrew:!!mi&&m.pf==='tamped',
+      isLatteCup:mcup==='cup',
+      showLungoZone:mcup==='cup',
       brewBar:{position:'absolute',left:0,top:0,bottom:0,width:m.brew.toFixed(1)+'%',background:'#c46a2a'},
-      brewBtnVisible:!((m.cup==='demi'||m.cup==='glass')&&m.brewState==='brewing'),
+      brewBtnVisible:!((mcup==='demi'||mcup==='glass')&&m.brewState==='brewing'),
       brewBtnLabel:m.brewState==='brewing'?'STOP':(m.brewState==='paused'?'RESUME':'BREW'),
       brewBtnStyle:m.brewState==='brewing'
         ?{background:'#8a3b1f',border:'2px solid #f0b48c',padding:'5px 8px',fontFamily:"'Silkscreen',monospace",fontSize:9,color:'#ffe6d8',cursor:'pointer',flex:'none'}
@@ -1563,6 +1774,7 @@ class Component extends DCLogic {
   ghost(item){
     const s=this.state;
     if(item.indexOf('drink:')===0){ const d=s.tray.find(t=>t.id===+item.slice(6)); return d?{...SPR[traySpr(d)]}:null; }
+    if(item==='mcup'){ const mi=s.machine.item; return mi?{...SPR[traySpr(mi)]}:null; }
     if(item==='pf') return {...SPR[{clean:'pfClean',grounds:'pfGrounds',tamped:'pfTamped',spent:'pfGrounds'}[s.pf]||'pfClean']};
     if(item==='frother') return {...SPR[s.frother==='full'?'pitcherMilk':'pitcherEmpty']};
     if(item==='carton') return {...SPR.milkCarton};
