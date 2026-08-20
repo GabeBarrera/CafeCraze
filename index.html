@@ -28,6 +28,10 @@ input,textarea{user-select:text;-webkit-user-select:text}
 ::-webkit-scrollbar-thumb:hover{background:#e8b661}
 ::-webkit-scrollbar-corner{background:#231710}
 a{color:#e8b661}a:hover{color:#f5d69a}
+[data-tap]{transition:scale .07s ease-out,translate .07s ease-out,filter .07s ease-out}
+[data-tap]:active{scale:.97;translate:0 2px;filter:brightness(1.3)}
+[data-tap][data-pressed]{animation:cbtap .16s ease-out}
+@keyframes cbtap{0%{scale:.95;translate:0 3px;filter:brightness(1.5)}100%{scale:1;translate:0 0;filter:none}}
 @keyframes cbpulse{0%,100%{opacity:1}50%{opacity:.35}}
 @keyframes cbpop{from{transform:translateY(6px);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes cbstream{0%{transform:scaleY(0)}18%{transform:scaleY(1)}100%{transform:scaleY(1)}}
@@ -119,12 +123,22 @@ a{color:#e8b661}a:hover{color:#f5d69a}
         <div style="{{ o.wrap }}">
           <div data-zone="{{ o.zone }}" data-tap="{{ o.tap }}" style="{{ o.card }}">
             <div style="display:flex;gap:5px;align-items:center">
-              <div style="position:relative;width:34px;height:32px;flex:none"><div style="{{ o.spr }}"></div></div>
+              <sc-if value="{{ o.accepted }}" hint-placeholder-val="{{ true }}">
+                <div style="position:relative;width:34px;height:32px;flex:none">
+                  <div style="{{ o.spr }}"></div>
+                </div>
+              </sc-if>
               <div style="min-width:0;flex:1">
-                <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#2a1a0e;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.drinkLabel }}</div>
-                <div style="font-size:14px;color:#6b5236;line-height:1">{{ o.who }}</div>
-                <sc-if value="{{ o.hasMods }}" hint-placeholder-val="{{ false }}">
-                  <div style="font-family:'Silkscreen',monospace;font-size:7px;color:#8a3b1f;line-height:1.3;margin-top:1px">{{ o.modsLabel }}</div>
+                <sc-if value="{{ o.accepted }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#2a1a0e;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.drinkLabel }}</div>
+                  <div style="font-size:14px;color:#6b5236;line-height:1">{{ o.who }}</div>
+                  <sc-if value="{{ o.hasMods }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-family:'Silkscreen',monospace;font-size:7px;color:#8a3b1f;line-height:1.3;margin-top:1px">{{ o.modsLabel }}</div>
+                  </sc-if>
+                </sc-if>
+                <sc-if value="{{ o.pending }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:15px;color:#2a1a0e;line-height:1.05;text-wrap:pretty">{{ o.greet }}</div>
+                  <div style="font-size:13px;color:#8a6b45;line-height:1">{{ o.who }}</div>
                 </sc-if>
               </div>
             </div>
@@ -249,6 +263,19 @@ a{color:#e8b661}a:hover{color:#f5d69a}
     </sc-if>
   </div>
 
+  <div style="position:absolute;left:8px;bottom:100px;display:flex;align-items:flex-end;gap:6px;z-index:51">
+    <div data-tap="modal-map" style="border:2px solid #3a2a1c;border-bottom:none;background:#231710;box-sizing:border-box;width:73px;height:25px;display:flex;align-items:center;justify-content:center;font-family:'Silkscreen',monospace;font-size:9px;color:#c9b394;cursor:pointer">MAP</div>
+    <div data-tap="modal-shop" style="border:2px solid #3a2a1c;border-bottom:none;background:#231710;box-sizing:border-box;width:73px;height:25px;display:flex;align-items:center;justify-content:center;font-family:'Silkscreen',monospace;font-size:9px;color:#7fd39a;cursor:pointer">SUPPLIES</div>
+    <div data-tap="modal-reputation" style="border:2px solid #3a2a1c;border-bottom:none;background:#231710;box-sizing:border-box;width:73px;height:25px;display:flex;align-items:center;justify-content:center;gap:2px;cursor:pointer">
+      <sc-for list="{{ repStarsView }}" as="st" hint-placeholder-count="5">
+        <div style="position:relative;width:9px;height:11px;font-family:'Silkscreen',monospace;font-size:11px;line-height:1;flex:none">
+          <div style="position:absolute;inset:0;color:#4a3728">&#9733;</div>
+          <div style="{{ st.fillWrap }}"><div style="color:#e8b661">&#9733;</div></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
   <div style="position:absolute;left:0;right:0;bottom:0;height:100px;background:#150e09;border-top:3px solid #3a2a1c;display:flex;align-items:center;gap:8px;padding:0 8px;z-index:50">
     <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#8a6b45;writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:2px">TRAY</div>
     <sc-for list="{{ trayView }}" as="t" hint-placeholder-count="3">
@@ -267,18 +294,6 @@ a{color:#e8b661}a:hover{color:#f5d69a}
         </sc-if>
       </div>
     </sc-for>
-    <div style="margin-left:auto;display:flex;flex-direction:column;gap:5px">
-      <div data-tap="modal-shop" style="border:2px solid #3a2a1c;background:#231710;padding:5px 7px;font-family:'Silkscreen',monospace;font-size:9px;color:#7fd39a;cursor:pointer">SUPPLIES</div>
-      <div data-tap="modal-recipes" style="border:2px solid #3a2a1c;background:#231710;padding:5px 7px;font-family:'Silkscreen',monospace;font-size:9px;color:#c9b394;cursor:pointer">RECIPES</div>
-      <div data-tap="modal-reputation" style="border:2px solid #3a2a1c;background:#231710;padding:4px 7px;display:flex;gap:2px;cursor:pointer">
-        <sc-for list="{{ repStarsView }}" as="st" hint-placeholder-count="5">
-          <div style="position:relative;width:9px;height:11px;font-family:'Silkscreen',monospace;font-size:11px;line-height:1;flex:none">
-            <div style="position:absolute;inset:0;color:#4a3728">&#9733;</div>
-            <div style="{{ st.fillWrap }}"><div style="color:#e8b661">&#9733;</div></div>
-          </div>
-        </sc-for>
-      </div>
-    </div>
   </div>
 </div>
 </sc-if>
@@ -313,14 +328,32 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 </div>
 </sc-if>
 
+<sc-if value="{{ mapOn }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:120;background:#0a0705;display:flex;align-items:center;justify-content:center;overflow:hidden">
+  <div style="position:relative;height:100%;aspect-ratio:880/1568;max-width:100%">
+    <img src="assets/SanLuego_Portrait.webp" alt="Map of San Luego" style="width:100%;height:100%;object-fit:fill;display:block" />
+    <div style="position:absolute;right:2%;top:20%;font-family:'Silkscreen',monospace;font-size:9px;letter-spacing:1px;color:#f0e2cd;background:rgba(10,7,5,.78);border:1px solid #e8b661;padding:3px 5px;white-space:nowrap">EMPIRE BEACH</div>
+    <div style="position:absolute;right:2%;top:31%;font-family:'Silkscreen',monospace;font-size:9px;letter-spacing:1px;color:#f0e2cd;background:rgba(10,7,5,.78);border:1px solid #e8b661;padding:3px 5px;white-space:nowrap">CORONA ISLAND</div>
+    <div style="position:absolute;left:2%;top:33.5%;font-family:'Silkscreen',monospace;font-size:9px;letter-spacing:1px;color:#f0e2cd;background:rgba(10,7,5,.78);border:1px solid #e8b661;padding:3px 5px;white-space:nowrap">GASWORKS DISTRICT</div>
+    <div style="position:absolute;left:38%;top:49%;transform:translateX(-50%);font-family:'Silkscreen',monospace;font-size:11px;letter-spacing:2px;color:#e8b661;background:rgba(10,7,5,.82);border:2px solid #e8b661;padding:4px 7px;white-space:nowrap">DOWNTOWN</div>
+    <div style="position:absolute;left:52%;top:70.5%;transform:translateX(-50%);font-family:'Silkscreen',monospace;font-size:9px;letter-spacing:1px;color:#f0e2cd;background:rgba(10,7,5,.78);border:1px solid #e8b661;padding:3px 5px;white-space:nowrap">OCEANFRONT PARK</div>
+    <div style="position:absolute;left:2%;top:69%;font-family:'Silkscreen',monospace;font-size:9px;letter-spacing:1px;color:#f0e2cd;background:rgba(10,7,5,.78);border:1px solid #e8b661;padding:3px 5px;white-space:nowrap">LITTLE ITALY</div>
+  </div>
+  <div style="position:absolute;left:0;right:0;top:0;display:flex;align-items:center;justify-content:center;padding:10px 60px;background:#3d2a17;border-bottom:3px solid #e8b661;box-shadow:0 4px 0 rgba(0,0,0,.5)">
+    <div style="font-family:'Silkscreen',monospace;font-size:16px;letter-spacing:4px;color:#e8b661;text-shadow:0 3px 0 #241708">SAN LUEGO</div>
+  </div>
+  <div data-tap="close-map" style="position:absolute;right:8px;top:8px;background:#3d2a17;border:3px solid #e8b661;box-shadow:0 4px 0 rgba(0,0,0,.5);font-family:'Silkscreen',monospace;font-size:13px;color:#f0e2cd;cursor:pointer;padding:8px 12px">&#10005;</div>
+</div>
+</sc-if>
+
 <sc-if value="{{ modalOn }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;inset:0;background:rgba(5,3,2,.82);z-index:200;display:flex;align-items:center;justify-content:center;padding:18px">
-  <div style="width:100%;max-height:100%;overflow:auto;background:#1a120c;border:3px solid #e8b661;box-shadow:0 10px 0 rgba(0,0,0,.5)">
-    <div style="display:flex;justify-content:space-between;align-items:center;background:#3d2a17;padding:7px 9px">
+  <div style="width:100%;max-height:100%;display:flex;flex-direction:column;min-height:0;background:#1a120c;border:3px solid #e8b661;box-shadow:0 10px 0 rgba(0,0,0,.5)">
+    <div style="flex:none;display:flex;justify-content:space-between;align-items:center;background:#3d2a17;padding:7px 9px;border-bottom:2px solid #241708">
       <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:12px;color:#e8b661">{{ modalTitle }}</div>
-      <div data-tap="close" style="font-family:'Silkscreen',monospace;font-size:12px;color:#f0e2cd;cursor:pointer;padding:0 3px">&#10005;</div>
+      <div data-tap="close" style="font-family:'Silkscreen',monospace;font-size:12px;color:#f0e2cd;cursor:pointer;padding:8px 10px;margin:-8px -8px -8px 0">&#10005;</div>
     </div>
-    <div style="padding:12px">
+    <div style="flex:1;min-height:0;overflow:auto;padding:12px">
 
       <sc-if value="{{ mMenu }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;flex-direction:column;gap:7px">
@@ -480,11 +513,12 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 <sc-if value="{{ logOpen }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;left:0;right:0;top:52px;bottom:0;z-index:300">
   <div data-tap="close-log" style="position:absolute;inset:0;background:rgba(5,3,2,.55)"></div>
-  <div style="position:absolute;right:6px;top:6px;width:274px;max-height:380px;overflow:auto;background:#150e09;border:3px solid #e8b661;box-shadow:0 8px 0 rgba(0,0,0,.5)">
-    <div style="display:flex;justify-content:space-between;align-items:center;background:#3d2a17;padding:6px 8px;position:sticky;top:0">
+  <div style="position:absolute;right:6px;top:6px;width:274px;max-height:380px;display:flex;flex-direction:column;background:#150e09;border:3px solid #e8b661;box-shadow:0 8px 0 rgba(0,0,0,.5)">
+    <div style="flex:none;display:flex;justify-content:space-between;align-items:center;background:#3d2a17;padding:6px 8px;border-bottom:2px solid #241708">
       <div style="font-family:'Silkscreen',monospace;font-weight:700;font-size:10px;color:#e8b661">SERVICE LOG</div>
-      <div data-tap="close-log" style="font-family:'Silkscreen',monospace;font-size:11px;color:#f0e2cd;cursor:pointer;padding:0 3px">&#10005;</div>
+      <div data-tap="close-log" style="font-family:'Silkscreen',monospace;font-size:11px;color:#f0e2cd;cursor:pointer;padding:8px 10px;margin:-8px -8px -8px 0">&#10005;</div>
     </div>
+    <div style="flex:1;min-height:0;overflow:auto">
     <sc-for list="{{ logView }}" as="l" hint-placeholder-count="3">
       <div style="{{ l.row }}">
         <div style="{{ l.dot }}"></div>
@@ -497,6 +531,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
     <sc-if value="{{ logEmpty }}" hint-placeholder-val="{{ false }}">
       <div style="font-size:18px;color:#8a6b45;padding:14px 10px">Nothing logged yet.</div>
     </sc-if>
+    </div>
   </div>
 </div>
 </sc-if>
@@ -571,7 +606,8 @@ const SHOP={
 };
 const MOD_PRICE={extraShot:1.25,sugar:0.35,dust:0.75,cocoaTop:1,altMilk:0.75};
 const MILK_LABEL={whole:'WHOLE',oat:'OAT',cashew:'CASHEW'};
-const NPC_NAMES=['Kenji','Britt','Grant','Naomi','Mateus','Marguerite','Priya','Darius','Bodhi','Zaria','Hiroshi','Valentina'];
+const NPC_NAMES=['Kenji','Britt','Grant','Naomi','Mateus','Marguerite','Priya','Darius','Bodhi','Zaria','Ken','Valentina'];
+const GREETINGS=['Morning! Can I order?','Hey there \u2014 got a minute?','Hi! Ready when you are.','Afternoon! Mind if I order?','Hello! Can you take my order?','Hey! Quick one for me?'];
 const TUT=[
   {k:'accept',t:'Someone\u2019s at the window. Tap their ticket to accept the order.'},
   {k:'view',t:'Good. Hit \u2630 MAKE up top to step over to the bar \u2014 the timer keeps running.'},
@@ -685,7 +721,7 @@ class Component extends DCLogic {
     this.ck=e=>{ const t=e.target instanceof Element?e.target:null; if(!t) return;
       const tap=t.closest('[data-tap]'); if(!tap) return;
       if(this.lastTap&&Date.now()-this.lastTap<600) return;
-      this.lastTap=Date.now(); this.doTap(tap.getAttribute('data-tap')); };
+      this.lastTap=Date.now(); const act=tap.getAttribute('data-tap'); this.clickSfx(act); this.pressFx(tap); this.doTap(act); };
     window.addEventListener('click',this.ck);
     window.addEventListener('pointerdown',this.pd);
     window.addEventListener('pointermove',this.pm);
@@ -858,7 +894,10 @@ class Component extends DCLogic {
       }
       if(Object.keys(mods).length===0) mods=null;
     }
-    return {id:this.uid++,drink,npc,dur,left:dur,accepted:false,mods,price:this.priceOf(drink)};
+    const inUse=this.state.orders.filter(o=>!o.accepted).map(o=>o.greet);
+    const gFree=GREETINGS.filter(g=>inUse.indexOf(g)<0);
+    const gPool=gFree.length?gFree:GREETINGS;
+    return {id:this.uid++,drink,npc,dur,left:dur,accepted:false,mods,price:this.priceOf(drink),greet:gPool[Math.floor(Math.random()*gPool.length)]};
   }
   endRun(extra){
     const s=this.state;
@@ -875,7 +914,7 @@ class Component extends DCLogic {
     const hold=t.closest('[data-hold]');
     if(hold){ this.hold=hold.getAttribute('data-hold'); e.preventDefault(); return; }
     const tap=t.closest('[data-tap]');
-    if(tap){ e.preventDefault(); this.lastTap=Date.now(); this.doTap(tap.getAttribute('data-tap')); return; }
+    if(tap){ e.preventDefault(); this.lastTap=Date.now(); const act=tap.getAttribute('data-tap'); this.clickSfx(act); this.pressFx(tap); this.doTap(act); return; }
     const item=t.closest('[data-item]');
     if(item){ e.preventDefault(); this.dragEl=item; item.style.visibility='hidden'; this.setState({drag:{item:item.getAttribute('data-item'),x:e.clientX,y:e.clientY}}); }
   }
@@ -904,6 +943,65 @@ class Component extends DCLogic {
     this.setState({wand:w});
   }
 
+  cashSfx(){
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+      if(!this.actx) this.actx=new AC();
+      const c=this.actx; if(c.state==='suspended') c.resume();
+      const t=c.currentTime;
+      const out=c.createGain(); out.gain.value=0.5; out.connect(c.destination);
+      /* register "ka" â€” short wooden thunk */
+      const kg=c.createGain();
+      kg.gain.setValueAtTime(0.0001,t); kg.gain.exponentialRampToValueAtTime(0.07,t+0.008); kg.gain.exponentialRampToValueAtTime(0.0001,t+0.11);
+      const ko=c.createOscillator(); ko.type='triangle';
+      ko.frequency.setValueAtTime(300,t); ko.frequency.exponentialRampToValueAtTime(140,t+0.1);
+      ko.connect(kg).connect(out); ko.start(t); ko.stop(t+0.12);
+      /* "ching" â€” bell partials shimmering out */
+      const b=t+0.07;
+      const bp=c.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2600; bp.Q.value=1.1;
+      const bg=c.createGain();
+      bg.gain.setValueAtTime(0.0001,b); bg.gain.exponentialRampToValueAtTime(0.06,b+0.012); bg.gain.exponentialRampToValueAtTime(0.0001,b+0.7);
+      bg.connect(bp).connect(out);
+      [[2093,1],[2637,0.7],[3136,0.45],[4186,0.25]].forEach(([f,amp])=>{
+        const o=c.createOscillator(), g=c.createGain();
+        o.type='sine'; o.frequency.value=f; g.gain.value=amp;
+        o.connect(g).connect(bg); o.start(b); o.stop(b+0.75);
+      });
+    }catch(e){}
+  }
+  sfxAllowed(a){
+    return a==='barista-0'||a==='barista-1'||a==='start'||a==='toggle'||a==='modal-map'||a==='modal-menu';
+  }
+  clickSfx(a){
+    if(!this.sfxAllowed(a)) return;
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+      if(!this.actx) this.actx=new AC();
+      const c=this.actx; if(c.state==='suspended') c.resume();
+      const t=c.currentTime;
+      const g=c.createGain();
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(0.055,t+0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+0.42);
+      const lp=c.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=1600; lp.Q.value=0.6;
+      g.connect(lp).connect(c.destination);
+      /* soft marimba-ish wooden knock: warm fundamental + gentle octave */
+      [[523.25,1],[1046.5,0.28]].forEach(([f,amp])=>{
+        const o=c.createOscillator(), og=c.createGain();
+        o.type='sine'; o.frequency.setValueAtTime(f,t); o.frequency.linearRampToValueAtTime(f*0.985,t+0.4);
+        og.gain.value=amp;
+        o.connect(og).connect(g); o.start(t); o.stop(t+0.45);
+      });
+    }catch(e){}
+  }
+  pressFx(el){
+    if(!el) return;
+    el.removeAttribute('data-pressed');
+    void el.offsetWidth;
+    el.setAttribute('data-pressed','1');
+    setTimeout(()=>{ try{el.removeAttribute('data-pressed');}catch(e){} },180);
+  }
+
   /* ------- taps ------- */
   doTap(a){
     const s=this.state;
@@ -913,6 +1011,7 @@ class Component extends DCLogic {
     if(a==='toggle'){ this.setState({view:s.view==='customer'?'crafting':'customer'}); if(s.view==='customer') this.tut('view'); return; }
     if(a==='bell') return this.setState({logOpen:!s.logOpen,unread:0});
     if(a==='close-log') return this.setState({logOpen:false,unread:0});
+    if(a==='close-map') return this.setState({modal:null,view:'customer'});
     if(a==='close') return this.setState({modal:null});
     if(a==='fridge') return this.setState({modal:'fridge'});
     if(a.indexOf('take-')===0) return this.takeFromFridge(a.slice(5));
@@ -1042,7 +1141,7 @@ class Component extends DCLogic {
     if(m.brewState==='paused'){
       const band=m.brew>=BAND_LO&&m.brew<=BAND_HI;
       if(!band) return;
-      if(s.tray.length>=3) return this.toast('Tray is full \u2014 ring one up first.','bad');
+      if(s.tray.length>=4) return this.toast('Tray is full \u2014 ring one up first.','bad');
       const cup=m.cup;
       const m2={...m,cup:null,pf:null,shot:null,brew:0,brewState:'idle'};
       this.setState({machine:m2,pf:'spent',tray:[...s.tray,{id:this.uid++,type:'espresso',cup}]});
@@ -1051,7 +1150,7 @@ class Component extends DCLogic {
       return;
     }
     if(!m.shot) return;
-    if(s.tray.length>=3) return this.toast('Tray is full \u2014 ring one up first.','bad');
+    if(s.tray.length>=4) return this.toast('Tray is full \u2014 ring one up first.','bad');
     const type=m.shot==='lungo'?'lungo':'espresso';
     const cup=m.cup;
     m.shot=null; m.cup=null; m.brew=0;
@@ -1066,7 +1165,7 @@ class Component extends DCLogic {
     const hit=m.wpos>=m.wtarget&&m.wpos<=m.wtarget+18;
     m.wactive=false;
     if(hit){
-      if(s.tray.length>=3){ this.setState({machine:m}); return this.toast('Tray is full.','bad'); }
+      if(s.tray.length>=4){ this.setState({machine:m}); return this.toast('Tray is full.','bad'); }
       m.glass=false;
       this.setState({machine:m,tray:[...s.tray,{id:this.uid++,type:'water',cup:'glass'}]});
       this.toast('Clean pour.','good');
@@ -1279,6 +1378,7 @@ class Component extends DCLogic {
     const reputation=clampRep(s.reputation+0.02+speed*0.08+priceDrift);
     this.setState({tray:s.tray.filter(t=>t.id!==drinkId),orders:s.orders.filter(x=>x.id!==orderId),
       money:s.money+pay,served:s.served+1,dayServed:s.dayServed+1,dayCash:s.dayCash+pay,reputation});
+    this.cashSfx();
     this.toast('Served '+NPC_NAMES[o.npc]+' \u00B7 +$'+money2(pay)+(rel>0.3?' \u00B7 they grumbled about the price':(tip>0.4?' \u00B7 nice tip':'')),'good');
     this.tut('serve');
   }
@@ -1308,7 +1408,7 @@ class Component extends DCLogic {
       ...STACKS.avatar[s.barista?'h1':'h0']
     };
     const pick=on=>({width:96,border:on?'3px solid #e8b661':'3px solid #3a2a1c',background:on?'#3d2a17':'#1a120c',boxShadow:on?'0 0 0 2px rgba(232,182,97,.3)':'none',cursor:'pointer',padding:'4px 2px 0'});
-    const trayView=[0,1,2].map(i=>{
+    const trayView=[0,1,2,3].map(i=>{
       const t=s.tray[i];
       const extras=t?[t.sugar?'S':'',t.dust?'C':''].filter(Boolean).join(''):'';
       return {wrap:{position:'relative',width:78,height:78,border:'2px solid #3a2a1c',background:'#231710'},
@@ -1338,7 +1438,8 @@ class Component extends DCLogic {
         tag:o.accepted?'ACCEPTED':'TAP TO ACCEPT',
         tagStyle:{fontFamily:"'Silkscreen',monospace",fontSize:8,textAlign:'center',marginTop:3,color:o.accepted?'#2f6d3f':'#8a3b1f'},
         zone:'ticket:'+o.id, tap:'ticket-'+o.id,
-        hasMods:modsParts.length>0, modsLabel:modsParts.join(' ')
+        hasMods:modsParts.length>0, modsLabel:modsParts.join(' '),
+        accepted:!!o.accepted, pending:!o.accepted, greet:o.greet||'Hi! Can you take my order?'
       };
     });
     const npcsView=s.orders.slice(0,2).map((o,i)=>({
@@ -1440,7 +1541,8 @@ class Component extends DCLogic {
       waterZone:{position:'absolute',left:m.wtarget.toFixed(1)+'%',width:'18%',top:0,bottom:0,background:'rgba(159,216,255,.25)',border:'1px solid #9fd8ff'},
       waterPin:{position:'absolute',left:m.wpos.toFixed(1)+'%',top:-2,bottom:-2,width:4,background:'#e8b661'},
       tutOn:s.tut>0,tutStep:s.tut,tutText:s.tut>0?TUT[s.tut-1].t:'',
-      modalOn:!!s.modal,modalTitle:{menu:'SETTINGS',shop:'SUPPLIES',recipes:'RECIPE CARD',instructions:'HOW TO PLAY',scores:'HIGHSCORES',settings:'GAMEPLAY',note:'A NOTE',fridge:'FRIDGE',reputation:'REPUTATION'}[s.modal]||'',
+      mapOn:s.modal==='map',
+      modalOn:!!s.modal&&s.modal!=='map',modalTitle:{menu:'SETTINGS',shop:'SUPPLIES',recipes:'RECIPE CARD',instructions:'HOW TO PLAY',scores:'HIGHSCORES',settings:'GAMEPLAY',note:'A NOTE',fridge:'FRIDGE',reputation:'REPUTATION'}[s.modal]||'',
       mMenu:s.modal==='menu',mShop:s.modal==='shop',mRecipes:s.modal==='recipes',mInstr:s.modal==='instructions',
       mScores:s.modal==='scores',mSettings:s.modal==='settings',mNote:s.modal==='note',mFridge:s.modal==='fridge',mRep:s.modal==='reputation',
       scoresView:s.scores.map((x,i)=>({rank:'#'+(i+1),day:x.day,cash:x.cash})),noScores:s.scores.length===0,
