@@ -135,9 +135,9 @@ a{color:#e8b661}a:hover{color:#f5d69a}
       <div data-item="cup" style="position:absolute;left:8%;bottom:70.8%;width:16.1%;height:9%;cursor:grab"><div style="{{ spr.cupEmpty }}"></div></div>
       <div data-item="demi" style="position:absolute;left:29.1%;bottom:70.8%;width:13.1%;height:7.5%;cursor:grab"><div style="{{ spr.demiEmpty }}"></div></div>
       <div data-item="glass" style="position:absolute;left:47.2%;bottom:70.8%;width:10.1%;height:8%;cursor:grab"><div style="{{ spr.glassEmpty }}"></div></div>
-      <div data-item="tamp" style="position:absolute;left:62.3%;bottom:70.8%;width:8.8%;height:9.5%;cursor:grab"><div style="{{ spr.tamp }}"></div></div>
+      <div data-item="tamp" style="position:absolute;left:65%;bottom:calc(12% + 70px);width:8.8%;height:9.5%;cursor:grab"><div style="{{ spr.tamp }}"></div></div>
       <sc-if value="{{ pfOnShelf }}" hint-placeholder-val="{{ true }}">
-        <div data-item="pf" data-zone="pf" style="position:absolute;left:76.1%;bottom:70.8%;width:15.9%;height:11%;cursor:grab"><div style="{{ spr.pf_pfClean }}"></div><div style="{{ spr.pf_pfGrounds }}"></div><div style="{{ spr.pf_pfTamped }}"></div>
+        <div data-item="pf" data-zone="pf" style="position:absolute;left:76.1%;bottom:calc(12% + 66px);width:15.9%;height:11%;cursor:grab"><div style="{{ spr.pf_pfClean }}"></div><div style="{{ spr.pf_pfGrounds }}"></div><div style="{{ spr.pf_pfTamped }}"></div>
           <div style="{{ pfTagStyle }}">{{ pfTag }}</div>
         </div>
       </sc-if>
@@ -168,10 +168,10 @@ a{color:#e8b661}a:hover{color:#f5d69a}
         <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#9fd8ff;background:rgba(10,7,5,.78);border:1px solid #3a2a1c;padding:1px 4px;transform:translateX(15px)">FRIDGE</div>
       </div>
       <sc-if value="{{ frotherOnShelf }}" hint-placeholder-val="{{ true }}">
-        <div data-item="frother" data-zone="frother" style="position:absolute;left:calc(78% + 10px);bottom:calc(12% + 70px);width:14%;height:10%;cursor:grab"><div style="{{ spr.frother_pitcherMilk }}"></div><div style="{{ spr.frother_pitcherEmpty }}"></div>
+        <div data-item="frother" data-zone="frother" style="position:absolute;left:4%;bottom:calc(12% + 70px);width:14%;height:10%;cursor:grab"><div style="{{ spr.frother_pitcherMilk }}"></div><div style="{{ spr.frother_pitcherEmpty }}"></div>
           <div style="{{ frotherTagStyle }}">{{ frotherTag }}</div>
         </div>
-        <div data-zone="frother" style="position:absolute;left:calc(78% + 5px);bottom:calc(12% - 5px);width:calc(14% + 10px);height:80px"></div>
+        <div data-zone="frother" style="position:absolute;left:calc(4% - 5px);bottom:calc(12% - 5px);width:calc(14% + 10px);height:80px"></div>
       </sc-if>
       <sc-if value="{{ counterItem }}" hint-placeholder-val="{{ false }}">
         <div data-item="{{ counterDragId }}" style="{{ counterWrap }}"><div style="{{ spr.counter_sugar }}"></div><div style="{{ spr.counter_milkCarton }}"></div>
@@ -321,7 +321,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
       </sc-if>
 
       <sc-if value="{{ mFridge }}" hint-placeholder-val="{{ false }}">
-        <div style="font-size:19px;color:#c9b394;margin-bottom:10px">Take one thing out at a time. Cartons go into the frother tin on the shelf.</div>
+        <div style="font-size:19px;color:#c9b394;margin-bottom:10px">Take one thing out at a time. Cartons go into the frother tin on the left of the counter.</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
           <div data-tap="take-whole" style="position:relative;border:2px solid #3a2a1c;background:#231710;padding:7px;cursor:pointer">
             <div style="position:relative;height:66px"><div style="{{ spr.milkCarton }}"></div></div>
@@ -374,7 +374,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
           <p style="margin:0 0 9px"><b style="color:#e8b661">Window:</b> tap a ticket to accept it. Drag a finished drink from the tray onto an accepted ticket to ring it up.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Bar:</b> beans â†’ grinder, hold GRIND (it keeps its progress if you let go), dose the portafilter, tamp it, set a cup and the portafilter on the machine, then BREW.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Stopping a brew:</b> hit STOP inside the gold band for an espresso. Miss the band with a demitasse or a glass and the shot is binned â€” re-dose and try again. In a latte cup, stopping past the band (or letting it run out) gives you a lungo.</p>
-          <p style="margin:0 0 9px"><b style="color:#e8b661">Milk:</b> open the FRIDGE by the trash, pick whole, oat or cashew, then drag the carton into the frother tin on the far left of the shelf. Put the full tin on the steam wand and hold STEAM.</p>
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Milk:</b> open the FRIDGE by the trash, pick whole, oat or cashew, then drag the carton into the frother tin on the left of the counter. Put the full tin on the steam wand and hold STEAM.</p>
           <p style="margin:0">Sugar cubes and cinnamon dust on a finished drink earn a bigger tip. Miss five tickets and the run is over â€” unless You're Fired! is switched off in GAMEPLAY.</p>
           <p style="margin:9px 0 0"><b style="color:#e8b661">Reputation:</b> tucked under RECIPES. Fast, accurate service builds it; missed or wrong orders cost you â€” it quietly shifts customer traffic, tips, and patience. House rules (game over, patience, modifications, day length) live under GAMEPLAY in the menu.</p>
         </div>
@@ -771,12 +771,14 @@ class Component extends DCLogic {
     const tap=t.closest('[data-tap]');
     if(tap){ e.preventDefault(); this.lastTap=Date.now(); this.doTap(tap.getAttribute('data-tap')); return; }
     const item=t.closest('[data-item]');
-    if(item){ e.preventDefault(); this.setState({drag:{item:item.getAttribute('data-item'),x:e.clientX,y:e.clientY}}); }
+    if(item){ e.preventDefault(); this.dragEl=item; item.style.visibility='hidden'; this.setState({drag:{item:item.getAttribute('data-item'),x:e.clientX,y:e.clientY}}); }
   }
-  onMove(e){ if(this.state.drag) this.setState(s=>({drag:{...s.drag,x:e.clientX,y:e.clientY}})); }
+  onMove(e){ if(this.state.drag){ if(this.dragEl) this.dragEl.style.visibility='hidden'; this.setState(s=>({drag:{...s.drag,x:e.clientX,y:e.clientY}})); } }
+  clearDragEl(){ if(this.dragEl){ this.dragEl.style.visibility=''; this.dragEl=null; } }
   onUp(e){
     if(this.hold){ const h=this.hold; this.hold=null; if(h==='steam') this.releaseSteam(); }
     const d=this.state.drag; if(!d) return;
+    this.clearDragEl();
     this.setState({drag:null});
     const els=document.elementsFromPoint(e.clientX,e.clientY);
     let zone=null;
@@ -1241,7 +1243,7 @@ class Component extends DCLogic {
       counterLabel:s.counter?(s.counter.item==='sugar'?'SUGAR':MILK_LABEL[s.counter.kind]):'',
       counterWrap:s.counter&&s.counter.item==='sugar'
         ?{position:'absolute',left:'70%',bottom:'15%',width:'7.5%',height:'6%',zIndex:19,cursor:'grab'}
-        :{position:'absolute',left:'68%',bottom:'14%',width:'9%',height:'15%',zIndex:19,cursor:'grab'},
+        :{position:'absolute',left:'21.5%',bottom:'calc(12% + 62px)',width:'9%',height:'15%',zIndex:19,cursor:'grab'},
       showDockCup:!!m.cup||!!m.shot,
       brewing:m.brewState==='brewing',
       pourStreamStyle:{position:'absolute',left:'49.3%',bottom:'calc(18% + 100px + '+(m.cup==='glass'?8:(m.cup==='demi'?7.5:10))+'%)',width:'1.4%',height:'62px',background:'linear-gradient(#4a2410,#7a3f18)',transformOrigin:'top center',animation:'cbstream .5s ease-out',zIndex:18,boxShadow:'0 0 3px rgba(0,0,0,.5)'},
