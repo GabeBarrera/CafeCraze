@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cafe Craze</title>
-<link rel="icon" type="image/png" href="assets/favicon.png">
-<link rel="apple-touch-icon" href="assets/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
 <link rel="manifest" href="assets/manifest.json">
 <meta name="theme-color" content="#0a0705">
 <script src="./support.js"></script>
@@ -146,7 +146,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 
       <div data-zone="machine" style="position:absolute;left:24.55%;bottom:calc(16% + 100px);width:50.9%;height:33%"><div style="{{ spr.machine_mIdle }}"></div><div style="{{ spr.machine_mPf }}"></div></div>
       <sc-if value="{{ showDockCup }}" hint-placeholder-val="{{ false }}">
-        <div data-tap="pour" style="{{ dockCupWrap }}"><div style="{{ spr.dock_glassShot }}"></div><div style="{{ spr.dock_glassEmpty }}"></div><div style="{{ spr.dock_demiShot }}"></div><div style="{{ spr.dock_demiEmpty }}"></div><div style="{{ spr.dock_americano }}"></div><div style="{{ spr.dock_espressoCup }}"></div><div style="{{ spr.dock_cupEmpty }}"></div></div>
+        <div data-tap="pour" style="{{ dockCupWrap }}"><div style="{{ spr.dock_glassShot }}"></div><div style="{{ spr.dock_glassEmpty }}"></div><div style="{{ spr.dock_demiShot }}"></div><div style="{{ spr.dock_demiEmpty }}"></div><div style="{{ spr.dock_espressoCup }}"></div><div style="{{ spr.dock_cupEmpty }}"></div></div>
       </sc-if>
       <sc-if value="{{ brewing }}" hint-placeholder-val="{{ false }}">
         <div style="{{ pourStreamStyle }}"></div>
@@ -478,16 +478,37 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:800}}">
 const S=n=>({backgroundImage:'url(assets/sprites/'+n+'.webp)',backgroundSize:'contain',backgroundRepeat:'no-repeat',backgroundPosition:'center center',width:'100%',height:'100%'});
 
-function stackLayers(map,active){
-  const o={};
-  for(const k in map) o[k]={...map[k],position:'absolute',inset:0,opacity:k===active?1:0,transition:'none'};
-  return o;
-}
 const SPR={};
 ['tamp','pfClean','pfGrounds','pfTamped','sugar','beans','cocoa','cinnamon','milkCarton','note',
  'glassEmpty','glassWater','pitcherEmpty','pitcherMilk','pitcherFroth','demiEmpty','demiShot','glassShot','cortado',
  'cupEmpty','espressoCup','latte','mocha','americano','g0','g1','g2','g3','g4','g5','mIdle','mPf',
  'p0','p1','h0','h1','n0','n1','n2','n3','n4','n5','n6','n7','n8','n9','n10','n11'].forEach(n=>{SPR[n]=S(n);});
+
+const LAYER_SETS={
+  grinder:['g0','g1','g2','g3','g4','g5'],
+  pf:['pfClean','pfGrounds','pfTamped'],
+  machine:['mIdle','mPf'],
+  dock:['glassShot','glassEmpty','demiShot','demiEmpty','espressoCup','cupEmpty'],
+  wand:['pitcherFroth','pitcherMilk'],
+  frother:['pitcherMilk','pitcherEmpty'],
+  counter:['sugar','milkCarton'],
+  avatar:['h0','h1']
+};
+const STACKS={};
+for(const p in LAYER_SETS){
+  STACKS[p]={};
+  LAYER_SETS[p].forEach(active=>{
+    const o={};
+    LAYER_SETS[p].forEach(k=>{ o[p+'_'+k]={...SPR[k],position:'absolute',inset:0,opacity:k===active?1:0,transition:'none'}; });
+    STACKS[p][active]=o;
+  });
+}
+
+const MENU_SPRITES=['p0','p1','h0','h1','note','demiShot','espressoCup','americano','latte','cortado','mocha','glassWater',
+  'n0','n1','n2','n3','n4','n5','n6','n7','n8','n9','n10','n11'];
+const preload=names=>names.forEach(n=>{ const i=new Image(); i.src='assets/sprites/'+n+'.webp'; });
+
+const BAND_LO=34, BAND_HI=66;
 
 const DRINKS={
   espresso:{label:'ESPRESSO',price:3.5,spr:'demiShot',dur:46,w:3,how:'Stop the brew inside the gold band. Any cup will do.'},
@@ -529,6 +550,8 @@ const TUT=[
 const money2=n=>(Math.round(n*100)/100).toFixed(2);
 const freshInv=()=>({beans:6,whole:3,oat:2,cashew:2,cocoa:3,cinnamon:3,sugar:6});
 const freshMachine=()=>({cup:null,glass:false,pf:null,brew:0,brewState:'idle',shot:null,wpos:0,wdir:1,wtarget:30,wactive:false});
+const freshStations=()=>({grinder:{hopper:false,levels:0,prog:0},pf:'clean',machine:freshMachine(),
+  wand:{milk:false,gauge:0,froth:false,kind:null},frother:'empty',frotherKind:null,counter:null});
 const freshSettings=()=>({fired:false,patience:false,modifications:false,dayLength:10});
 const clampRep=r=>Math.max(0,Math.min(5,r));
 const repTier=r=>{
@@ -557,17 +580,17 @@ class Component extends DCLogic {
     reputation:2.5,settings:freshSettings(),
     inv:freshInv(),
     orders:[],tray:[],toasts:[],unread:0,logOpen:false,
-    grinder:{hopper:false,levels:0,prog:0},
-    pf:'clean',
-    machine:freshMachine(),
-    wand:{milk:false,gauge:0,froth:false,kind:null},
-    frother:'empty',frotherKind:null,counter:null,
-    modal:null,tut:0,drag:null,selected:null,scores:[]
+    ...freshStations(),
+    modal:null,tut:0,drag:null,scores:[]
   };
   hold=null; spawnCd=6; uid=1;
 
   componentDidMount(){
-    Object.values(SPR).forEach(s=>{ const m=/url\((.*)\)/.exec(s.backgroundImage); if(m){ const img=new Image(); img.src=m[1]; } });
+    preload(MENU_SPRITES);
+    const scene=new Image(); scene.src='assets/scene_crafting.webp';
+    const rest=Object.keys(SPR).filter(k=>MENU_SPRITES.indexOf(k)<0);
+    (window.requestIdleCallback||(f=>setTimeout(f,1200)))(()=>preload(rest));
+    this.bind();
     try{this.setState({scores:JSON.parse(localStorage.getItem('cb_scores')||'[]')});}catch(e){}
     try{const n=JSON.parse(localStorage.getItem('cb_names')||'null'); if(n&&n.length===2) this.setState({names:n});}catch(e){}
     try{ if(localStorage.getItem('cb_save')) this.load(); }catch(e){}
@@ -575,6 +598,31 @@ class Component extends DCLogic {
     this.vis=()=>{ this.lastTick=Date.now(); this.pump(); };
     document.addEventListener('visibilitychange',this.vis);
     window.addEventListener('focus',this.vis);
+  }
+  bind(){
+    if(this.bound) return;
+    this.bound=true;
+    const prev=window.__cbHandlers;
+    if(prev){
+      window.removeEventListener('pointerdown',prev.pd); window.removeEventListener('pointermove',prev.pm);
+      window.removeEventListener('pointerup',prev.pu); window.removeEventListener('pointercancel',prev.pu);
+      if(prev.fit) window.removeEventListener('resize',prev.fit);
+      if(prev.ck) window.removeEventListener('click',prev.ck);
+    }
+    this.pd=e=>this.onDown(e); this.pm=e=>this.onMove(e); this.pu=e=>this.onUp(e);
+    this.ck=e=>{ const t=e.target instanceof Element?e.target:null; if(!t) return;
+      const tap=t.closest('[data-tap]'); if(!tap) return;
+      if(this.lastTap&&Date.now()-this.lastTap<600) return;
+      this.lastTap=Date.now(); this.doTap(tap.getAttribute('data-tap')); };
+    window.addEventListener('click',this.ck);
+    window.addEventListener('pointerdown',this.pd);
+    window.addEventListener('pointermove',this.pm);
+    window.addEventListener('pointerup',this.pu);
+    window.addEventListener('pointercancel',this.pu);
+    this.fit=()=>this.setState({scale:Math.min(window.innerWidth/420,window.innerHeight/800)});
+    window.addEventListener('resize',this.fit);
+    window.__cbHandlers={pd:this.pd,pm:this.pm,pu:this.pu,fit:this.fit,ck:this.ck};
+    setTimeout(this.fit,0);
   }
   pump(){
     clearTimeout(this.pumpId);
@@ -594,6 +642,8 @@ class Component extends DCLogic {
   componentWillUnmount(){
     clearTimeout(this.pumpId); this.pumpId=null; this.bound=false;
     if(this.vis){ document.removeEventListener('visibilitychange',this.vis); window.removeEventListener('focus',this.vis); }
+    if(this.ck) window.removeEventListener('click',this.ck);
+    if(window.__cbHandlers&&window.__cbHandlers.pd===this.pd) window.__cbHandlers=null;
     if(this.fit) window.removeEventListener('resize',this.fit);
     window.removeEventListener('pointerdown',this.pd);
     window.removeEventListener('pointermove',this.pm);
@@ -649,9 +699,7 @@ class Component extends DCLogic {
         if(s.settings.fired){ next.lives=lives; this.endRun(next); return; }
         next.lives=0;
       } else next.lives=lives;
-      if(clock>=900){ this.setState({...next,screen:'dayend',orders:[],tray:[],selected:null}); return; }
-    }
-    if(!paused){
+      if(clock>=900){ this.setState({...next,screen:'dayend',orders:[],tray:[]}); return; }
       const g={...s.grinder};
       if(this.hold==='grind' && g.hopper){
         g.prog=Math.min(1,g.prog+dt/1.1);
@@ -704,7 +752,7 @@ class Component extends DCLogic {
       }
       if(Object.keys(mods).length===0) mods=null;
     }
-    return {id:this.uid++,drink,npc,who:'',dur,left:dur,accepted:false,mods};
+    return {id:this.uid++,drink,npc,dur,left:dur,accepted:false,mods};
   }
   endRun(extra){
     const s=this.state;
@@ -754,7 +802,7 @@ class Component extends DCLogic {
     if(a==='barista-0') return this.setState({barista:0});
     if(a==='barista-1') return this.setState({barista:1});
     if(a==='start') return this.startRun();
-    if(a==='toggle'){ this.setState({view:s.view==='customer'?'crafting':'customer',selected:null}); if(s.view==='customer') this.tut('view'); return; }
+    if(a==='toggle'){ this.setState({view:s.view==='customer'?'crafting':'customer'}); if(s.view==='customer') this.tut('view'); return; }
     if(a==='bell') return this.setState({logOpen:!s.logOpen,unread:0});
     if(a==='close-log') return this.setState({logOpen:false,unread:0});
     if(a==='close') return this.setState({modal:null});
@@ -783,17 +831,14 @@ class Component extends DCLogic {
     this.spawnCd=6;
     this.setState({screen:'play',view:'customer',day:1,clock:360,money:20,lives:5,served:0,dayServed:0,dayMissed:0,dayCash:0,
       reputation:2.5,
-      inv:freshInv(),orders:[first],tray:[],toasts:[],unread:0,logOpen:false,modal:null,tut:seen?0:1,selected:null,
-      grinder:{hopper:false,levels:0,prog:0},pf:'clean',machine:freshMachine(),
-      wand:{milk:false,gauge:0,froth:false,kind:null},frother:'empty',frotherKind:null,counter:null});
+      inv:freshInv(),orders:[first],tray:[],toasts:[],unread:0,logOpen:false,modal:null,tut:seen?0:1,
+      ...freshStations()});
   }
   nextDay(){
     const s=this.state;
     this.spawnCd=4;
     this.setState({screen:'play',view:'customer',day:s.day+1,clock:360,dayServed:0,dayMissed:0,dayCash:0,
-      orders:[this.makeOrder()],tray:[],modal:null,selected:null,
-      grinder:{hopper:false,levels:0,prog:0},pf:'clean',machine:freshMachine(),
-      wand:{milk:false,gauge:0,froth:false,kind:null},frother:'empty',frotherKind:null,counter:null});
+      orders:[this.makeOrder()],tray:[],modal:null,...freshStations()});
   }
   save(){
     const s=this.state;
@@ -806,7 +851,7 @@ class Component extends DCLogic {
     let d=null; try{d=JSON.parse(localStorage.getItem('cb_save')||'null');}catch(e){}
     if(!d) return this.toast('No saved shift found.','bad');
     this.spawnCd=4;
-    this.setState({...d,inv:{...freshInv(),...(d.inv||{})},settings:{...freshSettings(),...(d.settings||{})},reputation:d.reputation!=null?d.reputation:2.5,screen:'play',orders:[this.makeOrder()],modal:null,tut:0,selected:null});
+    this.setState({...d,inv:{...freshInv(),...(d.inv||{})},settings:{...freshSettings(),...(d.settings||{})},reputation:d.reputation!=null?d.reputation:2.5,screen:'play',orders:[this.makeOrder()],modal:null,tut:0});
   }
   buy(k){
     const p=SHOP[k]; if(!p) return;
@@ -850,10 +895,9 @@ class Component extends DCLogic {
   stopBrew(){
     const s=this.state; const m={...s.machine};
     if(m.brewState!=='brewing') return;
-    if(m.cup==='demi'||m.cup==='glass') return;
     const at=m.brew;
-    if(at<34){ m.brewState='paused'; this.setState({machine:m}); return this.toast('Paused early â€” hit BREW again to reach the band.','info'); }
-    if(at<=66){ m.brewState='paused'; this.setState({machine:m}); return this.toast('Paused in the sweet spot â€” grab it now, or keep brewing for a lungo.','good'); }
+    if(at<BAND_LO){ m.brewState='paused'; this.setState({machine:m}); return this.toast('Paused early â€” hit BREW again to reach the band.','info'); }
+    if(at<=BAND_HI){ m.brewState='paused'; this.setState({machine:m}); return this.toast('Paused in the sweet spot â€” grab it now, or keep brewing for a lungo.','good'); }
     m.brewState='idle'; m.pf=null; m.brew=0; m.shot='lungo';
     this.setState({machine:m,pf:'spent'});
     this.toast('Ran past the band â€” a lungo. Tap the cup to collect it.','good');
@@ -861,7 +905,7 @@ class Component extends DCLogic {
   pour(){
     const s=this.state; const m={...s.machine};
     if(m.brewState==='paused'){
-      const band=m.brew>=34&&m.brew<=66;
+      const band=m.brew>=BAND_LO&&m.brew<=BAND_HI;
       if(!band) return;
       if(s.tray.length>=3) return this.toast('Tray is full â€” ring one up first.','bad');
       const cup=m.cup;
@@ -915,7 +959,7 @@ class Component extends DCLogic {
   }
   trash(item){
     const s=this.state;
-    if(item.indexOf('drink:')===0){ const id=+item.slice(6); this.setState({tray:s.tray.filter(t=>t.id!==id),selected:null}); return this.toast('Binned.','info'); }
+    if(item.indexOf('drink:')===0){ const id=+item.slice(6); this.setState({tray:s.tray.filter(t=>t.id!==id)}); return this.toast('Binned.','info'); }
     if(item==='pf'&&s.pf!=='clean'){ this.setState({pf:'clean'}); return this.toast('Puck knocked out.','info'); }
     if(item==='froth'&&s.wand.froth){ this.setState({wand:{milk:false,gauge:0,froth:false,kind:null}}); return this.toast('Milk dumped.','info'); }
     if(item==='frother'&&s.frother==='full'){ this.setState({frother:'empty',frotherKind:null}); return this.toast('Tin emptied.','info'); }
@@ -1040,7 +1084,7 @@ class Component extends DCLogic {
     const s=this.state; const a=s.tray.find(t=>t.id===fromId); const b=s.tray[slot];
     if(!a||!b||a.id===b.id) return;
     if(a.type==='water'&&b.type==='espresso'){
-      return this.setState({tray:s.tray.filter(t=>t.id!==a.id).map(t=>t.id===b.id?{...t,type:'americano'}:t),selected:null},()=>this.toast('Americano built.','good'));
+      return this.setState({tray:s.tray.filter(t=>t.id!==a.id).map(t=>t.id===b.id?{...t,type:'americano'}:t)},()=>this.toast('Americano built.','good'));
     }
     this.toast('Those don\u2019t combine.','bad');
   }
@@ -1072,9 +1116,8 @@ class Component extends DCLogic {
     const o=s.orders.find(x=>x.id===oid); if(!o) return;
     if(!o.accepted){
       this.setState({orders:s.orders.map(x=>x.id===oid?{...x,accepted:true}:x)});
-      this.tut('accept'); return this.toast((o.who||NPC_NAMES[o.npc])+' ordered a '+DRINKS[o.drink].label,'good');
+      this.tut('accept'); return this.toast(NPC_NAMES[o.npc]+' ordered a '+DRINKS[o.drink].label,'good');
     }
-    if(s.selected!=null){ const d=s.tray.find(t=>t.id===s.selected); if(d) return this.serve(d.id,oid); }
     this.toast('Drag their drink onto the ticket.','info');
   }
   serve(drinkId,orderId){
@@ -1092,8 +1135,8 @@ class Component extends DCLogic {
     const pay=DRINKS[o.drink].price+tip+(speed>0.5?0.5:0)+(d.sugar?0.1*d.sugar:0)+(d.dust?0.25:0)+(d.cocoaTop?0.25:0);
     const reputation=clampRep(s.reputation+0.02+speed*0.08);
     this.setState({tray:s.tray.filter(t=>t.id!==drinkId),orders:s.orders.filter(x=>x.id!==orderId),
-      money:s.money+pay,served:s.served+1,dayServed:s.dayServed+1,dayCash:s.dayCash+pay,selected:null,reputation});
-    this.toast('Served '+(o.who||NPC_NAMES[o.npc])+' Â· +$'+money2(pay),'good');
+      money:s.money+pay,served:s.served+1,dayServed:s.dayServed+1,dayCash:s.dayCash+pay,reputation});
+    this.toast('Served '+NPC_NAMES[o.npc]+' Â· +$'+money2(pay),'good');
     this.tut('serve');
   }
 
@@ -1101,64 +1144,31 @@ class Component extends DCLogic {
   renderVals(){
     const s=this.state;
     if(!this.pumpId||(this.lastTick&&Date.now()-this.lastTick>900)) this.pump();
-    if(!this.bound){ this.bound=true;
-      const prev=window.__cbHandlers;
-      if(prev){ window.removeEventListener('pointerdown',prev.pd); window.removeEventListener('pointermove',prev.pm); window.removeEventListener('pointerup',prev.pu); window.removeEventListener('pointercancel',prev.pu); if(prev.fit) window.removeEventListener('resize',prev.fit); }
-      if(prev&&prev.ck) window.removeEventListener('click',prev.ck);
-      this.pd=e=>this.onDown(e); this.pm=e=>this.onMove(e); this.pu=e=>this.onUp(e);
-      this.ck=e=>{ const t=e.target instanceof Element?e.target:null; if(!t) return;
-        const tap=t.closest('[data-tap]'); if(!tap) return;
-        if(this.lastTap&&Date.now()-this.lastTap<600) return;
-        this.lastTap=Date.now(); this.doTap(tap.getAttribute('data-tap')); };
-      window.addEventListener('click',this.ck);
-      window.addEventListener('pointerdown',this.pd);
-      window.addEventListener('pointermove',this.pm);
-      window.addEventListener('pointerup',this.pu);
-      window.addEventListener('pointercancel',this.pu);
-      this.fit=()=>this.setState({scale:Math.min(window.innerWidth/420,window.innerHeight/800)});
-      window.addEventListener('resize',this.fit);
-      window.__cbHandlers={pd:this.pd,pm:this.pm,pu:this.pu,fit:this.fit,ck:this.ck};
-      setTimeout(this.fit,0);
-    }
+    this.bind();
     const hh=Math.floor(s.clock/60), mm=Math.floor(s.clock%60);
     const ampm=hh>=12?'PM':'AM'; const h12=hh>12?hh-12:hh;
     const hearts='\u2665'.repeat(Math.max(0,s.lives))+'\u2661'.repeat(Math.max(0,5-s.lives));
     const m=s.machine;
-    const spr={...SPR, avatar:s.barista?SPR.h1:SPR.h0,
-      grinder:(s.grinder.hopper?(this.hold==='grind'?SPR.g2:SPR.g1):[SPR.g0,SPR.g5,SPR.g4,SPR.g3][s.grinder.levels]),
-      machine:m.pf?SPR.mPf:SPR.mIdle,
-      pf:{clean:SPR.pfClean,grounds:SPR.pfGrounds,tamped:SPR.pfTamped,spent:SPR.pfGrounds}[s.pf]||SPR.pfClean,
-      frother:s.frother==='full'?SPR.pitcherMilk:SPR.pitcherEmpty,
-      counter:s.counter?(s.counter.item==='sugar'?SPR.sugar:SPR.milkCarton):SPR.milkCarton,
-      dockCup:m.cup==='glass'?(m.shot?SPR.glassShot:SPR.glassEmpty)
-        :m.cup==='demi'?(m.shot?SPR.demiShot:SPR.demiEmpty)
-        :((m.shot||m.brew>=34)?SPR.espressoCup:SPR.cupEmpty),
-      wandPitcher:s.wand.froth?SPR.pitcherFroth:SPR.pitcherMilk
-    };
-    const grinderKey=s.grinder.hopper?(s.grinder.prog>0?'g2':(this.hold==='grind'?'g2':'g1')):['g0','g5','g4','g3'][s.grinder.levels];
-    Object.assign(spr, Object.fromEntries(Object.entries(stackLayers({g0:SPR.g0,g1:SPR.g1,g2:SPR.g2,g3:SPR.g3,g4:SPR.g4,g5:SPR.g5},grinderKey)).map(([k,v])=>['grinder_'+k,v])));
+    const grinderKey=s.grinder.hopper?((s.grinder.prog>0||this.hold==='grind')?'g2':'g1'):['g0','g5','g4','g3'][s.grinder.levels];
     const pfKey={clean:'pfClean',grounds:'pfGrounds',tamped:'pfTamped',spent:'pfGrounds'}[s.pf]||'pfClean';
-    Object.assign(spr, Object.fromEntries(Object.entries(stackLayers({pfClean:SPR.pfClean,pfGrounds:SPR.pfGrounds,pfTamped:SPR.pfTamped},pfKey)).map(([k,v])=>['pf_'+k,v])));
-    const machineKey=m.pf?'mPf':'mIdle';
-    Object.assign(spr, Object.fromEntries(Object.entries(stackLayers({mIdle:SPR.mIdle,mPf:SPR.mPf},machineKey)).map(([k,v])=>['machine_'+k,v])));
     const dockKey=m.cup==='glass'?(m.shot?'glassShot':'glassEmpty')
       :m.cup==='demi'?(m.shot?'demiShot':'demiEmpty')
-      :((m.shot||m.brew>=34)?'espressoCup':'cupEmpty');
-    Object.assign(spr, Object.fromEntries(Object.entries(stackLayers({glassShot:SPR.glassShot,glassEmpty:SPR.glassEmpty,demiShot:SPR.demiShot,demiEmpty:SPR.demiEmpty,americano:SPR.americano,espressoCup:SPR.espressoCup,cupEmpty:SPR.cupEmpty},dockKey)).map(([k,v])=>['dock_'+k,v])));
-    const wandKey=s.wand.froth?'pitcherFroth':'pitcherMilk';
-    Object.assign(spr, Object.fromEntries(Object.entries(stackLayers({pitcherFroth:SPR.pitcherFroth,pitcherMilk:SPR.pitcherMilk},wandKey)).map(([k,v])=>['wand_'+k,v])));
-    const frotherKey=s.frother==='full'?'pitcherMilk':'pitcherEmpty';
-    Object.assign(spr, Object.fromEntries(Object.entries(stackLayers({pitcherMilk:SPR.pitcherMilk,pitcherEmpty:SPR.pitcherEmpty},frotherKey)).map(([k,v])=>['frother_'+k,v])));
-    const counterKey=s.counter&&s.counter.item==='sugar'?'sugar':'milkCarton';
-    Object.assign(spr, Object.fromEntries(Object.entries(stackLayers({sugar:SPR.sugar,milkCarton:SPR.milkCarton},counterKey)).map(([k,v])=>['counter_'+k,v])));
-    const avatarKey=s.barista?'h1':'h0';
-    Object.assign(spr, Object.fromEntries(Object.entries(stackLayers({h0:SPR.h0,h1:SPR.h1},avatarKey)).map(([k,v])=>['avatar_'+k,v])));
+      :((m.shot||m.brew>=BAND_LO)?'espressoCup':'cupEmpty');
+    const spr={...SPR,
+      ...STACKS.grinder[grinderKey],
+      ...STACKS.pf[pfKey],
+      ...STACKS.machine[m.pf?'mPf':'mIdle'],
+      ...STACKS.dock[dockKey],
+      ...STACKS.wand[s.wand.froth?'pitcherFroth':'pitcherMilk'],
+      ...STACKS.frother[s.frother==='full'?'pitcherMilk':'pitcherEmpty'],
+      ...STACKS.counter[s.counter&&s.counter.item==='sugar'?'sugar':'milkCarton'],
+      ...STACKS.avatar[s.barista?'h1':'h0']
+    };
     const pick=on=>({width:96,border:on?'3px solid #e8b661':'3px solid #3a2a1c',background:on?'#3d2a17':'#1a120c',boxShadow:on?'0 0 0 2px rgba(232,182,97,.3)':'none',cursor:'pointer',padding:'4px 2px 0'});
     const trayView=[0,1,2].map(i=>{
       const t=s.tray[i];
-      const sel=t&&s.selected===t.id;
       const extras=t?[t.sugar?'S':'',t.dust?'C':''].filter(Boolean).join(''):'';
-      return {wrap:{position:'relative',width:78,height:78,border:sel?'3px solid #e8b661':'2px solid #3a2a1c',background:sel?'#33220f':'#231710'},
+      return {wrap:{position:'relative',width:78,height:78,border:'2px solid #3a2a1c',background:'#231710'},
         filled:!!t,empty:!t,
         dragId:t?'drink:'+t.id:'',zoneId:'slot:'+i,
         spr:t?{...SPR[traySpr(t)]}:null, label:t?TRAY_LABEL[t.type]:'',
@@ -1180,7 +1190,7 @@ class Component extends DCLogic {
       return {wrap:{position:'absolute',left:i===0?'3%':'55%',top:'1.5%',width:'42%',zIndex:30},
         card:{background:o.accepted?'#f3e2bd':'#e9dcc4',border:o.accepted?'3px solid #e8b661':'3px dashed #8a6b45',
           boxShadow:'0 4px 0 rgba(0,0,0,.45)',padding:'5px 5px 3px',cursor:'pointer',position:'relative'},
-        spr:{...SPR[DRINKS[o.drink].spr]}, drinkLabel:DRINKS[o.drink].label, who:o.who||NPC_NAMES[o.npc],
+        spr:{...SPR[DRINKS[o.drink].spr]}, drinkLabel:DRINKS[o.drink].label, who:NPC_NAMES[o.npc],
         bar:{height:'100%',width:pct.toFixed(1)+'%',background:col},
         tag:o.accepted?'ACCEPTED':'TAP TO ACCEPT',
         tagStyle:{fontFamily:"'Silkscreen',monospace",fontSize:8,textAlign:'center',marginTop:3,color:o.accepted?'#2f6d3f':'#8a3b1f'},
@@ -1236,7 +1246,7 @@ class Component extends DCLogic {
       brewing:m.brewState==='brewing',
       pourStreamStyle:{position:'absolute',left:'49.3%',bottom:'calc(18% + 100px + '+(m.cup==='glass'?8:(m.cup==='demi'?7.5:10))+'%)',width:'1.4%',height:'62px',background:'linear-gradient(#4a2410,#7a3f18)',transformOrigin:'top center',animation:'cbstream .5s ease-out',zIndex:18,boxShadow:'0 0 3px rgba(0,0,0,.5)'},
       pourDripStyle:{position:'absolute',left:'48.6%',bottom:'calc(18% + 100px + '+(m.cup==='glass'?8:(m.cup==='demi'?7.5:10))+'% - 6px)',width:'2.8%',height:'1.2%',borderRadius:'50%',background:'rgba(122,63,24,.85)',animation:'cbdrip .4s linear infinite',zIndex:18},
-      dockCupWrap:{position:'absolute',left:m.cup==='glass'?'44.95%':(m.cup==='demi'?'43.45%':'41.95%'),bottom:'calc(18% + 100px)',width:m.cup==='glass'?'10.1%':(m.cup==='demi'?'13.1%':'16.1%'),height:m.cup==='glass'?'8%':(m.cup==='demi'?'7.5%':'10%'),cursor:(m.shot||(m.brewState==='paused'&&m.brew>=34&&m.brew<=66))?'pointer':'default',animation:(m.shot||(m.brewState==='paused'&&m.brew>=34&&m.brew<=66))?'cbpulse 1s infinite':'none',zIndex:15},
+      dockCupWrap:{position:'absolute',left:m.cup==='glass'?'44.95%':(m.cup==='demi'?'43.45%':'41.95%'),bottom:'calc(18% + 100px)',width:m.cup==='glass'?'10.1%':(m.cup==='demi'?'13.1%':'16.1%'),height:m.cup==='glass'?'8%':(m.cup==='demi'?'7.5%':'10%'),cursor:(m.shot||(m.brewState==='paused'&&m.brew>=BAND_LO&&m.brew<=BAND_HI))?'pointer':'default',animation:(m.shot||(m.brewState==='paused'&&m.brew>=BAND_LO&&m.brew<=BAND_HI))?'cbpulse 1s infinite':'none',zIndex:15},
       showGlass:!!m.glass,
       wandItem:s.wand.milk||s.wand.froth,
       wandWrap:{position:'absolute',left:'20.55%',bottom:'32%',width:'17%',height:'11%',zIndex:16,cursor:s.wand.froth?'grab':'default'},
