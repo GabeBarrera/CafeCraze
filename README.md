@@ -112,6 +112,8 @@ Every recipe card shows the whole picture live as you type:
 - **CROWD %** and a bar &mdash; how much traffic this price pulls versus normal.
 - **TAKE &plusmn;%** &mdash; the honest answer: total revenue at this price versus the menu default, crowd loss already accounted for. If TAKE is negative, the price rise is costing you money, however good the number on the board looks.
 
+The mood line, CROWD bar, TAKE and FAIR live behind the row itself &mdash; tap a drink's picture or name to open it, tap again to close. Custom drinks carry a small **S** badge and open with **DELETE** (tap twice to confirm) and **EDIT** underneath. The price is always colour-coded: green while TAKE is level or up, amber once it slips below, red at &minus;45% or worse.
+
 Hunt the peak of TAKE. It is always somewhere past FAIR, and it moves every time your stars change.
 
 ### Everything else reputation does
@@ -127,3 +129,15 @@ Hunt the peak of TAKE. It is always somewhere past FAIR, and it moves every time
 | 5 | 50% faster | ~50% | 40% slower |
 
 Reputation climbs with fast, accurate service and falls on missed or wrong orders &mdash; and now on greedy ones too.
+
+## Your own recipes
+
+**+ NEW RECIPE** at the bottom of the recipe card saves the shift exactly as it stands &mdash; clock, queue, tray, till &mdash; and freezes it while the bench is open.
+
+Pick the cup the drink is served in (espresso, latte, mocha or americano) with the arrows, then tap or drag ingredients in: up to two shots, one milk, cocoa (twice for a dusting on top), cinnamon, three sugars, water. A badge counts each one, **&minus; ONE** under a tile takes one back, and **UNDO** steps back through the whole build. Milk and water can't share a cup and cocoa won't mix with water &mdash; the same rules as the bar, and anything the bar would refuse is explained in red above the buttons.
+
+Custom drinks stay off the chalkboard by the window &mdash; that board is the house menu.
+
+**SAVE** shows the costing: every ingredient at its per-use price, the total, and the fair asking price it lands on the card at. Name it there, or it gets called SIGNATURE 1. **OKAY** puts it on the menu, the chalkboard and into the order rotation; **DISCARD** throws it out after a confirmation. Either way you return to the recipe card with the shift exactly where you left it.
+
+A recipe that already exists (or duplicates one of the house drinks) is refused. Once it's on the menu, building that exact combination at the bar shows your chosen cup art on the tray, and a customer asking for it is served the same way as anything else.
