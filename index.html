@@ -103,7 +103,22 @@ a{color:#e8b661}a:hover{color:#f5d69a}
     </div>
   </div>
 
-  <div style="position:absolute;left:0;right:0;top:52px;height:648px;overflow:hidden">
+  <sc-if value="{{ closing }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;left:0;right:0;top:52px;height:44px;box-sizing:border-box;z-index:59;background:#2a120a;border-bottom:2px solid #6b2a12;display:flex;align-items:center;gap:6px;padding:0 6px">
+      <div style="flex:1;min-width:0;font-family:'Silkscreen',monospace;font-size:9px;color:#e0805a;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ closingNote }}</div>
+      <sc-if value="{{ cadIdle }}" hint-placeholder-val="{{ true }}">
+        <div data-tap="callday" style="flex:none;border:2px solid #6b2a12;background:#1a120c;padding:9px 8px;font-family:'Silkscreen',monospace;font-size:9px;color:#e0805a;cursor:pointer;white-space:nowrap">CALL IT A DAY</div>
+      </sc-if>
+      <sc-if value="{{ cadArm }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:none;display:flex;gap:5px">
+          <div data-tap="callday-no" style="border:2px solid #3a2a1c;background:#231710;padding:9px 8px;font-family:'Silkscreen',monospace;font-size:9px;color:#c9b394;cursor:pointer">WAIT</div>
+          <div data-tap="callday-yes" style="border:2px solid #e0805a;background:#6b2a12;padding:9px 8px;font-family:'Silkscreen',monospace;font-size:9px;color:#ffeade;cursor:pointer;white-space:nowrap">CLOSE UP</div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <div style="{{ stageStyle }}">
 
     <sc-if value="{{ isCustomer }}" hint-placeholder-val="{{ true }}">
     <div style="position:absolute;inset:0">
@@ -713,7 +728,9 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:800}}">
-const S=n=>({backgroundImage:'url(assets/sprites/'+n+'.webp)',backgroundSize:'contain',backgroundRepeat:'no-repeat',backgroundPosition:'center center',width:'100%',height:'100%'});
+const BASE=(()=>{ try{ return new URL('./',document.baseURI).href; }catch(e){ return ''; } })();
+const ASSET=p=>BASE+p;
+const S=n=>({backgroundImage:'url('+ASSET('assets/sprites/'+n+'.webp')+')',backgroundSize:'contain',backgroundRepeat:'no-repeat',backgroundPosition:'center center',width:'100%',height:'100%'});
 
 const SPR={};
 ['tamp','pfClean','pfGrounds','pfTamped','sugar','beans','cocoa','cinnamon','milkCarton','note',
@@ -743,7 +760,7 @@ for(const p in LAYER_SETS){
 
 const MENU_SPRITES=['p0','p1','h0','h1','note','demiShot','espressoCup','americano','latte','cortado','mocha','glassWater',
   'n0','n1','n2','n3','n4','n5','n6','n7','n8','n9','n10','n11'];
-const preload=names=>names.forEach(n=>{ const i=new Image(); i.src='assets/sprites/'+n+'.webp'; });
+const preload=names=>names.forEach(n=>{ const i=new Image(); i.src=ASSET('assets/sprites/'+n+'.webp'); });
 
 const BAND_LO=34, BAND_HI=66;
 
@@ -881,6 +898,12 @@ const TUT=[
   {k:'shot',t:'Press BREW and hit STOP inside the gold band, then tap the cup to set it on the tray.'},
   {k:'serve',t:'Back to \u2630 CUSTOMERS and drag the espresso onto their ticket.'}
 ];
+const SAVE_V=2;
+/* only these keys are ever restored from storage - a corrupt or hand-edited
+   save must not be able to inject state keys the game never wrote */
+const SAVE_KEYS=['orders','day','clock','money','lives','served','inv','barista','names','view',
+  'grinder','pf','machine','wand','tray','frother','frotherKind','counter',
+  'dayServed','dayMissed','dayCash','reputation','settings','prices','custom','upgrades','tipJar'];
 const money2=n=>(Math.round(n*100)/100).toFixed(2);
 const freshInv=()=>({beans:6,whole:3,oat:2,cashew:2,cocoa:3,cinnamon:3,sugar:6});
 const freshMachine=()=>({item:null,glass:false,pf:null,brew:0,brewState:'idle',wpos:0,wdir:1,wtarget:30,wactive:false});
@@ -986,7 +1009,7 @@ class Component extends DCLogic {
     prices:freshPrices(),priceDraft:{},
     inv:freshInv(),
     custom:[],infoOpen:{},cr:null,delArm:null,
-    orders:[],tray:[],toasts:[],unread:0,logOpen:false,
+    orders:[],tray:[],toasts:[],unread:0,logOpen:false,closing:false,cadArm:false,
     ...freshStations(),
     modal:null,tut:0,drag:null,scores:[],
     upgrades:{grinder:false,machine:false,tips:false,capitalism:false},tipJar:0,shopTab:'stock'
@@ -1000,7 +1023,7 @@ class Component extends DCLogic {
     document.addEventListener('dragstart',this.blockCopy);
     document.addEventListener('contextmenu',this.blockCopy);
     preload(MENU_SPRITES);
-    const scene=new Image(); scene.src='assets/scene_crafting.webp';
+    const scene=new Image(); scene.src=ASSET('assets/scene_crafting.webp');
     const rest=Object.keys(SPR).filter(k=>MENU_SPRITES.indexOf(k)<0);
     (window.requestIdleCallback||(f=>setTimeout(f,1200)))(()=>preload(rest));
     this.bind();
@@ -1036,7 +1059,15 @@ class Component extends DCLogic {
     window.addEventListener('pointercancel',this.pu);
     this.bl=()=>{ if(!this.hold) return; const held=this.hold; this.hold=null; if(held==='steam') this.releaseSteam(); };
     window.addEventListener('blur',this.bl);
-    this.fit=()=>this.setState({scale:Math.min(window.innerWidth/420,window.innerHeight/800)});
+    this.fit=()=>{
+      if(this._fitRaf) return;
+      const raf=window.requestAnimationFrame?window.requestAnimationFrame.bind(window):(f=>setTimeout(f,16));
+      this._fitRaf=raf(()=>{
+        this._fitRaf=null;
+        const sc=Math.min(window.innerWidth/420,window.innerHeight/800);
+        if(sc!==this.state.scale) this.setState({scale:sc});
+      });
+    };
     window.addEventListener('resize',this.fit);
     window.__cbHandlers={pd:this.pd,pm:this.pm,pu:this.pu,fit:this.fit,ck:this.ck,bl:this.bl};
     setTimeout(this.fit,0);
@@ -1058,6 +1089,8 @@ class Component extends DCLogic {
   }
   componentWillUnmount(){
     clearTimeout(this.pumpId); this.pumpId=null; this.bound=false;
+    clearTimeout(this._pressT);
+    if(this.actx){ try{this.actx.close();}catch(e){} this.actx=null; }
     if(this.blockCopy){ ['copy','cut','dragstart','contextmenu'].forEach(e=>document.removeEventListener(e,this.blockCopy)); }
     if(this.vis){ document.removeEventListener('visibilitychange',this.vis); window.removeEventListener('focus',this.vis); }
     if(this.ck) window.removeEventListener('click',this.ck);
@@ -1111,7 +1144,6 @@ class Component extends DCLogic {
       });
       if(missed) this.toast('Missed order! \u22121 life, \u2212$2, reputation down.','bad');
       next.orders=orders; next.money=money; next.dayMissed=dayMissed; next.reputation=reputation;
-      if(clock>=900){ clock=900; }
       next.clock=clock;
       if(s.tut===0 && clock<895){
         this.spawnCd-=dt;
@@ -1132,7 +1164,11 @@ class Component extends DCLogic {
         if(s.settings.fired){ next.lives=lives; this.endRun(next); return; }
         next.lives=0;
       } else next.lives=lives;
-      if(clock>=900){ this.setState({...next,screen:'dayend',orders:[],tray:[]}); return; }
+      /* closing time: no new customers, but everyone still at the window gets
+         served. The day only ends once the last ticket clears. */
+      const live=next.orders||orders;
+      if(clock>=900&&!live.length){ this.setState({...next,screen:'dayend',orders:[],tray:[]}); return; }
+      if(clock>=900&&!s.closing){ next.closing=true; this.logIt('Closing time \u2014 no new customers. Finish the orders still at the window.','info'); }
       if(s.upgrades.tips && Math.floor(clock/60)>Math.floor(s.clock/60)){
         next.tipJar=(next.tipJar!=null?next.tipJar:s.tipJar)+(1+Math.floor(Math.random()*5));
       }
@@ -1143,19 +1179,20 @@ class Component extends DCLogic {
         next.grinder=g;
       }
       const m={...s.machine};
-      let mdirty=false;
+      let mdirty=false, brewLog=null;
       if(m.brewState==='brewing'&&m.item){
         const fastCup=m.item.cup==='demi'||m.item.cup==='glass';
         m.brew=Math.min(100,m.brew+(fastCup?13:6.5)*(s.upgrades.machine?2.5:1)*dt);
         if(m.brew>=100){
           m.brewState='idle'; m.pf=null; next.pf='spent'; m.brew=0;
           const r=addFill(m.item,fastCup?'espresso':'lungo');
-          m.item=r.item; this.logIt('Brew finished \u2014 '+itemName(r.item),'good');
+          m.item=r.item; brewLog='Brew finished \u2014 '+itemName(r.item);
         }
         mdirty=true;
       }
       if(m.wactive){ m.wpos+=m.wdir*46*dt; if(m.wpos>100){m.wpos=100;m.wdir=-1;} if(m.wpos<0){m.wpos=0;m.wdir=1;} mdirty=true; }
       if(mdirty) next.machine=m;
+      if(brewLog) this._brewLog=brewLog;
       const w={...s.wand};
       if(this.hold==='steam' && w.milk && !w.froth){
         w.gauge=Math.min(1,w.gauge+dt/2.2);
@@ -1164,6 +1201,7 @@ class Component extends DCLogic {
       }
     }
     if(Object.keys(next).length) this.setState(next);
+    if(this._brewLog){ const t=this._brewLog; this._brewLog=null; this.logIt(t,'good'); }
   }
 
   demandInfo(){
@@ -1329,10 +1367,13 @@ class Component extends DCLogic {
   }
   pressFx(el){
     if(!el) return;
+    if(this._pressEl&&this._pressEl!==el){ try{this._pressEl.removeAttribute('data-pressed');}catch(e){} }
+    this._pressEl=el;
+    clearTimeout(this._pressT);
     el.removeAttribute('data-pressed');
-    void el.offsetWidth;
-    el.setAttribute('data-pressed','1');
-    setTimeout(()=>{ try{el.removeAttribute('data-pressed');}catch(e){} },180);
+    const raf=window.requestAnimationFrame?window.requestAnimationFrame.bind(window):(f=>setTimeout(f,16));
+    raf(()=>{ if(this._pressEl===el) el.setAttribute('data-pressed','1'); });
+    this._pressT=setTimeout(()=>{ try{el.removeAttribute('data-pressed');}catch(e){} this._pressEl=null; },180);
   }
 
   /* ------- taps ------- */
@@ -1357,6 +1398,9 @@ class Component extends DCLogic {
     if(a==='tryagain') return this.setState({screen:'menu'});
     if(a==='save'){ this.save(); return this.toast('Shift saved.','good'); }
     if(a==='load') return this.load();
+    if(a==='callday') return this.setState({cadArm:true});
+    if(a==='callday-no') return this.setState({cadArm:false});
+    if(a==='callday-yes') return this.callDay();
     if(a==='newgame') return this.setState({ngArm:true});
     if(a==='newgame-cancel') return this.setState({ngArm:false});
     if(a==='newgame-confirm'){ try{localStorage.removeItem('cb_save');}catch(e){} return this.setState({screen:'menu',modal:null,ngArm:false}); }
@@ -1395,19 +1439,26 @@ class Component extends DCLogic {
     this.spawnCd=6;
     this.setState({screen:'play',view:'customer',day:1,clock:360,money:20,lives:5,served:0,dayServed:0,dayMissed:0,dayCash:0,
       reputation:2.5,prices:freshPrices(),priceDraft:{},custom:[],infoOpen:{},cr:null,
-      inv:freshInv(),orders:[first],tray:[],toasts:[],unread:0,logOpen:false,modal:null,tut:seen?0:1,
+      inv:freshInv(),orders:[first],tray:[],toasts:[],unread:0,logOpen:false,modal:null,tut:seen?0:1,closing:false,cadArm:false,
       upgrades:{grinder:false,machine:false,tips:false,capitalism:false},tipJar:0,shopTab:'stock',
       ...freshStations()});
+  }
+  callDay(){
+    const s=this.state;
+    if(s.screen!=='play') return;
+    const left=s.orders.length;
+    if(left) this.logIt('Closed up with '+left+' order'+(left>1?'s':'')+' unfilled.','bad');
+    this.setState({screen:'dayend',orders:[],tray:[],cadArm:false,dayMissed:s.dayMissed+left});
   }
   nextDay(){
     const s=this.state;
     this.spawnCd=4;
     this.setState({screen:'play',view:'customer',day:s.day+1,clock:360,dayServed:0,dayMissed:0,dayCash:0,
-      orders:[this.makeOrder()].filter(Boolean),tray:[],toasts:[],unread:0,modal:null,tipJar:0,...freshStations()});
+      orders:[this.makeOrder()].filter(Boolean),tray:[],toasts:[],unread:0,modal:null,tipJar:0,closing:false,cadArm:false,...freshStations()});
   }
   save(){
     const s=this.state;
-    const keep={uid:this.uid,orders:s.orders,day:s.day,clock:s.clock,money:s.money,lives:s.lives,served:s.served,inv:s.inv,barista:s.barista,names:s.names,view:s.view,
+    const keep={v:SAVE_V,uid:this.uid,orders:s.orders,day:s.day,clock:s.clock,money:s.money,lives:s.lives,served:s.served,inv:s.inv,barista:s.barista,names:s.names,view:s.view,
       grinder:s.grinder,pf:s.pf,machine:s.machine,wand:s.wand,tray:s.tray,frother:s.frother,frotherKind:s.frotherKind,counter:s.counter,
       dayServed:s.dayServed,dayMissed:s.dayMissed,dayCash:s.dayCash,reputation:s.reputation,settings:s.settings,prices:s.prices,
       custom:s.custom,
@@ -1415,13 +1466,23 @@ class Component extends DCLogic {
     try{localStorage.setItem('cb_save',JSON.stringify(keep));}catch(e){}
   }
   load(){
-    let d=null; try{d=JSON.parse(localStorage.getItem('cb_save')||'null');}catch(e){}
-    if(!d) return this.toast('No saved shift found.','bad');
+    let raw=null; try{raw=JSON.parse(localStorage.getItem('cb_save')||'null');}catch(e){}
+    if(!raw||typeof raw!=='object') return this.toast('No saved shift found.','bad');
+    if(raw.v!=null&&raw.v>SAVE_V){ try{localStorage.removeItem('cb_save');}catch(e){} return this.toast('That save came from a newer version.','bad'); }
+    try{ this.restore(raw); }
+    catch(err){
+      console.error('load',err);
+      try{localStorage.removeItem('cb_save');}catch(e){}
+      this.setState({screen:'menu',modal:null,drag:null,cr:null,logOpen:false});
+      return this.toast('That saved shift was damaged \u2014 starting fresh.','bad');
+    }
+  }
+  restore(raw){
+    const d={}; SAVE_KEYS.forEach(k=>{ if(raw[k]!==undefined) d[k]=raw[k]; });
     registerCustoms(d.custom||[]);
     /* ids must never collide with the restored tray/queue, or a drag hits the wrong cup */
-    const ids=[...(d.tray||[]),...(d.orders||[])].map(x=>+x.id||0);
-    this.uid=Math.max(d.uid||1,ids.length?Math.max(...ids)+1:1);
-    delete d.uid;
+    const maxId=[...(d.tray||[]),...(d.orders||[])].reduce((a,x)=>Math.max(a,+(x&&x.id)||0),0);
+    this.uid=Math.max(+raw.uid||1,maxId+1);
     /* restored tickets come back with a full clock rather than mid-countdown */
     const orders=(d.orders||[]).map(o=>({...o,left:o.dur}));
     this.spawnCd=orders.length?6:0.5;
@@ -1429,7 +1490,7 @@ class Component extends DCLogic {
     const mach=(()=>{ const o=d.machine||{}; const m={...freshMachine(),...o};
       if(o.item===undefined){ m.item=o.cup?{type:o.shot?(o.shot==='lungo'?'lungo':'espresso'):'empty',cup:o.cup}:null; }
       delete m.cup; delete m.shot; return m; })();
-    this.setState({...d,machine:mach,prices,priceDraft:{},custom:d.custom||[],infoOpen:{},cr:null,upgrades:{grinder:false,machine:false,tips:false,capitalism:false,...(d.upgrades||{})},tipJar:d.tipJar||0,shopTab:'stock',inv:{...freshInv(),...(d.inv||{})},settings:{...freshSettings(),...(d.settings||{})},reputation:d.reputation!=null?d.reputation:2.5,screen:'play',orders,modal:null,tut:0});
+    this.setState({...d,machine:mach,prices,priceDraft:{},custom:d.custom||[],infoOpen:{},cr:null,upgrades:{grinder:false,machine:false,tips:false,capitalism:false,...(d.upgrades||{})},tipJar:d.tipJar||0,shopTab:'stock',inv:{...freshInv(),...(d.inv||{})},settings:{...freshSettings(),...(d.settings||{})},reputation:d.reputation!=null?d.reputation:2.5,screen:'play',orders,modal:null,tut:0,closing:(+d.clock||0)>=900,cadArm:false});
   }
   /* ------- recipe bench: the game is frozen and saved while this is open ------- */
   openCreator(rec){
@@ -2125,6 +2186,9 @@ class Component extends DCLogic {
       name0:(s.names[0]||'').toUpperCase(),name1:(s.names[1]||'').toUpperCase(),
       baristaName:s.names[s.barista]||'',onRename:e=>this.rename(e.target.value),
       baristaUpper:(s.names[s.barista]||'BARISTA').toUpperCase(),
+      closing:!!s.closing,cadArm:!!s.cadArm,cadIdle:!s.cadArm,
+      stageStyle:{position:'absolute',left:0,right:0,top:s.closing?96:52,height:s.closing?604:648,overflow:'hidden'},
+      closingNote:s.orders.length?('CLOSED \u2014 '+s.orders.length+' STILL WAITING'):'CLOSED \u2014 WRAPPING UP',
       day:s.day,nextDay:s.day+1,clockStr:h12+':'+(mm<10?'0':'')+mm+' '+ampm,moneyStr:money2(s.money),heartsStr:hearts,
       served:s.served,dayServed:s.dayServed,dayMissed:s.dayMissed,dayCashStr:money2(s.dayCash),inv:s.inv,
       stockLine:'Beans '+s.inv.beans+' \u00B7 Milk '+(s.inv.whole+s.inv.oat+s.inv.cashew)+' \u00B7 Cocoa '+s.inv.cocoa+' \u00B7 Sugar '+s.inv.sugar,
