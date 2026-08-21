@@ -586,7 +586,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
           <p style="margin:0 0 9px"><b style="color:#e8b661">Window:</b> tap a ticket to accept it. Drag a finished drink from the tray onto an accepted ticket to ring it up. Drinks can also rest on the counter beside the register &mdash; each one shows a card listing exactly what is in it, and can be dragged back to the tray or straight to a ticket.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Bar:</b> beans &rarr; grinder, hold GRIND (it keeps its progress if you let go), dose the portafilter, tamp it, set a cup and the portafilter on the machine, then BREW.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Stopping a brew:</b> hit STOP inside the gold band for an espresso. Miss the band with a demitasse or a glass and the shot is binned &mdash; re-dose and try again. In a latte cup, stopping past the band (or letting it run out) gives you a lungo. A lungo can go out black or stand in for the shot: steam milk into it for a latte (cocoa first for a mocha) provided no water went in, or pour a glass of water into it for an americano provided no milk went in.</p>
-          <p style="margin:0 0 9px"><b style="color:#e8b661">Cups:</b> any cup can sit in the tray, full or empty, and be picked up again â€” the cup on the machine too, unless a shot is mid-pull. Ingredients go into any cup in play. Only a latte cup takes a pour from another cup: it holds two shots and inherits whatever that cup was carrying. An espresso cup never takes milk or water.</p>
+          <p style="margin:0 0 9px"><b style="color:#e8b661">Cups:</b> any cup can sit in the tray, full or empty, and be picked up again &mdash; the cup on the machine too, unless a shot is mid-pull. Ingredients go into any cup in play. Only a latte cup takes a pour from another cup: it holds two shots and inherits whatever that cup was carrying. An espresso cup never takes milk or water.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Milk:</b> open the FRIDGE by the trash, pick whole, oat or cashew, then drag the carton into the frother tin on the left of the counter. Put the full tin on the steam wand and hold STEAM.</p>
           <p style="margin:0 0 9px"><b style="color:#e8b661">Prices:</b> set them per drink in RECIPES &mdash; any number you like, and the chalkboard by the window updates to match. Each card shows the fair price for your current reputation, how big a crowd it pulls, and whether the change is actually earning you more. Underprice and you get a queue and fat tips; overprice and the crowd thins, people walk out, stop tipping and talk. The sweet spot sits just above fair, and further above it on a mocha than on an espresso or a glass of water.</p>
           <p style="margin:0">Sugar cubes, cinnamon dust, cocoa, alt milk and extra shots all carry a surcharge, so garnishing pays. Miss five tickets and the run is over &mdash; unless You're Fired! is switched off in GAMEPLAY.</p>
@@ -671,6 +671,12 @@ a{color:#e8b661}a:hover{color:#f5d69a}
         <div style="{{ l.dot }}"></div>
         <div style="flex:1;min-width:0">
           <div style="font-size:17px;line-height:1.1;color:#f0e2cd;text-wrap:pretty">{{ l.text }}</div>
+          <sc-if value="{{ l.hasPay }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:8px;align-items:baseline;margin-top:3px;font-family:'Silkscreen',monospace;font-size:10px">
+              <div style="color:#7fd39a">{{ l.priceStr }}</div>
+              <div style="color:#e8b661">{{ l.tipStr }}</div>
+            </div>
+          </sc-if>
           <div style="font-family:'Silkscreen',monospace;font-size:8px;color:#8a6b45;margin-top:2px">{{ l.time }}</div>
         </div>
       </div>
@@ -745,7 +751,7 @@ const traySpr=t=>{
   return {americano:'americano',latte:'latte',cortado:'cortado',mocha:'mocha',water:'glassWater'}[t.type]||'demiShot';
 };
 /* Every cup in play is one object: a cup shape plus what is in it. Flags in,
-   flags out â€” the drink NAME is always derived from the contents. */
+   flags out - the drink NAME is always derived from the contents. */
 const SHOT_TYPES=['espresso','mochaBase','latte','cortado','mocha','americano'];
 const flagsOf=t=>({
   shots:t.shots!=null?t.shots:((SHOT_TYPES.indexOf(t.type)>=0?1:0)+(t.extraShot?1:0)),
@@ -832,10 +838,10 @@ const pourInto=(target,src,pending)=>{
   return {item:it,msg:'Poured in \u2014 '+itemName(it)+' now.'};
 };
 const UPGRADES={
-  tips:{name:'AMERICAN GREED',cost:200,desc:'Unlocks the TIP JAR â€” I mean its clearly been sitting there, but corporate lets you keep the cash tips now.'},
-  grinder:{name:'HARDER, BETTER\u2026',cost:500,desc:'V4 engine installation goes brrrrr â€” the GRINDER runs 150% faster.'},
-  machine:{name:'\u2026FASTER, STRONGER',cost:500,desc:'Applied WD40 to group head â€” the ESPRESSO MACHINE pulls shots 150% faster.'},
-  capitalism:{name:'CAPITALISM',cost:750,desc:'Because why buy expensive FDA approved beans when you can import them cheaper from that guy you know â€” all STOCK items are $1 off.'}
+  tips:{name:'AMERICAN GREED',cost:200,desc:'Unlocks the TIP JAR \u2014 I mean its clearly been sitting there, but corporate lets you keep the cash tips now.'},
+  grinder:{name:'HARDER, BETTER\u2026',cost:500,desc:'V4 engine installation goes brrrrr \u2014 the GRINDER runs 150% faster.'},
+  machine:{name:'\u2026FASTER, STRONGER',cost:500,desc:'Applied WD40 to group head \u2014 the ESPRESSO MACHINE pulls shots 150% faster.'},
+  capitalism:{name:'CAPITALISM',cost:750,desc:'Because why buy expensive FDA approved beans when you can import them cheaper from that guy you know \u2014 all STOCK items are $1 off.'}
 };
 const SHOP={
   beans:{name:'BEANS \u00D75',cost:6,amt:5,spr:'beans'},
@@ -943,7 +949,7 @@ const crCount=ing=>{ let n=0; for(const k in (ing||{})) n+=ing[k]; return n; };
 const crParts=ing=>CR_ING.filter(i=>(ing||{})[i.k]).map(i=>({n:i.name+' \u00D7'+ing[i.k],a:'$'+money2(CR_COST[i.k]*ing[i.k])}));
 const crHow=ing=>{ const p=CR_ING.filter(i=>(ing||{})[i.k]).map(i=>i.name.toLowerCase()+(ing[i.k]>1?' \u00D7'+ing[i.k]:'')); const t=p.join(', '); return t.charAt(0).toUpperCase()+t.slice(1)+'.'; };
 const cleanHow=t=>{ const v=String(t||'').replace(/^\s*your own:\s*/i,''); return v.charAt(0).toUpperCase()+v.slice(1); };
-/* one string that says exactly what is in a cup â€” how a custom order is matched */
+/* one string that says exactly what is in a cup - how a custom order is matched */
 const sigOf=f=>[f.shots||0,f.lungo?1:0,f.water?1:0,f.milk?(f.milkKind||'whole'):'-',
   f.cocoaBase?1:0,f.cocoaTop?1:0,f.dust?1:0,f.sugar||0].join('/');
 const BUILTIN_SIGS=[{shots:1},{lungo:true},{shots:1,water:true},{shots:1,milk:true,milkKind:'whole'},
@@ -1050,10 +1056,13 @@ class Component extends DCLogic {
     window.removeEventListener('pointercancel',this.pu);
   }
 
-  toast(text,kind){
+  /* transient feedback: intentionally not recorded in the service log */
+  toast(text,kind){}
+  /* the service log only carries orders taken, brews finished, and customers served */
+  logIt(text,kind,extra){
     const s=this.state;
     const hh=Math.floor(s.clock/60), mm=Math.floor(s.clock%60);
-    const t={id:this.uid++,text,kind:kind||'info',time:(hh>12?hh-12:hh)+':'+(mm<10?'0':'')+mm+' '+(hh>=12?'PM':'AM')};
+    const t={id:this.uid++,text,kind:kind||'info',time:(hh>12?hh-12:hh)+':'+(mm<10?'0':'')+mm+' '+(hh>=12?'PM':'AM'),...(extra||{})};
     this.setState(st=>({toasts:[t,...st.toasts].slice(0,40),unread:st.logOpen?0:st.unread+1}));
   }
   tut(k){
@@ -1127,7 +1136,7 @@ class Component extends DCLogic {
         if(m.brew>=100){
           m.brewState='idle'; m.pf=null; next.pf='spent'; m.brew=0;
           const r=addFill(m.item,fastCup?'espresso':'lungo');
-          m.item=r.item; this.toast(r.msg,r.ok?'good':'bad');
+          m.item=r.item; this.logIt('Brew finished \u2014 '+itemName(r.item),'good');
         }
         mdirty=true;
       }
@@ -1260,13 +1269,13 @@ class Component extends DCLogic {
       const c=this.actx; if(c.state==='suspended') c.resume();
       const t=c.currentTime;
       const out=c.createGain(); out.gain.value=0.5; out.connect(c.destination);
-      /* register "ka" â€” short wooden thunk */
+      /* register "ka" - short wooden thunk */
       const kg=c.createGain();
       kg.gain.setValueAtTime(0.0001,t); kg.gain.exponentialRampToValueAtTime(0.07,t+0.008); kg.gain.exponentialRampToValueAtTime(0.0001,t+0.11);
       const ko=c.createOscillator(); ko.type='triangle';
       ko.frequency.setValueAtTime(300,t); ko.frequency.exponentialRampToValueAtTime(140,t+0.1);
       ko.connect(kg).connect(out); ko.start(t); ko.stop(t+0.12);
-      /* "ching" â€” bell partials shimmering out */
+      /* "ching" - bell partials shimmering out */
       const b=t+0.07;
       const bp=c.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2600; bp.Q.value=1.1;
       const bg=c.createGain();
@@ -1378,7 +1387,7 @@ class Component extends DCLogic {
     const s=this.state;
     this.spawnCd=4;
     this.setState({screen:'play',view:'customer',day:s.day+1,clock:360,dayServed:0,dayMissed:0,dayCash:0,
-      orders:[this.makeOrder()].filter(Boolean),tray:[],modal:null,tipJar:0,...freshStations()});
+      orders:[this.makeOrder()].filter(Boolean),tray:[],toasts:[],unread:0,modal:null,tipJar:0,...freshStations()});
   }
   save(){
     const s=this.state;
@@ -1903,7 +1912,7 @@ class Component extends DCLogic {
     const o=s.orders.find(x=>x.id===oid); if(!o) return;
     if(!o.accepted){
       this.setState({orders:s.orders.map(x=>x.id===oid?{...x,accepted:true}:x)});
-      this.tut('accept'); return this.toast(NPC_NAMES[o.npc]+' ordered a '+DRINKS[o.drink].label,'good');
+      this.tut('accept'); return this.logIt(NPC_NAMES[o.npc]+' ordered a '+DRINKS[o.drink].label,'info');
     }
     this.toast('Drag their drink onto the ticket.','info');
   }
@@ -1932,7 +1941,7 @@ class Component extends DCLogic {
     this.setState({tray:s.tray.filter(t=>t.id!==drinkId),orders:s.orders.filter(x=>x.id!==orderId),
       money:s.money+pay,served:s.served+1,dayServed:s.dayServed+1,dayCash:s.dayCash+pay,reputation});
     this.cashSfx();
-    this.toast('Served '+NPC_NAMES[o.npc]+' \u00B7 +$'+money2(pay)+(rel>0.3?' \u00B7 they grumbled about the price':(tip>0.4?' \u00B7 nice tip':'')),'good');
+    this.logIt('Served '+NPC_NAMES[o.npc],'good',{priceStr:'\u0024'+money2(base+surcharge),tipStr:'TIP \u0024'+money2(tip)});
     this.tut('serve');
   }
 
@@ -2012,6 +2021,7 @@ class Component extends DCLogic {
       wrap:{position:'absolute',left:i===0?'17%':'51%',bottom:'44%',width:'31%',height:'38%',zIndex:10,cursor:'pointer'},
       spr:{...SPR['n'+o.npc],backgroundPosition:'center bottom'}, zone:'ticket:'+o.id, tap:'ticket-'+o.id}));
     const logView=s.toasts.map((t,i)=>({text:t.text,time:t.time,
+      hasPay:!!t.priceStr,priceStr:t.priceStr||'',tipStr:t.tipStr||'',
       row:{display:'flex',gap:7,alignItems:'flex-start',padding:'7px 9px',borderBottom:'1px solid #2a1d12',background:i===0?'#1c1409':'transparent'},
       dot:{width:8,height:8,marginTop:5,flex:'none',background:t.kind==='bad'?'#8a3b1f':t.kind==='good'?'#2f6d3f':'#8a6b45',border:'1px solid '+(t.kind==='bad'?'#f0b48c':t.kind==='good'?'#7fd39a':'#6b5236')}}));
     const tolPct=Math.round((toleranceFor(s.reputation)-1)*100);
