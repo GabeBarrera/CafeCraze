@@ -537,7 +537,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
         <sc-for list="{{ recipesView }}" as="r" hint-placeholder-count="7">
           <div style="border-bottom:1px solid #3a2a1c;padding:8px 0">
             <div style="display:flex;gap:9px;align-items:center">
-              <div data-tap="{{ r.row }}" style="display:flex;gap:9px;align-items:center;min-width:0;flex:1;cursor:pointer">
+              <div data-tap="{{ r.row }}" data-tap-safe="1" style="display:flex;gap:9px;align-items:center;min-width:0;flex:1;cursor:pointer">
                 <div style="position:relative;width:40px;height:38px;flex:none"><div style="{{ r.spr }}"></div></div>
                 <div style="min-width:0;flex:1">
                   <div style="display:flex;align-items:center;gap:5px">
@@ -550,12 +550,12 @@ a{color:#e8b661}a:hover{color:#f5d69a}
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:4px;flex:none">
-                <div data-tap="{{ r.down }}" style="width:24px;height:24px;flex:none;border:2px solid #3a2a1c;background:#231710;display:flex;align-items:center;justify-content:center;font-family:'Silkscreen',monospace;font-size:11px;color:#e8b661;cursor:pointer">-</div>
+                <div data-tap="{{ r.down }}" data-tap-safe="1" style="width:24px;height:24px;flex:none;border:2px solid #3a2a1c;background:#231710;display:flex;align-items:center;justify-content:center;font-family:'Silkscreen',monospace;font-size:11px;color:#e8b661;cursor:pointer">-</div>
                 <div style="flex:none;display:flex;align-items:center;gap:2px;background:#231710;border:2px solid #3a2a1c;padding:0 5px">
                   <span style="{{ r.dollarStyle }}">$</span>
                   <input value="{{ r.priceStr }}" onChange="{{ r.onPrice }}" onBlur="{{ r.onPriceBlur }}" inputMode="decimal" maxLength="6" size="4" style="{{ r.inputStyle }}"></input>
                 </div>
-                <div data-tap="{{ r.up }}" style="width:24px;height:24px;flex:none;border:2px solid #3a2a1c;background:#231710;display:flex;align-items:center;justify-content:center;font-family:'Silkscreen',monospace;font-size:11px;color:#e8b661;cursor:pointer">+</div>
+                <div data-tap="{{ r.up }}" data-tap-safe="1" style="width:24px;height:24px;flex:none;border:2px solid #3a2a1c;background:#231710;display:flex;align-items:center;justify-content:center;font-family:'Silkscreen',monospace;font-size:11px;color:#e8b661;cursor:pointer">+</div>
               </div>
             </div>
             <sc-if value="{{ r.infoOpen }}" hint-placeholder-val="{{ false }}">
@@ -570,14 +570,14 @@ a{color:#e8b661}a:hover{color:#f5d69a}
               <div style="font-family:'Silkscreen',monospace;font-size:9px;color:#8a6b45;margin-top:4px">FAIR ${{ r.defStr }}</div>
               <sc-if value="{{ r.canEdit }}" hint-placeholder-val="{{ false }}">
                 <div style="display:flex;gap:8px;margin-top:8px">
-                  <div data-tap="{{ r.del }}" style="{{ r.delStyle }}">{{ r.delLabel }}</div>
-                  <div data-tap="{{ r.edit }}" style="flex:1;text-align:center;background:#3d2a17;border:2px solid #e8b661;padding:8px 0;font-family:'Silkscreen',monospace;font-size:10px;color:#e8b661;cursor:pointer">EDIT</div>
+                  <div data-tap="{{ r.del }}" data-tap-safe="1" style="{{ r.delStyle }}">{{ r.delLabel }}</div>
+                  <div data-tap="{{ r.edit }}" data-tap-safe="1" style="flex:1;text-align:center;background:#3d2a17;border:2px solid #e8b661;padding:8px 0;font-family:'Silkscreen',monospace;font-size:10px;color:#e8b661;cursor:pointer">EDIT</div>
                 </div>
               </sc-if>
             </sc-if>
           </div>
         </sc-for>
-        <div data-tap="new-recipe" style="margin-top:13px;background:#2f6d3f;border:3px solid #7fd39a;box-shadow:0 4px 0 #14301b;padding:12px 0;text-align:center;font-family:'Silkscreen',monospace;font-weight:700;font-size:12px;color:#eafbef;cursor:pointer">+ NEW RECIPE</div>
+        <div data-tap="new-recipe" data-tap-safe="1" style="margin-top:13px;background:#2f6d3f;border:3px solid #7fd39a;box-shadow:0 4px 0 #14301b;padding:12px 0;text-align:center;font-family:'Silkscreen',monospace;font-weight:700;font-size:12px;color:#eafbef;cursor:pointer">+ NEW RECIPE</div>
       </sc-if>
 
       <sc-if value="{{ mInstr }}" hint-placeholder-val="{{ false }}">
@@ -1006,6 +1006,7 @@ class Component extends DCLogic {
     this.pd=e=>this.onDown(e); this.pm=e=>this.onMove(e); this.pu=e=>this.onUp(e);
     this.ck=e=>{ const t=e.target instanceof Element?e.target:null; if(!t) return;
       const tap=t.closest('[data-tap]'); if(!tap) return;
+      if(this.tapBlockUntil&&Date.now()<this.tapBlockUntil) return;
       if(this.lastTap&&Date.now()-this.lastTap<600) return;
       this.lastTap=Date.now(); const act=tap.getAttribute('data-tap'); this.clickSfx(act); this.pressFx(tap); this.doTap(act); };
     window.addEventListener('click',this.ck);
@@ -1206,6 +1207,9 @@ class Component extends DCLogic {
     const hold=t.closest('[data-hold]');
     if(hold){ this.hold=hold.getAttribute('data-hold'); e.preventDefault(); return; }
     const tap=t.closest('[data-tap]');
+    if(tap&&tap.hasAttribute('data-tap-safe')&&!tap.hasAttribute('data-item')){
+      /* inside a scrolling list: wait for pointerup so a scroll drag isn't read as a tap */
+      this.pendTap={act:tap.getAttribute('data-tap'),el:tap,x:e.clientX,y:e.clientY}; return; }
     if(tap&&!tap.hasAttribute('data-item')){ e.preventDefault(); this.lastTap=Date.now(); const act=tap.getAttribute('data-tap'); this.clickSfx(act); this.pressFx(tap); this.doTap(act); return; }
     const item=t.closest('[data-item]');
     if(item){ e.preventDefault(); this.dragEl=item;
@@ -1213,9 +1217,16 @@ class Component extends DCLogic {
       item.style.visibility='hidden';
       this.setState({drag:{item:item.getAttribute('data-item'),x:e.clientX,y:e.clientY,x0:e.clientX,y0:e.clientY}}); }
   }
-  onMove(e){ if(this.state.drag){ if(this.dragEl) this.dragEl.style.visibility='hidden'; this.setState(s=>({drag:{...s.drag,x:e.clientX,y:e.clientY}})); } }
+  onMove(e){
+    const p=this.pendTap;
+    if(p&&Math.abs(e.clientX-p.x)+Math.abs(e.clientY-p.y)>12){ this.pendTap=null; this.tapBlockUntil=Date.now()+500; }
+    if(this.state.drag){ if(this.dragEl) this.dragEl.style.visibility='hidden'; this.setState(s=>({drag:{...s.drag,x:e.clientX,y:e.clientY}})); } }
   clearDragEl(){ if(this.dragEl){ this.dragEl.style.visibility=''; this.dragEl=null; } }
   onUp(e){
+    const p=this.pendTap;
+    if(p){ this.pendTap=null;
+      if(Math.abs(e.clientX-p.x)+Math.abs(e.clientY-p.y)<=12){ this.lastTap=Date.now(); this.clickSfx(p.act); this.pressFx(p.el); this.doTap(p.act); }
+      else this.tapBlockUntil=Date.now()+500; }
     if(this.hold){ const h=this.hold; this.hold=null; if(h==='steam') this.releaseSteam(); }
     const d=this.state.drag; if(!d) return;
     this.clearDragEl();
