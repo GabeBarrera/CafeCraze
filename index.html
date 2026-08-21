@@ -186,7 +186,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 
       <div data-zone="machine" style="position:absolute;left:24.55%;bottom:calc(16% + 100px);width:50.9%;height:33%"><div style="{{ spr.machine_mIdle }}"></div><div style="{{ spr.machine_mPf }}"></div></div>
       <sc-if value="{{ showDockCup }}" hint-placeholder-val="{{ false }}">
-        <div data-tap="pour" data-item="mcup" style="{{ dockCupWrap }}"><div style="{{ spr.dock_glassShot }}"></div><div style="{{ spr.dock_glassEmpty }}"></div><div style="{{ spr.dock_demiShot }}"></div><div style="{{ spr.dock_demiEmpty }}"></div><div style="{{ spr.dock_espressoCup }}"></div><div style="{{ spr.dock_cupEmpty }}"></div></div>
+        <div data-tap="pour" data-item="mcup" style="{{ dockCupWrap }}"><div style="{{ spr.dock_glassShot }}"></div><div style="{{ spr.dock_glassEmpty }}"></div><div style="{{ spr.dock_demiShot }}"></div><div style="{{ spr.dock_demiEmpty }}"></div><div style="{{ spr.dock_espressoCup }}"></div><div style="{{ spr.dock_cupEmpty }}"></div><div style="{{ spr.dock_americano }}"></div><div style="{{ spr.dock_latte }}"></div><div style="{{ spr.dock_cortado }}"></div><div style="{{ spr.dock_mocha }}"></div><div style="{{ spr.dock_glassWater }}"></div></div>
       </sc-if>
       <sc-if value="{{ brewing }}" hint-placeholder-val="{{ false }}">
         <div style="{{ pourStreamStyle }}"></div>
@@ -596,7 +596,7 @@ const LAYER_SETS={
   grinder:['g0','g1','g2','g3','g4','g5'],
   pf:['pfClean','pfGrounds','pfTamped'],
   machine:['mIdle','mPf'],
-  dock:['glassShot','glassEmpty','demiShot','demiEmpty','espressoCup','cupEmpty'],
+  dock:['glassShot','glassEmpty','demiShot','demiEmpty','espressoCup','cupEmpty','americano','latte','cortado','mocha','glassWater'],
   wand:['pitcherFroth','pitcherMilk'],
   frother:['pitcherMilk','pitcherEmpty'],
   counter:['sugar','milkCarton'],
@@ -1467,7 +1467,8 @@ class Component extends DCLogic {
   toMachine(item){
     const s=this.state; const m={...s.machine};
     if(item==='cup'||item==='demi'||item==='glass'){
-      if(m.item) return this.toast('There\u2019s already a cup under the group head.','info');
+      if(m.item&&m.item.type!=='empty') return this.toast('There\u2019s already a drink under the group head \u2014 finish it first.','info');
+      if(m.item){ const lock=this.cupLock(m); if(lock) return this.toast(lock,'info'); }
       m.item={type:'empty',cup:item}; this.setState({machine:m});
       if(m.pf==='tamped') this.tut('dock');
       return this.toast(item==='cup'?'Latte cup under the group head \u2014 stop in the band for an espresso, run long for a lungo.':(item==='demi'?'Demitasse under the group head \u2014 stop in the band.':'Glass under the group head \u2014 stop in the band.'),'info');
@@ -1516,7 +1517,8 @@ class Component extends DCLogic {
     }
     if(it==='cocoa'){
       if(s.inv.cocoa<=0) return {err:'Out of cocoa \u2014 check Supplies.'};
-      if(!f.milk&&!f.water&&!f.cocoaBase) return {item:buildItem(t.cup,{...f,cocoaBase:true}),use:'cocoa',msg:'Cocoa in. Now espresso and steamed milk.'};
+      if(f.water) return {err:'Cocoa won\u2019t work with water in the cup.'};
+      if(!f.cocoaBase) return {item:buildItem(t.cup,{...f,cocoaBase:true}),use:'cocoa',msg:(f.milk&&(f.shots||f.lungo))?'Cocoa in \u2014 mocha.':'Cocoa in.'};
       if(f.cocoaTop) return {err:'Already has cocoa on top.'};
       return {item:buildItem(t.cup,{...f,cocoaTop:true}),use:'cocoa',msg:'Cocoa dusted on top.'};
     }
@@ -1680,9 +1682,11 @@ class Component extends DCLogic {
     const mi=m.item, mcup=mi?mi.cup:null, mfill=!!(mi&&mi.type!=='empty'), mfree=!!mi&&!this.cupLock(m);
     const grinderKey=s.grinder.hopper?((s.grinder.prog>0||this.hold==='grind')?'g2':'g1'):['g0','g5','g4','g3'][s.grinder.levels];
     const pfKey={clean:'pfClean',grounds:'pfGrounds',tamped:'pfTamped',spent:'pfGrounds'}[s.pf]||'pfClean';
-    const dockKey=mcup==='glass'?(mfill?'glassShot':'glassEmpty')
-      :mcup==='demi'?(mfill?'demiShot':'demiEmpty')
-      :((mfill||m.brew>=BAND_LO)?'espressoCup':'cupEmpty');
+    const dockKey=!mi?'cupEmpty'
+      :mfill?traySpr(mi)
+      :mcup==='glass'?'glassEmpty'
+      :mcup==='demi'?'demiEmpty'
+      :(m.brew>=BAND_LO?'espressoCup':'cupEmpty');
     const spr={...SPR,
       ...STACKS.grinder[grinderKey],
       ...STACKS.pf[pfKey],
