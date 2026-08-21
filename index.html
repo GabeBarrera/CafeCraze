@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -35,7 +35,7 @@ a{color:#e8b661}a:hover{color:#f5d69a}
 @keyframes cbpulse{0%,100%{opacity:1}50%{opacity:.35}}
 @keyframes cbpop{from{transform:translateY(6px);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes cbstream{0%{transform:scaleY(0)}18%{transform:scaleY(1)}100%{transform:scaleY(1)}}
-@keyframes cbdrip{0%{transform:translateY(-2px);opacity:0}30%{opacity:1}100%{transform:translateY(10px);opacity:0}}
+@keyframes cbdrip{0%{transform:translateY(-1px) scaleX(.6);opacity:0}30%{opacity:.9}100%{transform:translateY(6px) scaleX(1.3);opacity:0}}
 </style>
 </helmet>
 <div style="position:fixed;inset:0;background:#0a0705;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:'VT323',monospace;color:#f0e2cd;touch-action:none;user-select:none">
@@ -190,7 +190,9 @@ a{color:#e8b661}a:hover{color:#f5d69a}
       </sc-if>
       <sc-if value="{{ brewing }}" hint-placeholder-val="{{ false }}">
         <div style="{{ pourStreamStyle }}"></div>
+        <div style="{{ pourStreamStyle2 }}"></div>
         <div style="{{ pourDripStyle }}"></div>
+        <div style="{{ pourDripStyle2 }}"></div>
       </sc-if>
       <div data-zone="nozzle" style="position:absolute;left:64.55%;bottom:calc(16% + 100px);width:11%;height:19%"></div>
       <sc-if value="{{ showGlass }}" hint-placeholder-val="{{ false }}">
@@ -471,7 +473,19 @@ a{color:#e8b661}a:hover{color:#f5d69a}
           <div data-tap="modal-scores" style="border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#c9b394;cursor:pointer">HIGHSCORES</div>
           <div data-tap="modal-settings" style="border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#c9b394;cursor:pointer">GAMEPLAY</div>
           <div data-tap="save" style="border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#e8b661;cursor:pointer">SAVE GAME</div>
-          <div data-tap="newgame" style="border:2px solid #6b2a12;background:#2a120a;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#e0805a;cursor:pointer">NEW GAME</div>
+          <sc-if value="{{ ngIdle }}" hint-placeholder-val="{{ true }}">
+            <div data-tap="newgame" style="border:2px solid #6b2a12;background:#2a120a;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#e0805a;cursor:pointer">NEW GAME</div>
+          </sc-if>
+          <sc-if value="{{ ngArm }}" hint-placeholder-val="{{ false }}">
+            <div style="border:2px solid #6b2a12;background:#2a120a;padding:10px;display:flex;flex-direction:column;gap:9px">
+              <div style="font-family:'Silkscreen',monospace;font-size:11px;color:#e0805a">START A NEW GAME?</div>
+              <div style="font-size:17px;color:#c9b394;line-height:1.4">This wipes your saved shift &mdash; day, cash, tips, inventory, upgrades and highscore progress in play. It cannot be undone.</div>
+              <div style="display:flex;gap:7px">
+                <div data-tap="newgame-cancel" style="flex:1;text-align:center;border:2px solid #3a2a1c;background:#231710;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#c9b394;cursor:pointer">CANCEL</div>
+                <div data-tap="newgame-confirm" style="flex:1;text-align:center;border:2px solid #e0805a;background:#6b2a12;padding:10px;font-family:'Silkscreen',monospace;font-size:11px;color:#ffeade;cursor:pointer">WIPE &amp; START</div>
+              </div>
+            </div>
+          </sc-if>
         </div>
       </sc-if>
 
@@ -1331,10 +1345,10 @@ class Component extends DCLogic {
     if(a==='bell') return this.setState({logOpen:!s.logOpen,unread:0});
     if(a==='close-log') return this.setState({logOpen:false,unread:0});
     if(a==='close-map') return this.setState({modal:null,view:'customer'});
-    if(a==='close') return this.setState({modal:null,delArm:null});
+    if(a==='close') return this.setState({modal:null,delArm:null,ngArm:false});
     if(a==='fridge') return this.setState({modal:'fridge'});
     if(a.indexOf('take-')===0) return this.takeFromFridge(a.slice(5));
-    if(a.indexOf('modal-')===0) return this.setState({modal:a.slice(6)});
+    if(a.indexOf('modal-')===0) return this.setState({modal:a.slice(6),ngArm:false});
     if(a==='tutskip'){ try{localStorage.setItem('cb_seen','1');}catch(e){} return this.setState({tut:0}); }
     if(a==='toggle-fired') return this.setState(st=>({settings:{...st.settings,fired:!st.settings.fired}}));
     if(a==='toggle-patience') return this.setState(st=>({settings:{...st.settings,patience:!st.settings.patience}}));
@@ -1343,7 +1357,9 @@ class Component extends DCLogic {
     if(a==='tryagain') return this.setState({screen:'menu'});
     if(a==='save'){ this.save(); return this.toast('Shift saved.','good'); }
     if(a==='load') return this.load();
-    if(a==='newgame'){ try{localStorage.removeItem('cb_save');}catch(e){} return this.setState({screen:'menu',modal:null}); }
+    if(a==='newgame') return this.setState({ngArm:true});
+    if(a==='newgame-cancel') return this.setState({ngArm:false});
+    if(a==='newgame-confirm'){ try{localStorage.removeItem('cb_save');}catch(e){} return this.setState({screen:'menu',modal:null,ngArm:false}); }
     if(a.indexOf('info-')===0){ const ik=a.slice(5); return this.setState(st=>({infoOpen:{...st.infoOpen,[ik]:!st.infoOpen[ik]}})); }
     if(a.indexOf('row-')===0){ const ik=a.slice(4); return this.setState(st=>({infoOpen:{...st.infoOpen,[ik]:!st.infoOpen[ik]},delArm:null})); }
     if(a.indexOf('del-')===0) return this.deleteRecipe(a.slice(4));
@@ -1955,6 +1971,7 @@ class Component extends DCLogic {
     const hearts='\u2665'.repeat(Math.max(0,s.lives))+'\u2661'.repeat(Math.max(0,5-s.lives));
     const m=s.machine;
     const mi=m.item, mcup=mi?mi.cup:null, mfill=!!(mi&&mi.type!=='empty'), mfree=!!mi&&!this.cupLock(m);
+    const pourCupH=mcup==='glass'?8:(mcup==='demi'?7.5:10);
     const grinderKey=s.grinder.hopper?((s.grinder.prog>0||this.hold==='grind')?'g2':'g1'):['g0','g5','g4','g3'][s.grinder.levels];
     const pfKey={clean:'pfClean',grounds:'pfGrounds',tamped:'pfTamped',spent:'pfGrounds'}[s.pf]||'pfClean';
     const dockKey=!mi?'cupEmpty'
@@ -2047,7 +2064,7 @@ class Component extends DCLogic {
         priceStr:draft!=null?draft:money2(set),defStr:money2(fair),
         down:'price:dn:'+k,up:'price:up:'+k,row:'row-'+k,infoOpen:open,
         isCustom,canEdit:isCustom,del:'del-'+k,edit:'edit-'+k,
-        delLabel:armed?'TAP AGAIN':'DELETE',
+        delLabel:armed?'CONFIRM DELETE':'DELETE',
         delStyle:{flex:1,textAlign:'center',background:armed?'#c04a20':'#8a3b1f',border:'2px solid #f0b48c',padding:'8px 0',fontFamily:"'Silkscreen',monospace",fontSize:10,color:'#ffe6d8',cursor:'pointer'},
         dollarStyle:{fontFamily:"'Silkscreen',monospace",fontSize:11,color:pcol,flex:'none'},
         inputStyle:{width:40,minWidth:0,background:'transparent',border:'none',color:pcol,fontFamily:"'Silkscreen',monospace",fontSize:11,padding:'5px 0',outline:'none',textAlign:'right'},
@@ -2136,9 +2153,13 @@ class Component extends DCLogic {
         :{position:'absolute',left:'21.5%',bottom:'calc(12% + 62px)',width:'9%',height:'15%',zIndex:19,cursor:'grab'},
       showDockCup:!!mi,
       brewing:m.brewState==='brewing',
-      pourStreamStyle:{position:'absolute',left:'49.3%',bottom:'calc(18% + 100px + '+(mcup==='glass'?8:(mcup==='demi'?7.5:10))+'%)',width:'1.4%',height:'62px',background:'linear-gradient(#4a2410,#7a3f18)',transformOrigin:'top center',animation:'cbstream .5s ease-out',zIndex:18,boxShadow:'0 0 3px rgba(0,0,0,.5)'},
-      pourDripStyle:{position:'absolute',left:'48.6%',bottom:'calc(18% + 100px + '+(mcup==='glass'?8:(mcup==='demi'?7.5:10))+'% - 6px)',width:'2.8%',height:'1.2%',borderRadius:'50%',background:'rgba(122,63,24,.85)',animation:'cbdrip .4s linear infinite',zIndex:18},
+      pourStreamStyle:{position:'absolute',left:'48.25%',bottom:'calc(18% + 100px + '+pourCupH+'% - 15px)',width:'0.95%',height:'calc(13.2% - '+pourCupH+'% + 15px)',background:'linear-gradient(#3a1b0b,#7a3f18)',transformOrigin:'top center',animation:'cbstream .45s ease-out',zIndex:18,boxShadow:'0 0 3px rgba(0,0,0,.5)'},
+      pourStreamStyle2:{position:'absolute',left:'50.4%',bottom:'calc(18% + 100px + '+pourCupH+'% - 15px)',width:'0.95%',height:'calc(13.2% - '+pourCupH+'% + 15px)',background:'linear-gradient(#3a1b0b,#7a3f18)',transformOrigin:'top center',animation:'cbstream .45s ease-out .08s both',zIndex:18,boxShadow:'0 0 3px rgba(0,0,0,.5)'},
+      pourDripStyle:{position:'absolute',left:'47.6%',bottom:'calc(18% + 100px + '+pourCupH+'% - 5px)',width:'2.2%',height:'1%',borderRadius:'50%',background:'rgba(122,63,24,.85)',animation:'cbdrip .4s linear infinite',zIndex:18},
+      pourDripStyle2:{position:'absolute',left:'49.75%',bottom:'calc(18% + 100px + '+pourCupH+'% - 5px)',width:'2.2%',height:'1%',borderRadius:'50%',background:'rgba(122,63,24,.85)',animation:'cbdrip .4s linear .2s infinite',zIndex:18},
       dockCupWrap:{position:'absolute',left:mcup==='glass'?'44.95%':(mcup==='demi'?'43.45%':'41.95%'),bottom:'calc(18% + 100px)',width:mcup==='glass'?'10.1%':(mcup==='demi'?'13.1%':'16.1%'),height:mcup==='glass'?'8%':(mcup==='demi'?'7.5%':'10%'),cursor:mfree?'grab':'default',animation:(mfree&&(mfill||m.brew>=BAND_LO))?'cbpulse 1s infinite':'none',zIndex:15},
+      ngArm:!!s.ngArm,
+      ngIdle:!s.ngArm,
       showGlass:!!m.glass,
       wandItem:s.wand.milk||s.wand.froth,
       wandWrap:{position:'absolute',left:'20.55%',bottom:'32%',width:'17%',height:'11%',zIndex:16,cursor:'grab'},
@@ -2196,4 +2217,3 @@ class Component extends DCLogic {
 </script>
 </body>
 </html>
-
